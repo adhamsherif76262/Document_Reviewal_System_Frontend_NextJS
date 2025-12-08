@@ -68,12 +68,14 @@
 
 import { getMessages } from "../../lib/getMessages";
 
-interface PageProps {
-  params: { lang: string };
-}
+// interface PageProps {
+//   params: { lang: string };
+// }
 
-export default async function HomePage({ params }: PageProps) {
-  const messages = await getMessages(params.lang, "home"); // load page-specific messages
+export default async function HomePage({ params }: {params: Promise<{ lang: string }>;
+}) {
+  const lang = (await(params)).lang
+  const messages = await getMessages(lang, "home"); // load page-specific messages
 
   return (
         <><h1>{messages.title}</h1><p>{messages.description}</p></>

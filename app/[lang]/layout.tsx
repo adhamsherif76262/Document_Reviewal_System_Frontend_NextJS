@@ -5,7 +5,8 @@ import { Geist} from 'next/font/google';
 import clsx from 'clsx';
 // import { Tajawal } from 'next/font/google';
 import { Amiri } from 'next/font/google';
-import { Metadata } from 'next';
+// import { Metadata } from 'next';
+import { AuthProvider } from '../context/AuthContext';
 
 const metadataMap = {
   en: {
@@ -58,40 +59,47 @@ export default async function RootLayout({
   params,
 }: {
   children: ReactNode;
-  params: { lang: string };
+  params: Promise<{ lang: string }>;
 }) 
 {
     // ✅ Await anything (Next.js now considers params "safe")
   // await Promise.resolve();
   // const dir = (await params).lang === 'ar' ? 'rtl' : 'ltr';
   // const dir =  params.lang === 'ar' ? 'rtl' : 'ltr';
-  const dir =  params.lang === 'ar' ? 'rtl' : 'ltr';
-
+  const lang =  (await (params)).lang ;
   return (
     // <html lang={params.lang} dir={dir}>
-    <html lang={params.lang} dir={params.lang === "ar" ? "rtl" : "ltr"}>
+    <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
       <body  className={clsx(
         // cairo.variable,                // 👈 Arabic font variable
         // tajawal.variable,         // 👈 Arabic font
         amiri.variable,         // 👈 Arabic font
 
         geist.variable,                // 👈 Your existing font variable
-        params.lang === 'ar' ? 'font-arabic' : 'font-sans',  // 👈 Conditional font class
+        lang === 'ar' ? 'font-arabic' : 'font-sans',  // 👈 Conditional font class
         "bg_Body text-black bg-white transition-colors duration-300 overflow-x-hidden"
         )}
 
 style={{
-  backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.2'%3E%3Cpath d='M30 30l15-15v30l-15-15zm-15 0l15 15v-30l-15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-  backgroundRepeat: 'repeat',
-  backgroundSize: '60px 60px',
-  backgroundPosition: 'top left',
-  backgroundBlendMode: 'multiply',
+  // backgroundColor: 'gray',
+  // backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.2'%3E%3Cpath d='M30 30l15-15v30l-15-15zm-15 0l15 15v-30l-15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+  // backgroundRepeat: 'repeat',
+  // backgroundSize: '60px 60px',
+  // backgroundPosition: 'top left',
+  // backgroundBlendMode: 'multiply',
 }}
 
         >
-        <main className="grow">
+        {/* <main className="grow">
           {children}
-        </main>
+        </main> */}
+
+        {/* <NextIntlClientProvider locale={lang} messages={messages}> */}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        {/* </NextIntlClientProvider> */}
+
       </body>
     </html>
   );
@@ -101,16 +109,19 @@ export async function generateStaticParams() {
   return [{ lang: 'en' }, { lang: 'ar' }];
 }
 
-export async function generateMetadata(  {params,}: {params: { lang: string };
-}): Promise<Metadata> {
-  const lang = params.lang === 'ar' ? 'ar' : 'en';
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const lang = (await (params)).lang === 'ar' ? 'ar' : 'en';
   // const path = typeof window !== 'undefined'
     //  ? window.location.pathname.split('/')[2] || 'home'
   //   : 'home' ; 
     const path = 'home'; // You can customize based on route segment if needed
 
     {
-    console.log('[Metadata] lang:', params.lang); // 🔍 confirm it's running
+    console.log('[Metadata] lang:', lang); // 🔍 confirm it's running
 
   return {
     title: metadataMap[lang].title[path as keyof typeof metadataMap['en']['title']],
@@ -122,8 +133,8 @@ export async function generateMetadata(  {params,}: {params: { lang: string };
     other: {},
     // // ✅ Required structure for html tag customization
     // htmlAttributes: {
-    //   lang: params.lang,
-    //   dir: params.lang === 'ar' ? 'rtl' : 'ltr',
+    //   lang: lang,
+    //   dir: lang === 'ar' ? 'rtl' : 'ltr',
     // },
   };
 }
