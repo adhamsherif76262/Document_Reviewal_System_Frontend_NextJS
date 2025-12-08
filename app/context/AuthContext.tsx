@@ -10,10 +10,16 @@ interface AuthContextProps {
 }
 
 interface User {
-  _id: string;
+  // [x: string]: ReactNode;
+  _id?: string;
   name: string;
   email: string;
-  role: string;
+  phone?: string;
+  adminLevel?: string;
+  lastOTPResend?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  role?: string;
   preferredVerificationMethod?: string;
   verificationStatus?: string;
   isVerified?: boolean;
@@ -46,6 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const res = await api.get("/api/users/me");
         setUser(res.data);
+        console.log(res.data)
       } catch (err) {
         setUser(null);
       } finally {

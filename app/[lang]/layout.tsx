@@ -70,7 +70,8 @@ export default async function RootLayout({
   return (
     // <html lang={params.lang} dir={dir}>
     <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
-      <body  className={clsx(
+      <body  
+      className={clsx(
         // cairo.variable,                // 👈 Arabic font variable
         // tajawal.variable,         // 👈 Arabic font
         amiri.variable,         // 👈 Arabic font
