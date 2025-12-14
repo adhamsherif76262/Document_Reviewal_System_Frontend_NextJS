@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from "../../lib/api";
+import axios, { AxiosError, isAxiosError } from 'axios';
 
 interface AuthContextProps {
   user: User | null;
   loading: boolean;
+  error: string;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: (email: string) => Promise<void>;
 }
 
 interface User {
@@ -16,35 +19,26 @@ interface User {
   email: string;
   phone?: string;
   adminLevel?: string;
+  expiryStatus?: string;
   lastOTPResend?: Date;
   createdAt?: Date;
   updatedAt?: Date;
+  expiryDate?: Date;
   role?: string;
   preferredVerificationMethod?: string;
   verificationStatus?: string;
   isVerified?: boolean;
+  expirable?: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
 
   // ✅ Load user on mount
-//   useEffect(() => {
-//     const fetchUser = async () => {
-//       try {
-//         const { data } = await api.get('/api/users/my-submissions');
-//         setUser(data.user); // adjust if API returns differently
-//       } catch (err) {
-//         setUser(null);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     fetchUser();
-//   }, []);
 
   // Check if user is logged in on mount
   useEffect(() => {
@@ -53,7 +47,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const res = await api.get("/api/users/me");
         setUser(res.data);
         console.log(res.data)
-      } catch (err) {
+      } catch (err : any) {
+        setError( err.response?.data?.message || "Failed to fetch user data");
         setUser(null);
       } finally {
         setLoading(false);
@@ -65,34 +60,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     setLoading(true);
+    setError("");
     try {
-      const { data } = await api.post(
+      const res = await api.post(
         '/api/users/login',
         { email, password } // ✅ important to send cookies
       );
-      setUser(data); // API returns user info only, token is in cookie
+      setUser(res.data); // API returns user info only, token is in cookie
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      throw new Error(err.response?.data?.message || 'Login failed');
-    } finally {
+      console.log(res.data)
+    }catch (err: any) {
+  const msg =
+    err?.response?.data?.message ||
+    "Login failed";
+
+  setError(msg);
+} finally {
       setLoading(false);
     }
   };
-
-  const logout = async () => {
+  
+  const logout = async (email:string) => {
     setLoading(true);
+        setError("");
     try {
-      await api.post('/api/users/logout', {});
+      await api.post('/api/users/logout', {email});
       setUser(null);
-    } catch (err) {
-      console.error('Logout failed:', err);
+    } catch (err:any) {
+      // console.error('Logout failed:', err);
+      setError(err.response?.data?.message || 'Logout failed');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout , error }}>
       {children}
     </AuthContext.Provider>
   );
@@ -103,48 +106,3 @@ export const useAuth = () => {
   if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };
-
-
-
-// import { useEffect, useState, createContext, useContext } from "react";
-// import axios from "axios";
-
-// const AuthContext = createContext({});
-
-// export const AuthProvider = ({ children }) => {
-//   const [user, setUser] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   // Check if user is logged in on mount
-//   useEffect(() => {
-//     const fetchUser = async () => {
-//       try {
-//         const res = await axios.get("/api/users/me", { withCredentials: true });
-//         setUser(res.data);
-//       } catch (err) {
-//         setUser(null);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     fetchUser();
-//   }, []);
-
-//   const login = async (email, password) => {
-//     const res = await axios.post("/api/users/login", { email, password }, { withCredentials: true });
-//     setUser(res.data); // Update context state
-//   };
-
-//   const logout = async () => {
-//     await axios.post("/api/users/logout", {}, { withCredentials: true });
-//     setUser(null);
-//   };
-
-//   return (
-//     <AuthContext.Provider value={{ user, login, logout, loading }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export const useAuth = () => useContext(AuthContext);

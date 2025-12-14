@@ -3,23 +3,46 @@
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "../../../components/ui/button";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const {user , login , error , loading} = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handle = async () => {
-    await login(email, password);
+  if(user){
     router.push(`/${localStorage.getItem("lang") || "en"}/dashboard`);
+  }
+  const handleLogin = async () => {
+    await login(email, password);
   };
+  // const userMessage = apiError?.response?.data?.message || apiError?.message || 'An unknown error occurred.';
 
+
+  const handleForgotPassword = async ()=> {
+    router.push(`/${localStorage.getItem("lang") || "en"}/forgotPassword`);
+  }
+    
   return (
-    <div className="p-6 max-w-md mx-auto">
-      <input onChange={(e) => setEmail(e.target.value)} className="input" placeholder="Email" />
-      <input onChange={(e) => setPassword(e.target.value)} className="input" type="password" placeholder="Password" />
-      <button onClick={handle} className="btn-primary">Login</button>
-    </div>
+    // <form action="" method="">
+    // </form>
+       <section>
+        <div className="p-6 max-w-md mx-auto">
+          <input onChange={(e) => setEmail(e.target.value)} className="input" placeholder="Email" />
+          <input onChange={(e) => setPassword(e.target.value)} className="input" type="password" placeholder="Password" />
+          <Button onClick={handleLogin} className="btn-primary">Login</Button>
+          {error && <h2 className="text-red-600 text-center mt-24">{error}</h2>}
+          {loading && <div className="text-3xl text-blue-700">Logging You In...</div>}
+        </div>
+        <div className="flex justify-center items-center mt-4">
+          <p className="text-sm text-gray-600">Don&apos;t have an account?</p>
+          <Button onClick={() => router.push(`/${localStorage.getItem("lang") || "en"}/register`)} className="text-sm text-blue-600 hover:underline">Register</Button>
+        </div>
+        <div className="flex justify-center items-center mt-4">
+          <p className="text-sm text-gray-600">Forgot your password?</p>
+          <Button onClick={handleForgotPassword} className="text-sm text-blue-600 hover:underline">Reset Password</Button>
+        </div>
+      </section>
   );
 }
