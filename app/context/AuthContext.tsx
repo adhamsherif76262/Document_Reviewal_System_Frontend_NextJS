@@ -24,7 +24,7 @@ interface User {
   createdAt?: Date;
   updatedAt?: Date;
   expiryDate?: Date;
-  role?: string;
+  role: string;
   preferredVerificationMethod?: string;
   verificationStatus?: string;
   isVerified?: boolean;

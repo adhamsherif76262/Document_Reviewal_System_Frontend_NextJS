@@ -1,5 +1,5 @@
 // app/[lang]/layout.tsx
-import '../globals.css';
+import "../globals.css";
 import type { ReactNode } from 'react';
 import { Geist} from 'next/font/google';
 import clsx from 'clsx';
@@ -7,6 +7,9 @@ import clsx from 'clsx';
 import { Amiri } from 'next/font/google';
 // import { Metadata } from 'next';
 import { AuthProvider } from '../context/AuthContext';
+import PublicNavbar from '../../components/nav/PublicNavbar';
+// import { LanguageProvider } from "../context/LanguageContext";
+// import { NextIntlClientProvider } from "next-intl";
 
 const metadataMap = {
   en: {
@@ -94,13 +97,17 @@ style={{
         {/* <main className="grow">
           {children}
         </main> */}
-
-        {/* <NextIntlClientProvider locale={lang} messages={messages}> */}
+        {/* <PublicNavbar></PublicNavbar> */}
+        {/* <NextIntlClientProvider locale={lang}> */}
           <AuthProvider>
-            {children}
+            {/* <LanguageProvider> */}
+              {children}
+            {/* </LanguageProvider> */}
           </AuthProvider>
         {/* </NextIntlClientProvider> */}
-
+      <footer className="bg-gray-100 text-center text-sm p-4 mb-0">
+        &copy; {new Date().getFullYear()} Document Review System. All rights reserved.
+      </footer>
       </body>
     </html>
   );
