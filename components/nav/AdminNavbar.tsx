@@ -340,14 +340,14 @@ export default function MagneticCardNavbar() {
             </button>
 
             {isUserMenuOpen && (
-              <div ref={dropdownRef}  className={`absolute top-full ${lang === "ar" ? "left-0" : "right-0"} mt-4 w-64 bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl overflow-hidden z-50 animate-magnetic-slide-down text-center`}>
+              <div ref={dropdownRef}  className={`absolute top-full ${lang === "ar" ? "left-0" : "right-0"} mt-4 w-64 bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl overflow-hidden z-50 user-menu-slide-down text-center`}>
                 <div className="p-4 border-b border-zinc-700">
                   <p className="text-sm font-medium text-white">{user.name}</p>
                   <p className="text-xs text-zinc-400 mt-1">{user.email}</p>
                   <div className="flex items-center gap-2 mt-2 text-xs text-emerald-400">
                     <Clock className="w-3 h-3" />
                     <span>
-                      {user.expiryDate && currentLanguage === "en" ? "Expires At :" : user.expiryDate && currentLanguage === "ar" ? ": ينتهي في" : ""} {user.expiryDate? new Date(user.expiryDate).toLocaleDateString() : !(user.expiryDate) && currentLanguage === "en" ? "Admin Accounts Does Not Expire" : !(user.expiryDate) && currentLanguage === "ar" ? "حسابات المديرون لا تنتهي صلاحيتها" : ""}
+                      {user.expiryDate && currentLanguage === "en" ? "Expires At :" : user.expiryDate && currentLanguage === "ar" ? ": ينتهي في" : ""} {user.expiryDate? new Date(user.expiryDate).toLocaleDateString() : !(user.expiryDate) && currentLanguage === "en" ? "Admin Accounts Does Not Expire" : !(user.expiryDate) && currentLanguage === "ar" ? "حسابات المديرون صلاحيتها لا تنتهي" : ""}
                     </span>
                   </div>
                 </div>
@@ -436,7 +436,7 @@ export default function MagneticCardNavbar() {
                     <p className="text-sm font-medium text-white">{user.name}</p>
                     <p className="text-xs text-zinc-400">{user.email}</p>
                     <p className="text-xs text-emerald-400 mt-1">
-                      {user.expiryDate && currentLanguage === "en" ? "Expires At :" : user.expiryDate && currentLanguage === "ar" ? ": ينتهي في" : ""} {user.expiryDate? new Date(user.expiryDate).toLocaleDateString() : !(user.expiryDate) && currentLanguage === "en" ? "Admin Accounts Does Not Expire" : !(user.expiryDate) && currentLanguage === "ar" ? "حسابات المديرون لا تنتهي صلاحيتها" : ""}
+                      {user.expiryDate && currentLanguage === "en" ? "Expires At :" : user.expiryDate && currentLanguage === "ar" ? ": ينتهي في" : ""} {user.expiryDate? new Date(user.expiryDate).toLocaleDateString() : !(user.expiryDate) && currentLanguage === "en" ? "Admin Accounts Does Not Expire" : !(user.expiryDate) && currentLanguage === "ar" ? "حسابات المديرون صلاحيتها لا تنتهي" : ""}
                     </p>
                   </div>
                 </div>

@@ -105,9 +105,9 @@ style={{
             {/* </LanguageProvider> */}
           </AuthProvider>
         {/* </NextIntlClientProvider> */}
-      <footer className="bg-gray-100 text-center text-sm p-4 mb-0">
+      {/* <footer className="bg-gray-100 text-center text-sm p-4 mb-0">
         &copy; {new Date().getFullYear()} Document Review System. All rights reserved.
-      </footer>
+      </footer> */}
       </body>
     </html>
   );

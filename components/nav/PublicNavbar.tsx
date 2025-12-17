@@ -113,15 +113,17 @@ export default function ClassicDepthNavbar() {
   const navContent = {
     en: {
       home: "Home",
-      about: "Login",
-      contact: "Register",
+      about: "Account Mangement",
+      // about: "Login",
+      // contact: "Register",
       brand: "CLOA",
       tagline: "Growing Innovation",
     },
     ar: {
       home: "الرئيسية",
-      about: "تسجيل الدخول",
-      contact: "انشاء حساب",
+      about: "ادارة الحساب",
+      // about: "تسجيل الدخول",
+      // contact: "انشاء حساب",
       brand: "CLOA",
       tagline: "ننمي الابتكار",
     },
@@ -167,7 +169,8 @@ export default function ClassicDepthNavbar() {
           <div className="hidden md:flex items-center gap-2 lg:gap-8 lg:min-w-md sm:min-w-[250px]">
             <DepthNavLink href={`/${currentLanguage}`}>{content.home}</DepthNavLink>
             <DepthNavLink href={`/${currentLanguage}/login`}>{content.about}</DepthNavLink>
-            <DepthNavLink href={`/${currentLanguage}/register`}>{content.contact}</DepthNavLink>
+            {/* <DepthNavLink href={`/${currentLanguage}/login`}>{content.about}</DepthNavLink>
+            <DepthNavLink href={`/${currentLanguage}/register`}>{content.contact}</DepthNavLink> */}
           </div>
 
           {/* Language Switcher */}
@@ -215,9 +218,12 @@ export default function ClassicDepthNavbar() {
                 <MobileDepthNavLink href={`/${currentLanguage}/login`} onClick={() => setMobileMenuOpen(false)}>
                   {content.about}
                 </MobileDepthNavLink>
+                {/* <MobileDepthNavLink href={`/${currentLanguage}/login`} onClick={() => setMobileMenuOpen(false)}>
+                  {content.about}
+                </MobileDepthNavLink>
                 <MobileDepthNavLink href={`/${currentLanguage}/register`} onClick={() => setMobileMenuOpen(false)}>
                   {content.contact}
-                </MobileDepthNavLink>
+                </MobileDepthNavLink> */}
               </div>
               <div className={`xxxs:m-auto xxs:flex xs:justify-center xxs:justify-end xxs:shrink-0 ${isRTL ? "xxs:pl-3" : "xxs:pr-3"}`}>
                 {/* <LayeredDepthCards
