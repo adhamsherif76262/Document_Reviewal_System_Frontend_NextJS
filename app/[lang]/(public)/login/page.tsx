@@ -105,7 +105,7 @@ export default function SplitRealityAuth() {
       loginSuccess: "Login successful!",
       creatingAccount: "Creating your account...",
       accountCreated: "Account created successfully!",
-      fixErrors: "Please fix the errors above",
+      fixErrors: "Please Fix The Errors Below",
       emailRequired: "Email is required",
       invalidEmail: "Invalid email format",
       passwordRequired: "Password is required",
@@ -115,12 +115,13 @@ export default function SplitRealityAuth() {
       passwordNumber: "Password must contain a number",
       passwordSpecial: "Password must contain a special character",
       phoneRequired: "Phone number is required",
+      phoneLength: "Phone number must be 8 or 11 digits",
       invalidPhone: "Invalid phone number format",
       nameRequired: "Name is required",
       nameLength: "Name must be at least 2 characters",
       nameLetters: "Name can only contain letters and spaces",
       codeRequired: "Invitation code is required",
-      codeLength: "Invitation code must be at least 6 characters",
+      codeLength: "Invitation code must be at least 8 characters",
     },
     ar: {
       login: "تسجيل الدخول",
@@ -146,7 +147,7 @@ export default function SplitRealityAuth() {
       loginSuccess: "تم تسجيل الدخول بنجاح!",
       creatingAccount: "جاري إنشاء حسابك...",
       accountCreated: "تم إنشاء الحساب بنجاح!",
-      fixErrors: "يرجى إصلاح الأخطاء أعلاه",
+      fixErrors: "يرجى إصلاح الأخطاء بالأسفل",
       emailRequired: "البريد الإلكتروني مطلوب",
       invalidEmail: "تنسيق البريد الإلكتروني غير صالح",
       passwordRequired: "كلمة المرور مطلوبة",
@@ -156,17 +157,38 @@ export default function SplitRealityAuth() {
       passwordNumber: "يجب أن تحتوي كلمة المرور على رقم",
       passwordSpecial: "يجب أن تحتوي كلمة المرور على رمز خاص",
       phoneRequired: "رقم الهاتف مطلوب",
+      phoneLength: "يجب أن يكون رقم الهاتف 8 أرقام أو 11 رقم",
       invalidPhone: "تنسيق رقم الهاتف غير صالح",
       nameRequired: "الاسم مطلوب",
-      nameLength: "يجب أن يكون الاسم حرفين على الأقل",
+      nameLength: "يجب أن يكون الاسم أربعة أحرف على الأقل",
       nameLetters: "يمكن أن يحتوي الاسم على أحرف ومسافات فقط",
       codeRequired: "رمز الدعوة مطلوب",
-      codeLength: "يجب أن يكون رمز الدعوة 6 أحرف على الأقل",
+      codeLength: "يجب أن يكون رمز الدعوة 8 أحرف على الأقل",
     },
   }
   const currentLang = t[lang]
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const resetLoginForm = () => {
+  setLoginData({ email: "", password: "" })
+  setErrors({})
+  setMessage(null)
+  setShowPassword(false)
+}
+
+const resetRegisterForm = () => {
+  setRegisterData({
+    email: "",
+    password: "",
+    phone: "",
+    name: "",
+    invitationCode: "",
+  })
+  setErrors({})
+  setMessage(null)
+  setShowPassword(false)
+}
 
   // Dual particle systems
   useEffect(() => {
@@ -255,9 +277,10 @@ export default function SplitRealityAuth() {
     if (!/[!@#$%^&*]/.test(password)) return currentLang.passwordSpecial
     return null
   }
-
+  
   const validatePhone = (phone: string): string | null => {
     if (!phone) return currentLang.phoneRequired
+    if (phone.trim().length !== 8 && phone.trim().length !== 11) return currentLang.phoneLength
     const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/
     if (!phoneRegex.test(phone)) return currentLang.invalidPhone
     return null
@@ -265,14 +288,16 @@ export default function SplitRealityAuth() {
 
   const validateName = (name: string): string | null => {
     if (!name) return currentLang.nameRequired
-    if (name.length < 2) return currentLang.nameLength
-    if (!/^[a-zA-Z\s]+$/.test(name)) return currentLang.nameLetters
+    if (name.length < 4) return currentLang.nameLength
+    // if (!/^[a-zA-Z\s]+$/.test(name)) return currentLang.nameLetters
+    // Support Arabic Alphabet
+    if (!/^[a-zA-Z\s\u0600-\u06FF\u0750-\u077F\uFB50-\uFBC1\uFBD3-\uFD3F\uFD50-\uFD8F\uFD92-\uFDC7\uFE70-\uFEFC\uFDF0-\uFDFD]+$/.test(name)) return currentLang.nameLetters
     return null
   }
 
   const validateInvitationCode = (code: string): string | null => {
     if (!code) return currentLang.codeRequired
-    if (code.length < 6) return currentLang.codeLength
+    if (code.length < 8) return currentLang.codeLength
     return null
   }
 
@@ -346,8 +371,9 @@ export default function SplitRealityAuth() {
           onMouseLeave={() => setHoveredSide(null)}
           onClick={(() => {
             (!activeSide) && setActiveSide("login")
-            setMessage(null)
-            setErrors({})}
+            // setMessage(null)
+            // setErrors({})
+          }
           )}
         >
           <canvas ref={canvasLeftRef} className="absolute inset-0" />
@@ -365,7 +391,8 @@ export default function SplitRealityAuth() {
               <button onClick={(() => {
             setActiveSide(null)
             setMessage(null)
-            setErrors({})}
+            setErrors({})
+          }
           )} className="mb-6 text-2xl text-blue-400 hover:text-blue-300">
               {currentLang.backToSelection}  ←
               </button>
@@ -433,11 +460,19 @@ export default function SplitRealityAuth() {
                 </div>
 
                 <button
+                  type="button"
+                  onClick={resetLoginForm}
+                  className="hover:cursor-pointer w-full text-xl rounded-lg border border-slate-600 py-3 text-slate-300 hover:bg-slate-700/40 transition"
+                >
+                  Reset
+                </button>
+                <button
                   type="submit"
-                  className="text-2xl w-full rounded-lg bg-linear-to-r from-blue-600 to-cyan-500 py-3 font-semibold text-white transition-all hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-500/50 active:scale-95"
+                  className="hover:cursor-pointer text-2xl w-full rounded-lg bg-linear-to-r from-blue-600 to-cyan-500 py-3 font-semibold text-white transition-all hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-500/50 active:scale-95"
                 >
                   {currentLang.loginButton}
                 </button>
+
 
                 <div className="flex items-center justify-between text-xl">
                   <button
@@ -446,14 +481,15 @@ export default function SplitRealityAuth() {
                     onClick={(() => {
                       setActiveSide("register")
                       setMessage(null)
-                      setErrors({})}
+                      setErrors({})
+                    }
                     )}
-                    className="text-blue-400 hover:text-blue-300 hover:underline"
+                    className="hover:cursor-pointer text-blue-400 hover:text-blue-300 hover:underline"
                   >
                     {currentLang.createAccountLink}
                   </button>
                   <Link href={`/${lang}/forgotPassword`}>
-                    <button type="button" className="text-slate-400 hover:text-slate-300 hover:underline">
+                    <button type="button" className="hover:cursor-pointer text-slate-400 hover:text-slate-300 hover:underline">
                       {currentLang.forgotPassword}
                     </button>
                   </Link>
@@ -477,8 +513,9 @@ export default function SplitRealityAuth() {
           onMouseLeave={() => setHoveredSide(null)}
           onClick={(() => {
             (!activeSide) && setActiveSide("register")
-            setMessage(null)
-            setErrors({})}
+            // setMessage(null)
+            // setErrors({})
+          }
           )}
         >
           <canvas ref={canvasRightRef} className="absolute inset-0" />
@@ -496,8 +533,9 @@ export default function SplitRealityAuth() {
               <button
               onClick={(() => {
                 setActiveSide(null)
-                setMessage(null)
-                setErrors({})}
+                // setMessage(null)
+                // setErrors({})
+              }
               )}                
                 className="mb-6 text-2xl text-emerald-400 hover:text-emerald-300"
               >
@@ -618,14 +656,22 @@ export default function SplitRealityAuth() {
                 </div>
 
                 <div className="rounded-lg border border-slate-700 bg-slate-800/30 p-2.5">
-                  <p className="text-xl text-slate-400">
+                  <p className="text-xl text-slate-400 hover:scale-105 transition-all duration-500 px-2">
                     <span className="font-medium text-slate-300">{currentLang.verificationMethod}</span>
                   </p>
                 </div>
 
                 <button
+                  type="button"
+                  onClick={resetRegisterForm}
+                  className="hover:cursor-pointer w-full text-2xl rounded-lg border border-slate-600 py-3 text-slate-300 hover:bg-slate-700/40 transition"
+                >
+                  Reset
+                </button>
+
+                <button
                   type="submit"
-                  className="text-2xl w-full rounded-lg bg-linear-to-r from-emerald-600 to-teal-500 py-3 font-semibold text-white transition-all hover:from-emerald-500 hover:to-teal-400 hover:shadow-lg hover:shadow-emerald-500/50 active:scale-95"
+                  className="hover:cursor-pointer text-2xl w-full rounded-lg bg-linear-to-r from-emerald-600 to-teal-500 py-3 font-semibold text-white transition-all hover:from-emerald-500 hover:to-teal-400 hover:shadow-lg hover:shadow-emerald-500/50 active:scale-95"
                 >
                   {currentLang.registerButton}
                 </button>
@@ -636,9 +682,10 @@ export default function SplitRealityAuth() {
                     onClick={(() => {
                       setActiveSide("login")
                       setMessage(null)
-                      setErrors({})}
+                      setErrors({})
+                    }
                     )}
-                    className="text-emerald-400 hover:text-emerald-300 hover:underline"
+                    className="text-emerald-400 hover:text-emerald-300 hover:underline hover:cursor-pointer"
                   >
                     {currentLang.login}
                   </button>
