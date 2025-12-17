@@ -130,7 +130,7 @@ export default function SplitRealityAuth() {
       welcomeBack: "مرحباً بعودتك",
       enterCredentials: "أدخل بيانات الاعتماد للمتابعة",
       createAccountTitle: "إنشاء حساب",
-      fillDetails: "املأ التفاصيل للبدء",
+      fillDetails: "املأ البيانات للبدء",
       email: "البريد الإلكتروني",
       password: "كلمة المرور",
       phone: "الهاتف",
@@ -366,12 +366,12 @@ export default function SplitRealityAuth() {
             setActiveSide(null)
             setMessage(null)
             setErrors({})}
-          )} className="mb-6 text-sm text-blue-400 hover:text-blue-300">
+          )} className="mb-6 text-2xl text-blue-400 hover:text-blue-300">
               {currentLang.backToSelection}  ←
               </button>
 
               <h2 className="mb-2 text-3xl font-bold text-white">{currentLang.welcomeBack}</h2>
-              <p className="mb-8 text-sm text-slate-400">{currentLang.enterCredentials}</p>
+              <p className="mb-8 text-xl text-slate-400">{currentLang.enterCredentials}</p>
 
               {message && (
                 <div
@@ -386,13 +386,13 @@ export default function SplitRealityAuth() {
                   {message.type === "loading" && <Loader2 className="h-4 w-4 animate-spin" />}
                   {message.type === "error" && <AlertCircle className="h-4 w-4" />}
                   {message.type === "success" && <Check className="h-4 w-4" />}
-                  <span className="text-sm">{message.text}</span>
+                  <span className="text-xl">{message.text}</span>
                 </div>
               )}
 
               <form onSubmit={handleLogin} className="space-y-5">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{currentLang.email}</label>
+                  <label className="mb-2 block text-xl font-medium text-slate-300">{currentLang.email}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <input
@@ -409,7 +409,7 @@ export default function SplitRealityAuth() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{currentLang.password}</label>
+                  <label className="mb-2 block text-xl font-medium text-slate-300">{currentLang.password}</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <input
@@ -434,12 +434,12 @@ export default function SplitRealityAuth() {
 
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-gradient-to-r from-blue-600 to-cyan-500 py-3 font-semibold text-white transition-all hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-500/50 active:scale-95"
+                  className="text-2xl w-full rounded-lg bg-linear-to-r from-blue-600 to-cyan-500 py-3 font-semibold text-white transition-all hover:from-blue-500 hover:to-cyan-400 hover:shadow-lg hover:shadow-blue-500/50 active:scale-95"
                 >
                   {currentLang.loginButton}
                 </button>
 
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between text-xl">
                   <button
                     type="button"
 
@@ -499,13 +499,13 @@ export default function SplitRealityAuth() {
                 setMessage(null)
                 setErrors({})}
               )}                
-                className="mb-6 text-sm text-emerald-400 hover:text-emerald-300"
+                className="mb-6 text-2xl text-emerald-400 hover:text-emerald-300"
               >
                 {currentLang.backToSelection} ←
               </button>
 
               <h2 className="mb-2 text-3xl font-bold text-white">{currentLang.createAccountTitle}</h2>
-              <p className="mb-8 text-sm text-slate-400">{currentLang.fillDetails}</p>
+              <p className="mb-8 text-xl text-slate-400">{currentLang.fillDetails}</p>
 
               {message && (
                 <div
@@ -520,13 +520,13 @@ export default function SplitRealityAuth() {
                   {message.type === "loading" && <Loader2 className="h-4 w-4 animate-spin" />}
                   {message.type === "error" && <AlertCircle className="h-4 w-4" />}
                   {message.type === "success" && <Check className="h-4 w-4" />}
-                  <span className="text-sm">{message.text}</span>
+                  <span className="text-xl">{message.text}</span>
                 </div>
               )}
 
               <form onSubmit={handleRegister} className="space-y-6">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{currentLang.fullName}</label>
+                  <label className="mb-2 block text-xl font-medium text-slate-300">{currentLang.fullName}</label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <input
@@ -543,7 +543,7 @@ export default function SplitRealityAuth() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{currentLang.email}</label>
+                  <label className="mb-2 block text-xl font-medium text-slate-300">{currentLang.email}</label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <input
@@ -560,7 +560,7 @@ export default function SplitRealityAuth() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{currentLang.phone}</label>
+                  <label className="mb-2 block text-xl font-medium text-slate-300">{currentLang.phone}</label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <input
@@ -577,7 +577,7 @@ export default function SplitRealityAuth() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{currentLang.password}</label>
+                  <label className="mb-2 block text-xl font-medium text-slate-300">{currentLang.password}</label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <input
@@ -601,7 +601,7 @@ export default function SplitRealityAuth() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{currentLang.invitationCode}</label>
+                  <label className="mb-2 block text-xl font-medium text-slate-300">{currentLang.invitationCode}</label>
                   <div className="relative">
                     <Code className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <input
@@ -618,14 +618,14 @@ export default function SplitRealityAuth() {
                 </div>
 
                 <div className="rounded-lg border border-slate-700 bg-slate-800/30 p-2.5">
-                  <p className="text-md text-slate-400">
+                  <p className="text-xl text-slate-400">
                     <span className="font-medium text-slate-300">{currentLang.verificationMethod}</span>
                   </p>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 py-3 font-semibold text-white transition-all hover:from-emerald-500 hover:to-teal-400 hover:shadow-lg hover:shadow-emerald-500/50 active:scale-95"
+                  className="text-2xl w-full rounded-lg bg-linear-to-r from-emerald-600 to-teal-500 py-3 font-semibold text-white transition-all hover:from-emerald-500 hover:to-teal-400 hover:shadow-lg hover:shadow-emerald-500/50 active:scale-95"
                 >
                   {currentLang.registerButton}
                 </button>
