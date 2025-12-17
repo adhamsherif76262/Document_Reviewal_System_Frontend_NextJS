@@ -4,11 +4,15 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import api from "../../lib/api";
 import axios, { AxiosError, isAxiosError } from 'axios';
 
+type LoginResult =
+  | { success: true }
+  | { success: false; error: string }
+
 interface AuthContextProps {
   user: User | null;
   loading: boolean;
   error: string;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<LoginResult>;
   logout: (email: string) => Promise<void>;
 }
 
@@ -41,24 +45,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // ✅ Load user on mount
 
   // Check if user is logged in on mount
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await api.get("/api/users/me");
-        setUser(res.data);
-        console.log(res.data)
-      } catch (err : any) {
-        setError( err.response?.data?.message || "Failed to fetch user data");
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const res = await api.get("/api/users/me");
+  //       setUser(res.data);
+  //       console.log(res.data)
+  //     } catch (err : any) {
+  //       setError( err.response?.data?.message || "Failed to fetch user data");
+  //       setUser(null);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, []);
 
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string) : Promise<LoginResult> => {
     setLoading(true);
     setError("");
     try {
@@ -68,13 +72,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       );
       setUser(res.data); // API returns user info only, token is in cookie
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      console.log(res.data)
+      // console.log(res.data)
+      return{success : true}
     }catch (err: any) {
-  const msg =
-    err?.response?.data?.message ||
-    "Login failed";
-
-  setError(msg);
+      const msg =
+      err?.response?.data?.message ||
+      "Login failed";
+      
+      setError(msg);
+      return{success : false , error : msg}
+  
 } finally {
       setLoading(false);
     }

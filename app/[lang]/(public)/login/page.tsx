@@ -55,8 +55,9 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { Eye, EyeOff, Lock, Mail, User, Phone, Code, Check, AlertCircle, Loader2, LogIn, UserPlus } from "lucide-react"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
+import { useAuth } from "../../../context/AuthContext"
 type FormType = "login" | "register"
 type MessageType = { type: "error" | "success" | "loading"; text: string } | null
 
@@ -66,13 +67,28 @@ export default function SplitRealityAuth() {
   const [activeSide, setActiveSide] = useState<FormType | null>(null)
   // const [activeSide, setActiveSide] = useState<FormType | null>(pathname.includes("login") ? "login" : pathname.includes("register") ? "register" : null)
   const [showPassword, setShowPassword] = useState(false)
-  const [message, setMessage] = useState<MessageType>(null)
   const canvasLeftRef = useRef<HTMLCanvasElement>(null)
   const canvasRightRef = useRef<HTMLCanvasElement>(null)
   const lang = pathname.includes("ar") ? "ar" : "en"
   // alert(lang)
-  const isRTL = lang === "ar"
-  const [loginData, setLoginData] = useState({ email: "", password: "" })
+  // const isRTL = lang === "ar"
+  const router = useRouter()
+  const {user , login , error , loading} = useAuth();
+  const [message, setMessage] = useState<MessageType>(error ? { type: "error", text: error.toString() } : null)
+
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  if(user){
+    router.push(`/${lang}/${user.role === "user" ? "submissions" : "dashboard"}`);
+  }
+
+  // const userMessage = apiError?.response?.data?.message || apiError?.message || 'An unknown error occurred.';
+
+
+  // const handleForgotPassword = async ()=> {
+  //   router.push(`/${lang}/forgotPassword`);
+  // }
+  const [loginData, setLoginData] = useState({ email : "", password : "" })
   const [registerData, setRegisterData] = useState({
     email: "",
     password: "",
@@ -80,6 +96,7 @@ export default function SplitRealityAuth() {
     name: "",
     invitationCode: "",
   })
+  
   const t = {
     en: {
       login: "Login",
@@ -270,11 +287,11 @@ const resetRegisterForm = () => {
 
   const validatePassword = (password: string): string | null => {
     if (!password) return currentLang.passwordRequired
-    if (password.length < 8) return currentLang.passwordLength
-    if (!/[A-Z]/.test(password)) return currentLang.passwordUppercase
-    if (!/[a-z]/.test(password)) return currentLang.passwordLowercase
-    if (!/[0-9]/.test(password)) return currentLang.passwordNumber
-    if (!/[!@#$%^&*]/.test(password)) return currentLang.passwordSpecial
+    // if (password.length < 8) return currentLang.passwordLength
+    // if (!/[A-Z]/.test(password)) return currentLang.passwordUppercase
+    // if (!/[a-z]/.test(password)) return currentLang.passwordLowercase
+    // if (!/[0-9]/.test(password)) return currentLang.passwordNumber
+    // if (!/[!@#$%^&*]/.test(password)) return currentLang.passwordSpecial
     return null
   }
   
@@ -301,10 +318,9 @@ const resetRegisterForm = () => {
     return null
   }
 
-  // useEffect(() => {
-  //   setMessage(null)
-  //   setErrors({})
-  // }, [activeSide])
+  // const handleLogin = async () => {
+  //   await login(email, password);
+  // };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -323,11 +339,17 @@ const resetRegisterForm = () => {
       setMessage({ type: "error", text: currentLang.fixErrors })
       return
     }
+    
     setMessage({ type: "loading", text: currentLang.authenticating })
-    setTimeout(() => {
-      setMessage({ type: "success", text: currentLang.loginSuccess })
-    }, 1500)
+    
+    const result = await login(loginData.email, loginData.password);
+    
+      if (result.success) {
+    setMessage({ type: "success", text: currentLang.loginSuccess })
+  } else {
+    setMessage({ type: "error", text: result.error })
   }
+}
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -399,7 +421,7 @@ const resetRegisterForm = () => {
 
               <h2 className="mb-2 text-3xl font-bold text-white">{currentLang.welcomeBack}</h2>
               <p className="mb-8 text-xl text-slate-400">{currentLang.enterCredentials}</p>
-
+              {/* {error && (<p className="text-red-500">{error}</p>)} */}
               {message && (
                 <div
                   className={`mb-6 flex items-center gap-2 rounded-lg border p-4 ${
