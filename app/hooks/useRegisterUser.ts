@@ -3,26 +3,30 @@ import { useState } from 'react'
 import api from '../../lib/api'
 export function useRegisterUser() {
 // const { login  , error } = useAuth();
-const [loading, setLoading] = useState<boolean>(false);
-const [message, setMessage] = useState<string>("");
-const [status, setStatus] = useState<string>("");
+const [registerLoading, setregisterLoading] = useState<boolean>(false);
+const [regeisterMessage, setRegeisterMessage] = useState<string>("");
+const [registerStatus, setRegisterStatus] = useState<string>("");
 
-const registerUser = async (userData: {name: string, email: string, password: string , phone:string , preferredVerificationMethod:string , inviteCode:string}) => {
-    setLoading(true);
-    setMessage("");
-    setStatus("");
+const registerUser = async (userData: {name: string, email: string, password: string , phone:string , preferredVerificationMethod:string , invitationCode:string}) => {
+    setregisterLoading(true);
+    setRegeisterMessage("");
+    setRegisterStatus("");
     try {
         const res = await api.post('/api/users/register', userData);
         // login(res.data.token);
-        setMessage(res.data.message)
-        setStatus(res.status === 201 ? "success" : "failure")
-        return res.data
+        setRegeisterMessage(res.data.message)
+        setRegisterStatus(res.status === 201 ? "success" : "failure")
+        // return 
+        return{data: res.data ,success : true}
+
     } catch (err: any) {
-        setMessage(err?.response?.data?.message || 'User Registration failed');
+        // setRegeisterMessage(err?.response?.data?.message || 'User Registration failed');
+        const msg = err?.response?.data?.message || 'User Registration failed';
+        return{success : false , error : msg}
     } finally {
-        setLoading(false);
+        setregisterLoading(false);
     }
 };
 
-return { registerUser, loading , message , status};
+return { registerUser, registerLoading , regeisterMessage , registerStatus};
 }

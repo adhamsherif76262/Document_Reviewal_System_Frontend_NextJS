@@ -58,6 +58,7 @@ import { Eye, EyeOff, Lock, Mail, User, Phone, Code, Check, AlertCircle, Loader2
 import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "../../../context/AuthContext"
+import { useRegisterUser } from "../../../hooks/useRegisterUser"
 type FormType = "login" | "register"
 type MessageType = { type: "error" | "success" | "loading"; text: string } | null
 
@@ -74,6 +75,8 @@ export default function SplitRealityAuth() {
   // const isRTL = lang === "ar"
   const router = useRouter()
   const {user , login , error , loading} = useAuth();
+  const { registerUser , registerLoading , regeisterMessage , registerStatus } = useRegisterUser()
+  
   const [message, setMessage] = useState<MessageType>(error ? { type: "error", text: error.toString() } : null)
 
   // const [email, setEmail] = useState("");
@@ -90,10 +93,11 @@ export default function SplitRealityAuth() {
   // }
   const [loginData, setLoginData] = useState({ email : "", password : "" })
   const [registerData, setRegisterData] = useState({
+    name: "",
     email: "",
     password: "",
     phone: "",
-    name: "",
+    preferredVerificationMethod:"email",
     invitationCode: "",
   })
   
@@ -196,10 +200,11 @@ export default function SplitRealityAuth() {
 
 const resetRegisterForm = () => {
   setRegisterData({
+    name: "",
     email: "",
     password: "",
     phone: "",
-    name: "",
+    preferredVerificationMethod:"email",
     invitationCode: "",
   })
   setErrors({})
@@ -344,10 +349,10 @@ const resetRegisterForm = () => {
     
     const result = await login(loginData.email, loginData.password);
     
-      if (result.success) {
-    setMessage({ type: "success", text: currentLang.loginSuccess })
+    if (result.success) {
+      setMessage({ type: "success", text: currentLang.loginSuccess })
   } else {
-    setMessage({ type: "error", text: result.error })
+      setMessage({ type: "error", text: result.error })
   }
 }
 
@@ -376,9 +381,19 @@ const resetRegisterForm = () => {
     }
 
     setMessage({ type: "loading", text: currentLang.creatingAccount })
-    setTimeout(() => {
+
+            // await registerUser({registerData.name , email , password , phone , preferredVerificationMethod , inviteCode})
+    const result = await registerUser(registerData)
+
+  if (result.success) {
       setMessage({ type: "success", text: currentLang.accountCreated })
-    }, 1500)
+      router.push(`/${lang}/emailVertification`)
+  } else {
+      setMessage({ type: "error", text: result.error })
+  }
+    // setTimeout(() => {
+    //   setMessage({ type: "success", text: currentLang.accountCreated })
+    // }, 1500)
   }
 
   return (

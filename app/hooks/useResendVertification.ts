@@ -15,9 +15,10 @@ export function useResendVertification() {
             const res = await api.post('/api/users/resend-verification', { email });
             setResendStatus(res.status === 200 ? "success" : "failure")
             setResendMessage(res.data.message)
-            return res.data;
+            return{data: res.data ,success : true}
         } catch (err: any) {
-            setResendMessage(err?.response?.data?.message || 'Resend Verification failed')
+            const msg = err?.response?.data?.message || 'Resend Verification failed'
+            return{success : false , error : msg}
         }finally{
             setResendLoading(false)
         }

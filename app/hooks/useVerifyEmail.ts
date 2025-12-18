@@ -17,9 +17,11 @@ export function useVerifyEmail() {
             const res = await api.post("api/users/verify-email" , {email , otp})
             setVerifyStatus(res.status === 200 ? "success" : "failure")
             setVerifyMessage(res.data.message)
-            return res.data
+            return{data: res.data ,success : true}
         }catch(err : any){
-            setVerifyMessage(err?.response?.data?.message || 'Email Verification failed')
+            // setVerifyMessage(err?.response?.data?.message || 'Email Verification failed')
+            const msg = err?.response?.data?.message || 'Email Verification failed'
+            return{success : false , error : msg}
         }finally{
             setVerifyLoading(false)
         }
