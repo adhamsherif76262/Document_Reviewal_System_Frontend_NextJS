@@ -473,7 +473,7 @@ const resetRegisterForm = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-all hover:scale-110 hover:text-blue-400"
+                      className="hover:cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-all hover:scale-110 hover:text-blue-400"
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
@@ -652,7 +652,7 @@ const resetRegisterForm = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-all hover:scale-110 hover:text-emerald-400"
+                      className="hover:cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-all hover:scale-110 hover:text-emerald-400"
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
