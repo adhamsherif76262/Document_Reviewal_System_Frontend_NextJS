@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "../../context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import UserNavbar from "../../../components/nav/UserNavbar";
 import Footer from "../../../components/Footer";
@@ -13,14 +13,27 @@ export default function UserLayout({
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const { lang } = useParams();
 
-  useEffect(() => {
-    if (!loading && (!user || user.role !== "user")) {
-      router.replace("/login");
+  // useEffect(() => {
+  //   if (!loading && (!user || user.role !== "user")) {
+  //     router.replace("/login");
+  //   }
+  // }, [user, loading, router]);
+
+  // if (loading || !user) return null;
+
+      // 🔒 Redirect unauthorized users
+    useEffect(() => {
+      if (!loading && (!user || user.role !== "user")) {
+        router.replace(`/${lang}/login`);
+      }
+    }, [user, loading, router, lang]);
+  
+    // 🛑 BLOCK render until auth is resolved
+    if (loading || !user || user.role !== "user") {
+      return <div className="min-h-screen bg-white" />;
     }
-  }, [user, loading, router]);
-
-  if (loading || !user) return null;
 
   return (
     <>

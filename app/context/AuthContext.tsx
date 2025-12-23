@@ -45,21 +45,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // ✅ Load user on mount
 
   // Check if user is logged in on mount
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const res = await api.get("/api/users/me");
-  //       setUser(res.data);
-  //       console.log(res.data)
-  //     } catch (err : any) {
-  //       setError( err.response?.data?.message || "Failed to fetch user data");
-  //       setUser(null);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchUser();
-  // }, []);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/api/users/me");
+        setUser(res.data);
+        console.log(res.data)
+      } catch (err : any) {
+        setError( err.response?.data?.message || "Failed to fetch user data");
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, []);
 
 
   const login = async (email: string, password: string) : Promise<LoginResult> => {

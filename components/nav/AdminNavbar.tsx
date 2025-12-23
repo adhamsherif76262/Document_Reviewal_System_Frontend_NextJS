@@ -170,7 +170,7 @@ import { ParamValue } from "next/dist/server/request/params"
 // }
 
 export default function MagneticCardNavbar() {
-    const { user, logout } = useAuth();
+    const { user, logout , loading } = useAuth();
   const router = useRouter();
   const { lang } = useParams();
 
@@ -217,7 +217,20 @@ export default function MagneticCardNavbar() {
   }
 }, [isUserMenuOpen])
 
-  if (!user) return null;
+  // if (loading ) return null;
+  // if (!user) return null;
+
+
+if (loading) {
+  return (
+    <nav className="h-24 bg-zinc-950 border-b border-zinc-800" />
+  );
+}
+
+if (!user) {
+  return null;
+}
+
 
     // const initials =
     // user.name
@@ -245,14 +258,14 @@ export default function MagneticCardNavbar() {
 
   const navLinks = 
   isSuperAdmin ? [
-    { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: "/dashboard" },
-    { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: "/users" },
-    { label: currentLanguage === "en" ? "Admins" : "المديرون", href: "/admins" },
-    { label: currentLanguage === "en" ? "Logs" : "السجلات", href: "/logs" },
+    { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: `/dashboard` },
+    { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: `/users` },
+    { label: currentLanguage === "en" ? "Admins" : "المديرون", href: `/admins` },
+    { label: currentLanguage === "en" ? "Logs" : "السجلات", href: `/logs` },
   ]
   :[
-    { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: "/dashboard" },
-    { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: "/users" },
+    { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: `/dashboard` },
+    { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: `/users` },
   ]
 
   return (
@@ -284,11 +297,17 @@ export default function MagneticCardNavbar() {
           {/* Nav Links Card */}
           <div className="magnetic-card flex items-center gap-2 bg-linear-to-br from-zinc-900 to-zinc-800 border border-zinc-700 rounded-2xl px-4 py-3 shadow-lg">
             {navLinks.map((link, index) => (
-              <a
+              // <a
+              //   key={index}
+              //   href={link.href}
+              //   className="group relative px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white rounded-lg transition-all duration-300 hover:scale-110 perspective-1000"
+              // >
+              <Link
                 key={index}
                 href={link.href}
                 className="group relative px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white rounded-lg transition-all duration-300 hover:scale-110 perspective-1000"
               >
+
                 {/* Background glow effect */}
                 <span className="absolute inset-0 bg-linear-to-r from-emerald-500/0 via-emerald-500/20 to-emerald-500/0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm animate-nav-glow" />
 
@@ -303,7 +322,8 @@ export default function MagneticCardNavbar() {
 
                 {/* Bottom accent line */}
                 <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-linear-to-r from-emerald-500 to-cyan-500 group-hover:w-full transition-all duration-300 rounded-full group-hover:shadow-lg group-hover:shadow-emerald-500/50" />
-              </a>
+              </Link>
+              // </a>
             ))}
           </div>
 
@@ -403,11 +423,12 @@ export default function MagneticCardNavbar() {
               `}
             >
               {navLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  className="group relative block px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-linear-to-r hover:from-emerald-900 hover:to-zinc-800 rounded-lg transition-all duration-300 border border-zinc-700 hover:border-emerald-500 hover:scale-105 overflow-hidden text-center"
-                >
+                // <a
+                //   key={index}
+                //   href={link.href}
+                //   className="group relative block px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-linear-to-r hover:from-emerald-900 hover:to-zinc-800 rounded-lg transition-all duration-300 border border-zinc-700 hover:border-emerald-500 hover:scale-105 overflow-hidden text-center"
+                // >
+                <Link key={index} href={link.href} className="group relative block px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-linear-to-r hover:from-emerald-900 hover:to-zinc-800 rounded-lg transition-all duration-300 border border-zinc-700 hover:border-emerald-500 hover:scale-105 overflow-hidden text-center">
                   {/* Shimmer effect on hover */}
                   <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-emerald-500/20 to-transparent" />
 
@@ -415,7 +436,8 @@ export default function MagneticCardNavbar() {
                   <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-linear-to-r from-emerald-500/10 to-cyan-500/10 blur-xl" />
 
                   <span className="relative z-10">{link.label}</span>
-                </a>
+                </Link>
+                // </a>
               ))}
               <div className="flex items-center justify-center pt-2">
                 <div className="scale-[0.5] -m-9">
