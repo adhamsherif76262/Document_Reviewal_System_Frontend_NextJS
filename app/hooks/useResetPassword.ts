@@ -15,9 +15,10 @@ export function useResetPassword() {
       const res = await api.post("api/users/reset-password", { email, otp, newPassword });
       setResetPasswordStatus(res.status === 200 ? "success" : "failure")
       setResetPasswordMessage(res.data.message)
-      return res.data;
+      return{data: res.data ,success : true}
     } catch (error: any) {
-      setResetPasswordMessage(error?.response?.data?.message || 'Reset Password failed')
+      const msg = error?.response?.data?.message || 'Reset Password failed'
+      return{success : false , error : msg}
     }finally{
       setResetPasswordLoading(false)
     }

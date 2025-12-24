@@ -12,7 +12,7 @@ export default function AdminLayout({
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const {lang} = useParams()
+  // const {lang} = useParams()
 
   // useEffect(() => {
   //   if (!loading && (!user || !["admin"].includes(user.role))) {

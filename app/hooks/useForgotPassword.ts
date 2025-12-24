@@ -16,10 +16,11 @@ export function useForgotPassword() {
             const res = await api.post("api/users/forgot-password" , {email})
             setForgotPasswordStatus(res.status === 200 ? "success" : "failure")
             setForgotPasswordMessage(res.data.message)
-            return res.data
+            return{data: res.data ,success : true}
         } catch (error :any) {
 
-            setForgotPasswordMessage(error?.response?.data?.message || 'Forgot Password failed')
+            const msg = error?.response?.data?.message || 'Forgot Password failed'
+            return{success : false , error : msg}
         }finally{
             setForgotPasswordLoading(false)
         }

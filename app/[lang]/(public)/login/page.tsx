@@ -103,6 +103,7 @@ export default function SplitRealityAuth() {
   
   const t = {
     en: {
+      resetForm: "Reset Form",
       login: "Login",
       register: "Register",
       accessAccount: "Access your account",
@@ -145,6 +146,7 @@ export default function SplitRealityAuth() {
       codeLength: "Invitation code must be at least 8 characters",
     },
     ar: {
+      resetForm:"مسح جميع البيانات",
       login: "تسجيل الدخول",
       register: "التسجيل",
       accessAccount: "الوصول إلى حسابك",
@@ -501,7 +503,7 @@ const resetRegisterForm = () => {
                   onClick={resetLoginForm}
                   className="hover:cursor-pointer w-full text-xl rounded-lg border border-slate-600 py-3 text-slate-300 hover:bg-slate-700/40 transition"
                 >
-                  Reset
+                  {currentLang.resetForm}
                 </button>
                 <button
                   type="submit"
@@ -703,7 +705,7 @@ const resetRegisterForm = () => {
                   onClick={resetRegisterForm}
                   className="hover:cursor-pointer w-full text-2xl rounded-lg border border-slate-600 py-3 text-slate-300 hover:bg-slate-700/40 transition"
                 >
-                  Reset
+                  {currentLang.resetForm}
                 </button>
 
                 <button

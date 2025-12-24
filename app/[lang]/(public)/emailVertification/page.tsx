@@ -114,7 +114,7 @@ const otpRefs = useRef<(HTMLInputElement | null)[]>([])
       createAccount: "Resend Vertification Email",
       // forgotPassword: "Lost coordinates?",
       alreadyHave: "Verify Your Account",
-      fixErrors: "Please fix the errors above",
+      fixErrors: "Please fix the errors below",
       emailRequired: "Email is required",
       invalidEmail: "Invalid email format",
       passwordRequired: "OTP is missing or incomplete",
@@ -151,7 +151,7 @@ const otpRefs = useRef<(HTMLInputElement | null)[]>([])
       createAccount: "اعادة ارسال ايميل التحقق",
       // forgotPassword: "نسيت الإحداثيات؟",
       alreadyHave: "تحقق من حسابك",
-      fixErrors: "يرجى إصلاح الأخطاء أعلاه",
+      fixErrors: "يرجى إصلاح الأخطاء",
       emailRequired: "البريد الإلكتروني مطلوب",
       invalidEmail: "تنسيق البريد الإلكتروني غير صالح",
       passwordRequired: "كلمة المرور مطلوبة",
@@ -167,9 +167,9 @@ const otpRefs = useRef<(HTMLInputElement | null)[]>([])
       nameFormat: "يمكن أن يحتوي الاسم على أحرف ومسافات فقط",
       codeRequired: "رمز الدعوة مطلوب",
       codeLength: "يجب أن يكون رمز الدعوة 6 أحرف على الأقل",
-      launching: "جاري إطلاق البوابة...",
+      launching: "جاري التحقق من حسابك...",
       creating: "جاري ارسال ايميل التحقق...",
-      welcome: "مرحباً بعودتك أيها المسافر!",
+      welcome: "تم التحقق من حسابك بنجاح",
       success: "تم إرسال ايميل التحقق بنجاح",
     },
   }
@@ -426,7 +426,7 @@ const otpRefs = useRef<(HTMLInputElement | null)[]>([])
     }
     
     setMessage({ type: "loading", text: t.launching })
-        const result = await verifyEmail(loginData.email,otp.join(""))
+    const result = await verifyEmail(loginData.email,otp.join(""))
 
   if (result.success) {
       setMessage({ type: "success", text: t.welcome })
@@ -563,44 +563,7 @@ const otpRefs = useRef<(HTMLInputElement | null)[]>([])
                   <label htmlFor="otp"  className="mb-2 block text-sm font-medium text-purple-200">
                     {t.password}
                   </label>
-                                      
-                  {/* <div
-                    className={`flex ${
-                      language === "ar" ? "flex-row-reverse" : ""
-                    } gap-3 justify-center`}
-                  >
-                    {otp.map((digit, index) => (
-                      <input
-                        key={index}
-                        name="otp"
-                        title="otp"
-                        ref={(el) => {(otpRefs.current[index] = el)}}
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleOtpChange(e.target.value, index)}
-                        onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                        className={`
-                          w-12 h-14 text-center text-xl font-bold
-                          rounded-lg
-                          bg-slate-800/60
-                          border ${
-                            errors.otp ? "border-red-400/50" : "border-purple-500/30"
-                          }
-                          text-white
-                          transition-all
-                          focus:outline-none
-                          focus:border-purple-400
-                          focus:ring-2
-                          focus:ring-purple-400/30
-                          focus:shadow-lg
-                          focus:shadow-purple-500/40
-                        `}
-                      />
-                    ))}
-                  </div> */}
-                  
+                    
                   <div className="flex justify-center gap-3 rtl:flex-row-reverse">
                     {otp.map((digit, index) => (
                       <input
