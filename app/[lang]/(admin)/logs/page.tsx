@@ -85,18 +85,16 @@ export default function LogsPage() {
     endDate: '',
   })
 
-  // useEffect(()=>{
-  // },[filters])
-
   useEffect(() => {
     let cancelled = false
-    
+
     getLogs({
       page,
       ...filters,
     }).then(res => {
       if (!cancelled) {
         setData(res)
+        // setLoading(false)
       }
     }).finally(()=>{
       if (!cancelled) {
@@ -135,7 +133,10 @@ export default function LogsPage() {
           <LogsPagination
             page={data.page}
             pages={data.pages}
-            onPageChange={setPage}
+            onPageChange={(newPage)=>{
+              setLoading(true)
+              setPage(newPage);
+            }}
           />
         </>
       // ):<LogsTableSkeleton />}
