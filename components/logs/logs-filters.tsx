@@ -5,6 +5,42 @@ import { Label } from "@/components/ui/label"
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
+const LOG_ACTIONS = [
+  'login',
+  'logout',
+  'register',
+  'verifyEmail',
+  'forgotPassword',
+  'resetPassword',
+  'fileSubmission',
+  'fileReSubmission',
+  'approved',
+  'partiallyApproved',
+  'rejected',
+  'assign',
+  'reviewReturn',
+  'ListAllDocs',
+  'GetAllReviews',
+  'ExtendUserAccountExpiryDate',
+  'GenerateRegistrationCode',
+  'SyncDocTypeAssignments',
+  'GetDocTypeAssignments',
+  'SubmitFinalCertificate',
+  'ResubmitFinalCertificate',
+  'ApproveFinalCertificate',
+  'RejectFinalCertificate',
+  'GetAllPersonalDocs',
+  'GetAllUsersStats',
+  'GetAllAdminsStats',
+] as const
 
 interface Props {
   limit: number
@@ -60,7 +96,7 @@ export function LogsFilters({
                 className="w-[175px]"
                 />
             </div>
-            <div className="flex flex-col items-center justify-between gap-y-4">
+            {/* <div className="flex flex-col items-center justify-between gap-y-4">
               <Label htmlFor="action">Action</Label>
               <Input
                 id="action"
@@ -69,7 +105,34 @@ export function LogsFilters({
                 onChange={e => onChange('action', e.target.value)}
                 className="w-[175px]"
                 />
+            </div> */}
+            <div className="flex flex-col items-center justify-between gap-y-4">
+              <Label htmlFor="action">Action</Label>
+                        
+              <Select
+                value={action || 'all'}
+                onValueChange={(value) =>
+                  onChange('action', value === 'all' ? '' : value)
+                }
+              >
+                <SelectTrigger className="w-[175px]">
+                  <SelectValue placeholder="Select Action" />
+                </SelectTrigger>
+              
+                <SelectContent>
+                  {/* All actions (no filter) */}
+                  <SelectItem value="all">All Actions</SelectItem>
+              
+                  {/* Specific actions */}
+                  {LOG_ACTIONS.map(action => (
+                    <SelectItem key={action} value={action}>
+                      {action}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
+
             <div className="flex flex-col items-center justify-between gap-y-4">
               <Label htmlFor="startDate">Start Date</Label>
               <Input
