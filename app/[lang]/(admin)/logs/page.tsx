@@ -75,7 +75,7 @@ import { LogsPagination } from '../../../../components/logs/logs-pagination'
 export default function LogsPage() {
   const [data, setData] = useState<LogsResponse | null>(null)
   const [page, setPage] = useState<number>(1)
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
 
   const [filters, setFilters] = useState({
     limit: 25,
@@ -94,7 +94,7 @@ export default function LogsPage() {
     }).then(res => {
       if (!cancelled) {
         setData(res)
-        // setLoading(false)
+        setLoading(false)
       }
     }).finally(()=>{
       if (!cancelled) {
@@ -126,7 +126,8 @@ export default function LogsPage() {
 
       {/* {!data ? ( */}
       {loading ? (
-        <LogsTableSkeleton />
+        // <LogsTableSkeleton L={7}/>
+        <LogsTableSkeleton L={7}/>
       ) : data ? (
         <>
           <LogsDataTable data={data.logs} page={page} limit={Number(filters.limit)}/>

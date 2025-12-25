@@ -2,7 +2,12 @@
 
 import { Skeleton } from '../../src/components/ui/skeleton'
 
-export function LogsTableSkeleton() {
+interface Props {
+  L: number
+}
+
+export function LogsTableSkeleton({L}:Props) {
+// export function LogsTableSkeleton() {
   return (
     <div className="space-y-2">
       {Array.from({ length: 7 }).map((_, i) => (
