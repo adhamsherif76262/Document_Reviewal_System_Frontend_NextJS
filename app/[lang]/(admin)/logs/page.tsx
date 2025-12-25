@@ -74,7 +74,8 @@ import { LogsPagination } from '../../../../components/logs/logs-pagination'
 
 export default function LogsPage() {
   const [data, setData] = useState<LogsResponse | null>(null)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState<number>(1)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [filters, setFilters] = useState({
     limit: 25,
@@ -84,15 +85,22 @@ export default function LogsPage() {
     endDate: '',
   })
 
+  // useEffect(()=>{
+  // },[filters])
+
   useEffect(() => {
     let cancelled = false
-
+    
     getLogs({
       page,
       ...filters,
     }).then(res => {
       if (!cancelled) {
         setData(res)
+      }
+    }).finally(()=>{
+      if (!cancelled) {
+        setLoading(false)
       }
     })
 
@@ -105,17 +113,23 @@ export default function LogsPage() {
     <div className="space-y-6">
       <LogsFilters
         {...filters}
-        onChange={(key, value) =>
+        onChange={(key, value) =>{
           setFilters(prev => ({ ...prev, [key]: value }))
+          setLoading(true)
+          }
         }
         onReset={() =>
-          setFilters({ actor: '', action: '', startDate: '', endDate: ''  , limit:25})
+          {
+            setFilters({ actor: '', action: '', startDate: '', endDate: ''  , limit:25})
+            setLoading(true)
+          }
         }
       />
 
-      {!data ? (
+      {/* {!data ? ( */}
+      {loading ? (
         <LogsTableSkeleton />
-      ) : (
+      ) : data ? (
         <>
           <LogsDataTable data={data.logs} page={page} limit={Number(filters.limit)}/>
           <LogsPagination
@@ -124,7 +138,8 @@ export default function LogsPage() {
             onPageChange={setPage}
           />
         </>
-      )}
+      // ):<LogsTableSkeleton />}
+      ):null}
     </div>
   )
 }

@@ -59,7 +59,7 @@ export function LogsPagination({ page, pages, onPageChange }: Props) {
         </Button>
 
         <span className="text-sm text-muted-foreground">
-          Page <strong>{page}</strong> of {pages}
+          Page <strong>{page} of {pages || 1} </strong>
         </span>
 
         <Button
