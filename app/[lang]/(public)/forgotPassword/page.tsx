@@ -622,7 +622,7 @@ const resetRegisterForm = () => {
 
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 py-3 font-semibold text-white transition-all hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400 hover:shadow-lg hover:shadow-violet-500/50 active:scale-95"
+                  className="hover:cursor-pointer w-full rounded-lg bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 py-3 font-semibold text-white transition-all hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400 hover:shadow-lg hover:shadow-violet-500/50 active:scale-95"
                 >
                   {t.login}
                 </button>
@@ -631,7 +631,7 @@ const resetRegisterForm = () => {
                   <button
                     type="button"
                     onClick={switchForm}
-                    className="text-violet-300 transition-colors hover:text-violet-200 hover:underline "
+                    className="hover:cursor-pointer text-violet-300 transition-colors hover:text-violet-200 hover:underline "
                   >
                     {t.createAccount}
                   </button>
@@ -720,7 +720,7 @@ const resetRegisterForm = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className={`absolute ${language === "ar" ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 text-violet-400 transition-all hover:scale-110 hover:text-violet-300`}
+                      className={`hover:cursor-pointer absolute ${language === "ar" ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 text-violet-400 transition-all hover:scale-110 hover:text-violet-300`}
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
@@ -746,7 +746,7 @@ const resetRegisterForm = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className={`absolute ${language === "ar" ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 text-violet-400 transition-all hover:scale-110 hover:text-violet-300`}
+                      className={`hover:cursor-pointer absolute ${language === "ar" ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 text-violet-400 transition-all hover:scale-110 hover:text-violet-300`}
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
@@ -832,7 +832,7 @@ const resetRegisterForm = () => {
 
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 py-3 font-semibold text-white transition-all hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400 hover:shadow-lg hover:shadow-violet-500/50 active:scale-95"
+                  className="hover:cursor-pointer w-full rounded-lg bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 py-3 font-semibold text-white transition-all hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400 hover:shadow-lg hover:shadow-violet-500/50 active:scale-95"
                 >
                   {t.register}
                 </button>
@@ -850,7 +850,7 @@ const resetRegisterForm = () => {
                   <button
                     type="button"
                     onClick={switchForm}
-                    className="text-violet-300 transition-colors hover:text-violet-200 hover:underline"
+                    className="hover:cursor-pointer text-violet-300 transition-colors hover:text-violet-200 hover:underline"
                   >
                     {t.alreadyHave}
                   </button>

@@ -187,16 +187,20 @@ export default function MagneticCardNavbar() {
     document.body.style.touchAction = "none" // mobile Safari fix
   } else {
     // Restore scroll
-    document.body.style.overflow = ""
-    document.body.style.touchAction = ""
+    document.body.style.overflow = "visible"
+    document.body.style.touchAction = "auto"
   }
 
   return () => {
     // Cleanup on unmount
-    document.body.style.overflow = ""
-    document.body.style.touchAction = ""
+    document.body.style.overflow = "visible"
+    document.body.style.touchAction = "auto"
   }
 }, [isMenuOpen])
+
+const closeMenu = () => {
+  setIsMenuOpen(false)
+}
 
   useEffect(() => {
   const handleClickOutside = (event: MouseEvent) => {
@@ -410,67 +414,67 @@ if (!user) {
           {/* {isMenuOpen && ( */}
             {/* <div className="mt-4 space-y-3 animate-magnetic-slide-down animate-magnetic-slide-up block xxxlg:hidden"> */}
             <div
-              className={`
-                bg-black mt-4 space-y-3
-                
-                transform transition-all duration-900 ease-out
-                origin-top z-40
-                ${
-                  isMenuOpen
-                    ? "translate-y-0 opacity-100 pointer-events-auto blur-0 min-h-screen"
-                    : "-translate-y-6 opacity-0 pointer-events-none blur-md max-h-0"
-                }
-              `}
-            >
-              {navLinks.map((link, index) => (
-                // <a
-                //   key={index}
-                //   href={link.href}
-                //   className="group relative block px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-linear-to-r hover:from-emerald-900 hover:to-zinc-800 rounded-lg transition-all duration-300 border border-zinc-700 hover:border-emerald-500 hover:scale-105 overflow-hidden text-center"
-                // >
-                <Link key={index} href={link.href} className="group relative block px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-linear-to-r hover:from-emerald-900 hover:to-zinc-800 rounded-lg transition-all duration-300 border border-zinc-700 hover:border-emerald-500 hover:scale-105 overflow-hidden text-center">
-                  {/* Shimmer effect on hover */}
-                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-emerald-500/20 to-transparent" />
+                      className={`
+                        bg-black mt-4 space-y-3
 
-                  {/* Glow effect */}
-                  <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-linear-to-r from-emerald-500/10 to-cyan-500/10 blur-xl" />
-
-                  <span className="relative z-10">{link.label}</span>
-                </Link>
-                // </a>
-              ))}
-              <div className="flex items-center justify-center pt-2">
-                <div className="scale-[0.5] -m-9">
-                  {/* <MorphingTypography initialLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} /> */}
-                  <MorphingTypography />
-                </div>
-              </div>
-              <div className="pt-2 border-t border-zinc-700 ">
-                <div className="flex items-center gap-3 px-4 py-2">
-                  <div className="relative">
-                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-sm font-bold text-white animate-avatar-pulse-ring">
-                      {getUserInitials(user.name)}
-                    </div>
-                    <span className="absolute inset-0 rounded-full border-2 border-emerald-500 animate-avatar-ring-pulse" />
-                    <span className="absolute inset-0 rounded-full border-2 border-cyan-500 animate-avatar-ring-pulse-delayed" />
-                  </div>
-                  <div className="flex-1 text-center">
-                    <p className="text-sm font-medium text-white">{user.name}</p>
-                    <p className="text-xs text-zinc-400">{user.email}</p>
-                    <p className="text-xs text-emerald-400 mt-1">
-                      {user.expiryDate && currentLanguage === "en" ? "Expires At :" : user.expiryDate && currentLanguage === "ar" ? ": ينتهي في" : ""} {user.expiryDate? new Date(user.expiryDate).toLocaleDateString() : !(user.expiryDate) && currentLanguage === "en" ? "Admin Accounts Does Not Expire" : !(user.expiryDate) && currentLanguage === "ar" ? "حسابات المديرون صلاحيتها لا تنتهي" : ""}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="hover:text-red-600 w-full flex items-center justify-center gap-2 px-4 py-2 mt-2 text-sm text-zinc-300 bg-zinc-900 hover:bg-zinc-800 rounded-lg transition-colors border border-zinc-700 hover:cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4" />
-                  {currentLanguage === "en" ? "Logout" : "تسجيل خروج"}
-                </button>
-              </div>
-            </div>
+                        transform transition-all duration-900 ease-out
+                        origin-top z-40
+                        ${
+                          isMenuOpen
+                            ? "translate-y-0 opacity-100 pointer-events-auto blur-0 min-h-screen"
+                            : "-translate-y-6 opacity-0 pointer-events-none blur-md max-h-0"
+                        }
+                      `}
+                    >
+                      {navLinks.map((link, index) => (
+                        // <a
+                        //   key={index}
+                        //   href={link.href}
+                        //   className="group relative block px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-linear-to-r hover:from-emerald-900 hover:to-zinc-800 rounded-lg transition-all duration-300 border border-zinc-700 hover:border-emerald-500 hover:scale-105 overflow-hidden text-center"
+                        // >
+                        <Link onClick={closeMenu} key={index} href={link.href} className="group relative block px-4 py-3 text-sm font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-linear-to-r hover:from-emerald-900 hover:to-zinc-800 rounded-lg transition-all duration-300 border border-zinc-700 hover:border-emerald-500 hover:scale-105 overflow-hidden text-center">
+                          {/* Shimmer effect on hover */}
+                          <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-emerald-500/20 to-transparent" />
+                      
+                          {/* Glow effect */}
+                          <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-linear-to-r from-emerald-500/10 to-cyan-500/10 blur-xl" />
+                      
+                          <span className="relative z-10">{link.label}</span>
+                        </Link>
+                        // </a>
+                      ))}
+                      <div className="flex items-center justify-center pt-2">
+                        <div className="scale-[0.5] -m-9">
+                          {/* <MorphingTypography initialLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} /> */}
+                          <MorphingTypography />
+                        </div>
+                      </div>
+                      <div className="pt-2 border-t border-zinc-700 ">
+                        <div className="flex items-center gap-3 px-4 py-2">
+                          <div className="relative">
+                            <div className="w-10 h-10 rounded-full bg-linear-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-sm font-bold text-white animate-avatar-pulse-ring">
+                              {getUserInitials(user.name)}
+                            </div>
+                            <span className="absolute inset-0 rounded-full border-2 border-emerald-500 animate-avatar-ring-pulse" />
+                            <span className="absolute inset-0 rounded-full border-2 border-cyan-500 animate-avatar-ring-pulse-delayed" />
+                          </div>
+                          <div className="flex-1 text-center">
+                            <p className="text-sm font-medium text-white">{user.name}</p>
+                            <p className="text-xs text-zinc-400">{user.email}</p>
+                            <p className="text-xs text-emerald-400 mt-1">
+                              {user.expiryDate && currentLanguage === "en" ? "Expires At :" : user.expiryDate && currentLanguage === "ar" ? ": ينتهي في" : ""} {user.expiryDate? new Date(user.expiryDate).toLocaleDateString() : !(user.expiryDate) && currentLanguage === "en" ? "Admin Accounts Does Not Expire" : !(user.expiryDate) && currentLanguage === "ar" ? "حسابات المديرون صلاحيتها لا تنتهي" : ""}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={handleLogout}
+                          className="hover:text-red-600 w-full flex items-center justify-center gap-2 px-4 py-2 mt-2 text-sm text-zinc-300 bg-zinc-900 hover:bg-zinc-800 rounded-lg transition-colors border border-zinc-700 hover:cursor-pointer"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          {currentLanguage === "en" ? "Logout" : "تسجيل خروج"}
+                        </button>
+                      </div>
+            </div>                 
           {/* )} */}
         </div>
       </div>

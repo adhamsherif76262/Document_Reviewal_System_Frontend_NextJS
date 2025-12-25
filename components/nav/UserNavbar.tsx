@@ -142,14 +142,14 @@ export default function NeonCyberpunkNavbar() {
     document.body.style.touchAction = "none" // mobile Safari fix
   } else {
     // Restore scroll
-    document.body.style.overflow = ""
-    document.body.style.touchAction = ""
+    document.body.style.overflow = "visible"
+    document.body.style.touchAction = "auto"
   }
 
   return () => {
     // Cleanup on unmount
-    document.body.style.overflow = ""
-    document.body.style.touchAction = ""
+    document.body.style.overflow = "visible"
+    document.body.style.touchAction = "auto"
   }
 }, [isMenuOpen])
 

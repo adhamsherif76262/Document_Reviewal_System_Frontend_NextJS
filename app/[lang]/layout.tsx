@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { Amiri } from 'next/font/google';
 // import { Metadata } from 'next';
 import { AuthProvider } from '../context/AuthContext';
-import PublicNavbar from '../../components/nav/PublicNavbar';
+// import PublicNavbar from '../../components/nav/PublicNavbar';
 // import { LanguageProvider } from "../context/LanguageContext";
 // import { NextIntlClientProvider } from "next-intl";
 
@@ -99,6 +99,7 @@ style={{
         </main> */}
         {/* <PublicNavbar></PublicNavbar> */}
         {/* <NextIntlClientProvider locale={lang}> */}
+
           <AuthProvider>
             {/* <LanguageProvider> */}
               {children}
