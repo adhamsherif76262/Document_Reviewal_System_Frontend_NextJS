@@ -16,7 +16,7 @@ export function LogsPagination({ page, pages, onPageChange }: Props) {
 
   const handleJump = () => {
     const pageNumber = Number(jump)
-    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber <= pages) {
+    if (!isNaN(pageNumber) && pageNumber >= 1 && pageNumber !== page && pageNumber <= pages) {
       onPageChange(pageNumber)
       setJump('')
     }
@@ -47,10 +47,10 @@ export function LogsPagination({ page, pages, onPageChange }: Props) {
   // )
 
    return (
-    <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="flex sm:flex-row sm:flex-wrap xxxs:flex-col xxxs:items-center xxxs:justify-between sm:items-center sm:justify-between gap-4 mt-5">
       <div className="flex items-center gap-2">
         <Button
-        className='cursor-pointer bg-black font-black hover:bg-white hover:text-black text-white transition-all duration-300'
+        className='cursor-pointer bg-black text-md font-black hover:bg-white hover:text-black text-white transition-all duration-300'
           variant="outline"
           disabled={page === 1}
           onClick={() => onPageChange(page - 1)}
@@ -58,12 +58,12 @@ export function LogsPagination({ page, pages, onPageChange }: Props) {
           Previous
         </Button>
 
-        <span className="text-sm text-muted-foreground">
+        <span className="text-sm text-muted-foreground text-md font-black">
           Page <strong>{page} of {pages || 1} </strong>
         </span>
 
         <Button
-        className='cursor-pointer bg-black font-black hover:bg-white hover:text-black text-white transition-all duration-300'
+        className='cursor-pointer bg-black text-md font-black hover:bg-white hover:text-black text-white transition-all duration-300'
           variant="outline"
           disabled={page === pages}
           onClick={() => onPageChange(page + 1)}
@@ -73,16 +73,16 @@ export function LogsPagination({ page, pages, onPageChange }: Props) {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-sm">Jump to</span>
+        <span className="text-md font-black">Jump to</span>
         <Input
           type="number"
           min={1}
           max={pages}
           value={jump}
           onChange={e => setJump(e.target.value)}
-          className="w-20"
+          className="w-20 bg-black text-white text-md font-black"
         />
-        <Button className='cursor-pointer bg-black font-black hover:bg-white hover:text-black text-white transition-all duration-300' onClick={handleJump}>Go</Button>
+        <Button className='cursor-pointer bg-black text-md font-black hover:bg-white hover:text-black text-white transition-all duration-300' onClick={handleJump}>Go</Button>
       </div>
     </div>
   )
