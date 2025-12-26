@@ -42,8 +42,34 @@ const LOG_ACTIONS = [
   'GetAllAdminsStats',
 ] as const
 
+const Limit_Values = [
+  '10',
+  '25',
+  '50',
+  '75',
+  '100',
+  '125',
+  '150',
+  '175',
+  '200',
+  '250',
+  '300',
+  '350',
+  '400',
+  '450',
+  '500',
+  '550',
+  '600',
+  '650',
+  '700',
+  '800',
+  '900',
+  '1000',
+] as const
+
 interface Props {
-  limit: number
+  // limit: number
+  limit: string
   actor: string
   action: string
   startDate: string
@@ -70,13 +96,42 @@ export function LogsFilters({
       <CardContent>
         <div className="grid gap-4 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
             <div className="flex flex-col items-center justify-between gap-y-4">
+              <Label htmlFor="limit">Limit</Label>
+                        
+              <Select
+                value={limit || 'all'}
+                onValueChange={(value) =>
+                  onChange('limit', value === 'all' ? '1500' : value)
+                }
+              >
+                <SelectTrigger className="w-[175px]">
+                  <SelectValue placeholder="Select Limit" />
+                </SelectTrigger>
+              
+                <SelectContent>
+                  {/* All actions (no filter) */}
+                  <SelectItem value="all">All Limits</SelectItem>
+              
+                  {/* Specific actions */}
+                  {Limit_Values.map(limit => (
+                    // <SelectItem key={action} value={"l"}>
+                      <SelectItem key={limit} value={limit}>
+                      {limit}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {/* <div className="flex flex-col items-center justify-between gap-y-4">
                 <Label htmlFor="limit">Limit</Label>
                 <Input
                     type="text"
                     inputMode="numeric"          // phone-like numeric keypad (mobile)
                     pattern="\d*"                // digits only
-                    maxLength={20}  
-                    min={1}
+                    maxLength={3}
+                    minLength={1}
+                    // max={200}  
+                    // min={1}
                     id="limit"
                     // type='number'
                     placeholder="Number Of Logs"
@@ -84,7 +139,7 @@ export function LogsFilters({
                     onChange={e => onChange('limit', e.target.value)}
                     className="w-[175px]"
                 />
-            </div>
+            </div> */}
             <div className="flex flex-col items-center justify-between gap-y-4">
 
               <Label htmlFor="actor">Actor</Label>
@@ -125,7 +180,8 @@ export function LogsFilters({
               
                   {/* Specific actions */}
                   {LOG_ACTIONS.map(action => (
-                    <SelectItem key={action} value={action}>
+                    // <SelectItem key={action} value={"l"}>
+                      <SelectItem key={action} value={action}>
                       {action}
                     </SelectItem>
                   ))}

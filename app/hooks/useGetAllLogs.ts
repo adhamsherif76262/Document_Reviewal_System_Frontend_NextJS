@@ -6,7 +6,8 @@ import { LogsResponse } from '../../types/log'
 
 interface GetLogsParams {
   page: number
-  limit: number
+  // limit?: number
+  limit?: string
   actor?: string
   action?: string
   fromDate?: string

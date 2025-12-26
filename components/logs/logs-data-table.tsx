@@ -22,7 +22,7 @@ import {
 
 import { columns } from './columns'
 import { Log } from '../../types/log'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
   DropdownMenu,
@@ -36,13 +36,14 @@ import { Settings } from 'lucide-react'
 interface Props {
   data: Log[]
   page: number
-  limit: number
+  // limit: number
+  limit: string
 }
 
 export function LogsDataTable({ data  , page , limit}: Props) {
   const router = useRouter()
   const [columnVisibility, setColumnVisibility] = useState({})
-
+  const {lang} = useParams()
   const table = useReactTable({
     data,
     columns,
@@ -50,7 +51,7 @@ export function LogsDataTable({ data  , page , limit}: Props) {
         columnVisibility,
         pagination: {
           pageIndex: page - 1, // backend is 1-based
-          pageSize: limit,     // 🔥 THIS IS THE FIX
+          pageSize: Number(limit),     // 🔥 THIS IS THE FIX
         },
     },
     manualPagination:true,
@@ -123,7 +124,7 @@ export function LogsDataTable({ data  , page , limit}: Props) {
                         
                         "
                     onClick={() =>
-                      router.push(`/logs/${row.original._id}`)
+                      router.push(`/${lang}/logs/${row.original._id}`)
                     }
                   >
                     {row.getVisibleCells().map(cell => (

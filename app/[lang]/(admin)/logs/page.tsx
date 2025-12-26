@@ -66,7 +66,9 @@
 
 import { useEffect, useState } from 'react'
 import { LogsResponse } from '../../../../types/log'
+import { MetricsResponse } from '../../../../types/metrics'
 import { getLogs } from '../../../hooks/useGetAllLogs'
+import { getMetrics } from '../../../hooks/useGetAllMetrics'
 import { LogsDataTable } from '../../../../components/logs/logs-data-table'
 import { LogsTableSkeleton } from '../../../../components/logs/logs-table-skeleton'
 import { LogsFilters } from '../../../../components/logs/logs-filters'
@@ -76,25 +78,39 @@ export default function LogsPage() {
   const [data, setData] = useState<LogsResponse | null>(null)
   const [page, setPage] = useState<number>(1)
   const [loading, setLoading] = useState<boolean>(true)
+  const [metricsData, setMetricsData] = useState<MetricsResponse | null>()
 
   const [filters, setFilters] = useState({
-    limit: 25,
+    limit: '100',
     actor: '',
     action: '',
     startDate: '',
     endDate: '',
   })
 
+    useEffect(() => {
+      let cancelled = false
+
+      getMetrics().then(res => {
+        if (!cancelled) {
+          setMetricsData(res)
+        }
+      })
+
+      return () => {
+        cancelled = true
+      }
+    }, [])
+
   useEffect(() => {
     let cancelled = false
-
+    
     getLogs({
       page,
       ...filters,
     }).then(res => {
       if (!cancelled) {
         setData(res)
-        setLoading(false)
       }
     }).finally(()=>{
       if (!cancelled) {
@@ -118,7 +134,7 @@ export default function LogsPage() {
         }
         onReset={() =>
           {
-            setFilters({ actor: '', action: '', startDate: '', endDate: ''  , limit:25})
+            setFilters({ actor: '', action: '', startDate: '', endDate: ''  , limit:"25"})
             setLoading(true)
           }
         }
@@ -126,11 +142,14 @@ export default function LogsPage() {
 
       {/* {!data ? ( */}
       {loading ? (
-        // <LogsTableSkeleton L={7}/>
         <LogsTableSkeleton L={7}/>
       ) : data ? (
-        <>
-          <LogsDataTable data={data.logs} page={page} limit={Number(filters.limit)}/>
+        <section dir={"ltr"}>
+          <div className='flex xxxs:flex-col xxxs:items-center xxxs:justify-between md:flex-row md:items-center md:justify-evenly'>
+            <span className='flex flex-col items-center justify-between'><p className='font-black xxxs:text-lg xxxs:text-center xxxs:pb-5 xxs:text-xl'>Total Number Of Current Logs :</p> <strong className='text-xl xxxs:pb-5 md:pb-0'>{data.total}</strong></span>
+            <span className='flex flex-col items-center justify-between'><p className='font-black xxxs:text-lg xxxs:text-center xxxs:pb-5 xxs:text-xl'>Total Number Of Exsisting Logs :</p> <strong className='text-xl'>{metricsData?.totalLogs}</strong> </span>
+          </div>
+          <LogsDataTable data={data.logs} page={page} limit={filters.limit}/>
           <LogsPagination
             page={data.page}
             pages={data.pages}
@@ -139,7 +158,7 @@ export default function LogsPage() {
               setPage(newPage);
             }}
           />
-        </>
+        </section>
       // ):<LogsTableSkeleton />}
       ):null}
     </div>

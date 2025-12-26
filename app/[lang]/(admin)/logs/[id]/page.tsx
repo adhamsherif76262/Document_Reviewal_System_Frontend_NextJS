@@ -133,17 +133,28 @@ export default function LogDetailsPage() {
     async function loadLogDetails() {
       try {
         const log = await getLogById({ id })
-
         if (cancelled) return
         setLogData(log)
+        if(log.user){
+          // alert("entered if condition")
+          const actorId =  log.user._id
+          if (!actorId) return
+          const actor = await getUserById({ id: actorId })
+          // console.log( "aCOTR ==>" + actor)
+          
+          if (cancelled) return
+          setActorData(actor)
+        }else if(log.admin){
+          // alert("entered else if condition")
+          const actorId =  log.admin._id
+          if (!actorId) return
+          const actor = await getUserById({ id: actorId })
+          console.log(actor)
+          if (cancelled) return
+          setActorData(actor)
+        }else{console.log("Neither")}
 
-        const actorId = log.admin || log.user
-        if (!actorId) return
-
-        const actor = await getUserById({ id: actorId })
-
-        if (cancelled) return
-        setActorData(actor)
+        // console.log(actor)
       } finally {
         if (!cancelled) {
           setLoading(false)
@@ -169,7 +180,7 @@ export default function LogDetailsPage() {
   // 🧾 Content
   // =========================
   return (
-    <div className="space-y-6">
+    <div dir='ltr' className="space-y-6">
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">

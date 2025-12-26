@@ -262,14 +262,14 @@ if (!user) {
 
   const navLinks = 
   isSuperAdmin ? [
-    { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: `/dashboard` },
-    { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: `/users` },
-    { label: currentLanguage === "en" ? "Admins" : "المديرون", href: `/admins` },
-    { label: currentLanguage === "en" ? "Logs" : "السجلات", href: `/logs` },
+    { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: `/${currentLanguage}/dashboard` },
+    { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: `/${currentLanguage}/users` },
+    { label: currentLanguage === "en" ? "Admins" : "المديرون", href: `/${currentLanguage}/admins` },
+    { label: currentLanguage === "en" ? "Logs" : "السجلات", href: `/${currentLanguage}/logs` },
   ]
   :[
-    { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: `/dashboard` },
-    { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: `/users` },
+    { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: `/${currentLanguage}/dashboard` },
+    { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: `/${currentLanguage}/users` },
   ]
 
   return (
