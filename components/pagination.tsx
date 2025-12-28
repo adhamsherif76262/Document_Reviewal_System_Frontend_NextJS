@@ -10,7 +10,7 @@ interface Props {
   onPageChange: (page: number) => void
 }
 
-export function LogsPagination({ page, pages, onPageChange }: Props) {
+export function Pagination({ page, pages, onPageChange }: Props) {
 
     const [jump, setJump] = useState('')
 

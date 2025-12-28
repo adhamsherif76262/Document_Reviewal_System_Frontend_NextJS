@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
+@plugin "daisyui";
 @custom-variant dark (&:is(.dark *));
 .nav-link {
   @apply text-sm font-medium text-gray-700 hover:text-black;

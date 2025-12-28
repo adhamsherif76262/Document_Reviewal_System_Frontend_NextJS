@@ -1,16 +1,16 @@
 // components/logs/logs-table-skeleton.tsx
 
-import { Skeleton } from '../../src/components/ui/skeleton'
+import { Skeleton } from '../src/components/ui/skeleton'
 
 interface Props {
   L: number
 }
 
-export function LogsTableSkeleton({L}:Props) {
+export function TableSkeleton({L}:Props) {
 // export function LogsTableSkeleton() {
   return (
     <div className="space-y-2">
-      {Array.from({ length: 7 }).map((_, i) => (
+      {Array.from({ length: L }).map((_, i) => (
         <div
           key={i}
           className="grid grid-cols-4 gap-4 rounded-md border p-4"

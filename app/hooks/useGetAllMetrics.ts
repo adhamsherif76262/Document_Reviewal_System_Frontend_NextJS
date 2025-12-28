@@ -16,7 +16,7 @@ import api from '../../lib/api'
 
 // export async function getLogs(params: GetLogsParams) {
 export async function getMetrics() {
-  const { data } = await api.get('api/admin/metrics', {
+  const { data } = await api.get('/api/admin/metrics', {
     // params,
   })
   return data

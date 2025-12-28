@@ -15,7 +15,7 @@ interface GetLogsParams {
 }
 
 export async function getLogs(params: GetLogsParams) {
-  const { data } = await api.get<LogsResponse>('api/admin/logs', {
+  const { data } = await api.get<LogsResponse>('/api/admin/logs', {
     params,
   })
   return data
