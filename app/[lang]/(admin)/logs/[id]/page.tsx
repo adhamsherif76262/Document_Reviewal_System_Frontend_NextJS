@@ -246,7 +246,7 @@ export default function LogDetailsPage() {
               logData?.user && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0' onClick={()=>router.push(`/${lang}/users/${logData?.user?._id}`)}>Submission History</Button>)
             }
             {
-              logData?.admin && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0' onClick={()=>router.push(`/${lang}/admins/${logData?.admin?._id}`)}>Reviews History</Button>)
+              (logData?.admin && (!logData?.user)) && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0' onClick={()=>router.push(`/${lang}/admins/${logData?.admin?._id}`)}>Reviews History</Button>)
             } 
         </CardHeader>
 
