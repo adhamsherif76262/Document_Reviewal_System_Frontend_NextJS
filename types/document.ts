@@ -1,12 +1,14 @@
 // types/document.ts
 
+import { StaticImport } from "next/dist/shared/lib/get-img-props"
+
 // ======================
 // Shared / Reusable
 // ======================
 
 export type ReviewStatus = 'pending' | 'approved' | 'rejected' | 'none'
 export type DocumentStatus = 'pending' | 'partiallyApproved' | 'approved' | 'rejected'
-export type FieldType = 'text' | 'image' | 'pdf'
+// export type FieldType = 'text' | 'image' | 'pdf'
 
 export interface BasicUser {
   _id: string
@@ -39,9 +41,38 @@ export interface FieldReview {
 // Document Field
 // ======================
 
+type TextField = {
+  type: 'text';
+  value: string;
+  review?: {
+    status: 'approved' | 'rejected' | 'pending';
+    adminComment?: string;
+  };
+};
+
+type ImageField = {
+  type: 'image';
+  value: string[];
+  review?: {
+    status: 'approved' | 'rejected' | 'pending';
+    adminComment?: string;
+  };
+};
+
+type PdfField = {
+  type: 'pdf';
+  value: string;
+  review?: {
+    status: 'approved' | 'rejected' | 'pending';
+    adminComment?: string;
+  };
+};
+
 export interface DocumentField {
-  type: FieldType
-  value: string[] | string
+  // type: FieldType
+  type: TextField | ImageField | PdfField
+  value: string[]
+  // value: string | StaticImport
   tab: string
   review: FieldReview
 }
