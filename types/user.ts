@@ -1,39 +1,48 @@
+import { User } from 'lucide-react';
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// types/log.ts
+// types/user.ts
 
-// export interface LogUser {
-//   _id: string
-//   name: string
-//   email: string
-// }
-
-// export interface LogDocument {
-//   _id: string
-//   status: string
-// }
-
+import {Document} from "./document"
 export interface user {
-  _id: string
-  action: string
-  name: string
-  email: string
-  password: string
-  role: string
-  adminLevel?: string | null
-  expiryStatus: string
-  phone: string
-  preferredVerificationMethod: string
-  isVerified: boolean
-  expirable: boolean
-  lastOTPResend?: string | null
-  expiryDate?: string | null
-  createdAt: string
-  updatedAt: string
+    _id: string
+    name: string
+    email: string
+    password: string
+    role: string
+    adminLevel: string
+    expiryStatus: string
+    phone: string
+    preferredVerificationMethod: string
+    isVerified: boolean
+    expirable: boolean
+    lastOTPResend: string
+    expiryDate: string
+    createdAt: string
+    updatedAt: string
+  
+}
+export interface EmbededUser {
+  user:user
+  totalDocuments: number
+  pendingCount: number
+  approvedCount:number
+  partiallyApprovedCount?: number
+  rejectedCount: number
+
+  pendingDocuments: Document[]
+  partiallyApprovedDocuments?: Document[],
+  approvedDocuments: Document[],
+  rejectedDocuments: Document[]
+
 }
 
-// export interface LogsResponse {
-//   total: number
-//   page: number
-//   pages: number
-//   logs: Log[]
-// }
+export interface UsersResponse {
+  pagination: {
+      totalUsers  : number
+      totalPages  : number
+      currentPage : number  
+  }
+  // page: number
+  // pages: number
+  users: user[]
+}

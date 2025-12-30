@@ -238,7 +238,12 @@ export default function DocumentDetailsPage() {
       {/* Fields */}
 
       <section className='bg-gray-300 rounded-4xl shadow-2xl'>
-        <h1 className='text-2xl font-black text-center animate-pulse xxxs:pb-5 xxxs:pt-5'>Submission Fields&apos; Details</h1>
+        <div className='w-full flex sm:flex-row xxxs:flex-col xxxs:items-center sm:items-center xxxs:justify-between sm:justify-between px-4'>
+          <h1 className='text-2xl font-black text-center animate-pulse xxxs:pb-5 xxxs:pt-5'>Submission Fields&apos; Details</h1>
+          {
+            docData && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0' onClick={()=>router.push(`/${lang}/review/${docData?._id}`)}>Review This Submission</Button>)
+          }
+        </div>
         <div className="grid gap-2 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:p-4">
           {Object.entries(docData?.fields ?? {}).map(([fieldName, field]) => {
             return (
@@ -506,7 +511,6 @@ export default function DocumentDetailsPage() {
               </div>
               <BooleanBadge value={docData?.hasPendingResubmission || false} />
             </div>
-            
           </div>
             
           <Separator />

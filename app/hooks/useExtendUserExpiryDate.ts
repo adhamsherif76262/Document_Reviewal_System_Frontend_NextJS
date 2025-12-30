@@ -5,10 +5,10 @@ import api from '../../lib/api';
 export function useExtendUserExpiryDate() {
     const [message, setMessage] = useState<string>("");
     const [status, setStatus] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
+    const [extendExpiryDateloading, setExtendExpiryDateLoading] = useState<boolean>(false);
 
     const handleExtendUserExpiryDate = async (email :string) => {
-        setLoading(true);
+        setExtendExpiryDateLoading(true);
         setMessage("");
         setStatus("");
         try {
@@ -21,14 +21,14 @@ export function useExtendUserExpiryDate() {
         } catch (err: any) {
             setMessage(err.response?.data?.message || "Failed to extend user expiry date");
         } finally {
-            setLoading(false);
+            setExtendExpiryDateLoading(false);
         }
     };
 
     return {
         message,
         status,
-        loading,
+        extendExpiryDateloading,
         handleExtendUserExpiryDate,
     };
 }

@@ -2,18 +2,32 @@
 import { useState } from 'react'
 import api from '../../lib/api'
 
+// import { UsersResponse } from '../../types/user'
+
+interface GetAllUsersParams {
+  page: number
+  limit?: string
+  name?: string
+  email?: string
+  expiryStatus?: string
+  expiryBefore?: string | null
+  expiryAfter?: string | null
+  createdBefore?: string
+  createdAfter?: string
+}
+
 export function useGetAllUserStats() {
 
     const [userStatsLoading , setUserStatsLoading] = useState<boolean>(false)
     const [userStatsStatus , setUserStatsStatus] = useState<string>("")
     const [userStatsMessage , setUserStatsMessage] = useState<string>("")
     const [userStats , setUserStats] = useState<any>(null)
-    const getAllUserStats = async() =>{
+    const getAllUserStats = async(params: GetAllUsersParams) =>{
         setUserStatsLoading(true)
         setUserStatsStatus("")
         setUserStatsMessage("")
         try {
-            const res = await api.get("api/users/stats")
+            const res = await api.get("api/users/stats" , {params})
             setUserStatsStatus(res.status === 200 ? "success" : "failure")
             setUserStatsMessage(res.data.message)
             setUserStats(res.data)
