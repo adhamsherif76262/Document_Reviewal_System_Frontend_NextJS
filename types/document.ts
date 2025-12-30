@@ -4,7 +4,7 @@
 // Shared / Reusable
 // ======================
 
-export type ReviewStatus = 'pending' | 'approved' | 'rejected'
+export type ReviewStatus = 'pending' | 'approved' | 'rejected' | 'none'
 export type DocumentStatus = 'pending' | 'partiallyApproved' | 'approved' | 'rejected'
 export type FieldType = 'text' | 'image' | 'pdf'
 
@@ -12,9 +12,18 @@ export interface BasicUser {
   _id: string
   name: string
   email: string
+  expiryStatus: string
   phone?: string
-  role?: 'user' | 'admin'
+  isVerified?: boolean
+  expirable?: boolean
+  role?: string
   adminLevel?: 'super' | 'regular' | null
+  lastOTPResend?: string | null
+  submittedAt?: string | null
+  uploadedAt?: string | null
+  expiryDate?: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 // ======================
@@ -50,12 +59,13 @@ export interface DocumentCertificate {
   uploadedBy: BasicUser
   uploadedAt: string
   status: ReviewStatus
-  comment: string | null
+  comment: string | undefined
+  // submittedAt?: string | undefined
 
-  rejectedAt?: string | null
+  rejectedAt?: string
   rejectedBy?: BasicUser | null
 
-  approvedAt?: string | null
+  approvedAt?: string
   approvedBy?: BasicUser | null
 }
 

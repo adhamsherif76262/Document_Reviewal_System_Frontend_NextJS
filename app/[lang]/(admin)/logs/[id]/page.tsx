@@ -185,7 +185,7 @@ export default function LogDetailsPage() {
   // 🦴 Skeleton
   // =========================
   if (loading) {
-    return <TableSkeleton L={2}/>
+    return <TableSkeleton L={12}/>
   }
 
   // =========================
@@ -222,6 +222,7 @@ export default function LogDetailsPage() {
         </CardContent>
       </Card>
       <Card>
+        <h1 className='text-2xl font-black text-center'>{actorData?.adminLevel === null ? "User Details" : "Admin Details"}</h1>
         <CardHeader className='flex xs:flex-row xxxs:flex-col xxxs:items-center xs:items-center xs:justify-between xxxs:justify-between'>
           <div className="flex items-center gap-4">
             <Avatar>
@@ -364,6 +365,7 @@ export default function LogDetailsPage() {
       {
         adminData && (
         <Card>
+          <h1 className='text-2xl font-black text-center'>Admin Details</h1>
           <CardHeader className='flex xs:flex-row xxxs:flex-col xxxs:items-center xs:items-center xs:justify-between xxxs:justify-between'>
             <div className="flex items-center gap-4">
               <Avatar>

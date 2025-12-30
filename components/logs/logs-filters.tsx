@@ -564,7 +564,7 @@ export function LogsFilters({
 
 
 
-{/* <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+{/* <ul className="timeline timeline-snap-icon max-xxs:timeline-compact timeline-vertical overflow-scroll max-h-[300px]">
   <li>
     <div className="timeline-middle">
       <svg
@@ -583,11 +583,7 @@ export function LogsFilters({
     <div className="timeline-start mb-10 md:text-end">
       <time className="font-mono italic">1984</time>
       <div className="text-lg font-black">First Macintosh computer</div>
-      The Apple Macintosh—later rebranded as the Macintosh 128K—is the original Apple Macintosh
-      personal computer. It played a pivotal role in establishing desktop publishing as a general
-      office function. The motherboard, a 9 in (23 cm) CRT monitor, and a floppy drive were housed
-      in a beige case with integrated carrying handle; it came with a keyboard and single-button
-      mouse.
+      The Apple Macintosh—later rebranded      mouse.
     </div>
     <hr />
   </li>
