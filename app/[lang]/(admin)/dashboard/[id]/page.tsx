@@ -146,6 +146,7 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '../../../../context/AuthContext'
 import Image from 'next/image'
 import React from 'react'
+import { json } from 'stream/consumers'
 
 export default function DocumentDetailsPage() {
 
@@ -218,6 +219,101 @@ export default function DocumentDetailsPage() {
   // =========================
   return (
     <div dir='ltr' className="space-y-6">
+
+      <Card>
+        <h1 className='text-2xl font-black text-center animate-pulse'>Submission Custody Details</h1>
+        <CardHeader className='px-0 py-4 mx-4 rounded-4xl bg-gray-500'>
+        <h2 className='text-xl font-black text-white text-center'>Current Holder Details</h2>
+          <div className="grid grid-cols-1 xxxlg:grid-cols-[1fr_2fr_1fr_1fr] gap-4 text-center text-lg pb-4">
+            <div className="flex items-center gap-4 mx-auto">
+              <div>
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <User className="h-5 w-5" />
+                  {docData?.custody?.currentHolder?.name}
+                </CardTitle>
+              </div>
+            </div>
+
+              {/* <CardContent className="space-y-6 xxxs:text-center xs:text-left xxxs:mx-auto xs:mx-0"> */}
+              <div className="text-white font-black flex xxs:flex-row xxs:items-center xxs:justify-start  xxxs:flex-col xxxs:justify-center xxxs:items-center gap-2 mx-auto">
+                <Mail className="h-4 w-4 text-muted-foregsround" />
+                <p className='xxxs:text-sm xxs:text-lg'>{docData?.user.email}</p>
+              </div>
+
+              <div className="text-white font-black flex xxs:flex-row xxs:items-center xxxs:flex-col xxxs:justify-center xxxs:items-center gap-2">
+                <Phone className="h-4 w-4 text-mutsed-foreground" />
+                <p>{docData?.user.phone}</p>
+              </div>
+              <div className='flex flex-row items-center text-white justify-center'>
+                {/* <p className="text-muted-foreground">Role :</p> */}
+                <UserStar />
+                <Badge variant = {"secondary"}  className='h-8 w-20 text-lg font-black'>{docData?.user.role}</Badge>
+              </div>
+            </div>
+            {
+              docData?.custody.currentHolder.role && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0 mx-auto font-black' onClick={()=>router.push(`/${lang}/users/${docData?.custody?.currentHolder?._id}`)}>Submission History</Button>)
+            }
+            {
+              (docData?.custody.currentHolder.adminLevel && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0 mx-auto font-black' onClick={()=>router.push(`/${lang}/admins/${docData?.custody?.currentHolder?._id}`)}>Reviews History</Button>))
+            }
+            {/* </CardContent> */}
+        </CardHeader>
+
+        <div className="bg-gray-500 p-4 mx-4 rounded-4xl">
+          <h2 className='text-xl font-black text-white text-center mb-4'>Previous Holders&apos; Details</h2>
+          <div className='tabs tabs-box bg-gray-500 border-2 rounded-xl'>
+            {
+              docData?.custody.previousHolders.map((PreviousHolder , index)=>(
+              <>
+                <input type="radio" name="my_tabs_6" className="tab text-white font-black shadow-3xl" aria-label={`Previous Holder ${index + 1}`} defaultChecked/>
+                <div className="tab-content bg-base-100 border-base-300 xxxs:px-1 xxxs:py-2 xs:p-6 bg-card rounded-xl text-center">
+                  <div className="grid md:grid-cols-[1fr_2.5fr_1fr_0.5fr] sm:grid-cols-[1fr_1.5fr] xxxs:grid-cols-1 w-full max-w-full gap-2">
+                    <Item variant="outline" className='font-black hover:text-white hover:bg-black transition-all duration-300'>
+                      <ItemContent>
+                        <User className="h-8 w-8 text-center mx-auto" />
+                        <ItemDescription className='text-center pt-1 font-black text-blasck hover:text-white'>
+                          {PreviousHolder.name}
+                        </ItemDescription>
+                      </ItemContent>
+                    </Item>
+                    <Item variant="outline" className='px-0 font-black hover:text-white hover:bg-black transition-all duration-300'>
+                      <ItemContent>
+                        <Mail className="h-8 w-8 text-center mx-auto" />
+                        <ItemDescription className='text-center pt-1 px-0 font-black xxxs:text-[9px] xxs:text-sm text-blasck'>
+                          {PreviousHolder.email}
+                        </ItemDescription>
+                      </ItemContent>
+                    </Item>
+                    <Item variant="outline"  className='font-black hover:text-white hover:bg-black transition-all duration-300'>
+                      <ItemContent>
+                        <Phone className="h-8 w-8 text-center mx-auto" />
+                        <ItemDescription className='text-center pt-1 font-black text-blasck'>
+                          {PreviousHolder.phone}
+                        </ItemDescription>
+                      </ItemContent>
+                    </Item>
+                    <Item variant="outline"  className='font-black hover:text-white hover:bg-black transition-all duration-300'>
+                      <ItemContent>
+                        <UserStar className="h-8 w-8 text-center mx-auto" />
+                        <ItemDescription  className='text-center pt-1 font-black text-blasck'>
+                          {PreviousHolder.role ? PreviousHolder.role : PreviousHolder.adminLevel}
+                        </ItemDescription>
+                      </ItemContent>
+                    </Item>
+                  </div>
+                    {
+                      PreviousHolder.role && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0 mt-6 text-center font-black' onClick={()=>router.push(`/${lang}/users/${PreviousHolder._id}`)}>Submission History</Button>)
+                    }
+                    {
+                      (PreviousHolder.adminLevel && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0 mt-6 text-center font-black' onClick={()=>router.push(`/${lang}/admins/${PreviousHolder._id}`)}>Reviews History</Button>))
+                    }
+                </div>
+              </>
+              ))
+            }
+          </div>
+        </div>
+      </Card>
 
       <Card>
         <h1 className='text-2xl font-black text-center animate-pulse'>User Details</h1>
