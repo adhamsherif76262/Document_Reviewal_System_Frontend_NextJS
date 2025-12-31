@@ -4,6 +4,8 @@ import { User } from 'lucide-react';
 
 import {Document} from "./document"
 export interface user {
+    user: any;
+    // user: any;
     _id: string
     name: string
     email: string
@@ -22,7 +24,7 @@ export interface user {
   
 }
 export interface EmbededUser {
-  user:user
+  user:user[]
   totalDocuments: number
   pendingCount: number
   approvedCount:number
