@@ -52,7 +52,7 @@
 //                   onChange={(e) => setEmail(e.target.value)}
 //                   className='w-full px-3 py-2 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500' />
 //               <Button className='mt-10' onClick={async () => await handleExtendUserExpiryDate(email)}>Extend User Account Expiry Date</Button>
-//               {message && <h1 className={`${status === "success" ? "text-green-600" : "text-red-600"} text-3xl text-center`}>{message}</h1>}
+//               {message && <h1 className={`${status === "success" ? "text-green-600" : "text-red-600"} text-2xl text-center`}>{message}</h1>}
 //         </section>
 //     </>    
 //   )
@@ -66,6 +66,7 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { Eye, EyeOff, Lock, Mail, User, Phone, Code, Check, AlertCircle, Loader2 } from "lucide-react"
+import { useParams, usePathname } from "next/navigation"
 
 type FormType = "login" | "register"
 type MessageType = { type: "error" | "success" | "loading"; text: string } | null
@@ -81,21 +82,21 @@ interface Node {
 
 const translations = {
   en: {
-    loginTitle: "Neural Login",
-    registerTitle: "Neural Register",
-    loginSubtitle: "Connect to your neural network",
-    registerSubtitle: "Initialize your neural network",
+    loginTitle: "Extend User Account Exipry Date",
+    registerTitle: "Generate A Registration Invitation Code For A New User Account",
+    loginSubtitle: "Extend Account Validity By One Year",
+    registerSubtitle: "This Will Be A One Time Use Invitation Code",
     email: "Email",
     password: "Password",
     name: "Full Name",
     phone: "Phone",
     invitationCode: "Invitation Code",
     verificationMethod: "Verification Method",
-    loginButton: "Login",
-    registerButton: "Register",
-    createAccount: "Create account",
+    loginButton: "Extend Expiry Date",
+    registerButton: "Generate Invitation Code",
+    createAccount: "Generate New User Account Invitation Code",
     forgotPassword: "Forgot password?",
-    alreadyHaveAccount: "Already have an account?",
+    alreadyHaveAccount: "Extend A User's Account Expiry Date",
     emailRequired: "Email is required",
     invalidEmail: "Invalid email format",
     passwordRequired: "Password is required",
@@ -111,28 +112,28 @@ const translations = {
     nameFormat: "Name can only contain letters and spaces",
     codeRequired: "Invitation code is required",
     codeLength: "Invitation code must be at least 6 characters",
-    fixErrors: "Please fix the errors above",
-    authenticating: "Authenticating...",
-    loginSuccess: "Login successful!",
-    creatingAccount: "Creating your account...",
-    accountCreated: "Account created successfully!",
+    fixErrors: "Please Fix The Errors Below",
+    authenticating: "Extending Account Expiry Date By One Year",
+    loginSuccess: "Account Expiry Date Extension successful!",
+    creatingAccount: "Generating Invitation Code...",
+    accountCreated: "Invitation Code Generation successful!",
   },
   ar: {
-    loginTitle: "تسجيل دخول عصبي",
-    registerTitle: "تسجيل عصبي",
-    loginSubtitle: "اتصل بشبكتك العصبية",
-    registerSubtitle: "تهيئة شبكتك العصبية",
+    loginTitle: "تمديد صلاحية حساب المستخدم",
+    registerTitle: "قم بتوليد رمز الدعوة لحساب المستخدم جديد",
+    loginSubtitle: "مدد صلاحية حساب المستخدم بسنة واحدة",
+    registerSubtitle: "سيكون هذا الرمز قابل للاستخدام مرة واحدة فقط",
     email: "البريد الإلكتروني",
     password: "كلمة المرور",
     name: "الاسم الكامل",
     phone: "رقم الهاتف",
     invitationCode: "رمز الدعوة",
     verificationMethod: "طريقة التحقق",
-    loginButton: "تسجيل الدخول",
-    registerButton: "تسجيل",
-    createAccount: "إنشاء حساب",
+    loginButton: "مدد صلاحية حساب",
+    registerButton: "توليد رمز الدعوة",
+    createAccount: "توليد رمز الدعوة لمستخدم جديد",
     forgotPassword: "نسيت كلمة المرور؟",
-    alreadyHaveAccount: "هل لديك حساب بالفعل؟",
+    alreadyHaveAccount: "تمديد صلاحية حساب المستخدم",
     emailRequired: "البريد الإلكتروني مطلوب",
     invalidEmail: "تنسيق البريد الإلكتروني غير صالح",
     passwordRequired: "كلمة المرور مطلوبة",
@@ -148,19 +149,21 @@ const translations = {
     nameFormat: "يمكن أن يحتوي الاسم على أحرف ومسافات فقط",
     codeRequired: "رمز الدعوة مطلوب",
     codeLength: "يجب أن يكون رمز الدعوة 6 أحرف على الأقل",
-    fixErrors: "يرجى إصلاح الأخطاء أعلاه",
-    authenticating: "جاري المصادقة...",
-    loginSuccess: "تم تسجيل الدخول بنجاح!",
-    creatingAccount: "جاري إنشاء حسابك...",
-    accountCreated: "تم إنشاء الحساب بنجاح!",
+    fixErrors: "يرجى إصلاح الأخطاء أدناه",
+    authenticating: "جاري تمديد صلاحية حساب المستخدم بعام اضافي...",
+    loginSuccess: "تم تمديد صلاحية حساب المستخدم بنجاح !",
+    creatingAccount: "جاري توليد رمز الدعوة لحساب المستخدم الجديد...",
+    accountCreated: "تم توليد رمز الدعوة لحساب المستخدم بنجاح!",
   },
 }
 
 export default function NeuralNetworkAuth() {
-  const [lang, setLang] = useState<Language>("en")
+//   const {L} = useParams()
+  const pathname = usePathname()
+  const [lang, setLang] = useState<Language>(pathname.includes("ar") ? "ar" : "en")
   const [formType, setFormType] = useState<FormType>("login")
   const [isTransitioning, setIsTransitioning] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+//   const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState<MessageType>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const nodesRef = useRef<Node[]>([])
@@ -182,6 +185,7 @@ export default function NeuralNetworkAuth() {
   const isRTL = lang === "ar"
 
   useEffect(() => {
+    document.body.style.overflow = "hidden"
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -290,33 +294,10 @@ export default function NeuralNetworkAuth() {
     return null
   }
 
-  const validatePassword = (password: string): string | null => {
-    if (!password) return t.passwordRequired
-    if (password.length < 8) return t.passwordLength
-    if (!/[A-Z]/.test(password)) return t.passwordUppercase
-    if (!/[a-z]/.test(password)) return t.passwordLowercase
-    if (!/[0-9]/.test(password)) return t.passwordNumber
-    if (!/[!@#$%^&*]/.test(password)) return t.passwordSpecial
-    return null
-  }
-
-  const validatePhone = (phone: string): string | null => {
-    if (!phone) return t.phoneRequired
-    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/
-    if (!phoneRegex.test(phone)) return t.invalidPhone
-    return null
-  }
-
   const validateName = (name: string): string | null => {
     if (!name) return t.nameRequired
     if (name.length < 2) return t.nameLength
     if (!/^[a-zA-Z\s]+$/.test(name)) return t.nameFormat
-    return null
-  }
-
-  const validateInvitationCode = (code: string): string | null => {
-    if (!code) return t.codeRequired
-    if (code.length < 6) return t.codeLength
     return null
   }
 
@@ -336,10 +317,9 @@ export default function NeuralNetworkAuth() {
 
     const newErrors: Record<string, string> = {}
     const emailError = validateEmail(loginData.email)
-    const passwordError = validatePassword(loginData.password)
 
     if (emailError) newErrors.email = emailError
-    if (passwordError) newErrors.password = passwordError
+    // if (passwordError) newErrors.password = passwordError
 
     setErrors(newErrors)
 
@@ -359,17 +339,12 @@ export default function NeuralNetworkAuth() {
     setMessage(null)
 
     const newErrors: Record<string, string> = {}
-    const emailError = validateEmail(registerData.email)
-    const passwordError = validatePassword(registerData.password)
-    const phoneError = validatePhone(registerData.phone)
     const nameError = validateName(registerData.name)
-    const codeError = validateInvitationCode(registerData.invitationCode)
 
-    if (emailError) newErrors.email = emailError
-    if (passwordError) newErrors.password = passwordError
-    if (phoneError) newErrors.phone = phoneError
     if (nameError) newErrors.name = nameError
-    if (codeError) newErrors.invitationCode = codeError
+    // if (passwordError) newErrors.password = passwordError
+    // if (phoneError) newErrors.phone = phoneError
+    // if (codeError) newErrors.invitationCode = codeError
 
     setErrors(newErrors)
 
@@ -396,25 +371,17 @@ export default function NeuralNetworkAuth() {
     })
   }
 
+//   ueeff
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950" dir={isRTL ? "rtl" : "ltr"}>
-      <canvas ref={canvasRef} className="fixed inset-0 w-full h-full" />
+      <canvas ref={canvasRef} className="fixed top-42 inset-0 w-full h-full" />
 
-      <div className="fixed top-4 right-4 z-20">
-        <button
-          onClick={() => setLang(lang === "en" ? "ar" : "en")}
-          className="rounded-lg bg-slate-800/80 px-4 py-2 text-sm font-medium text-cyan-400 backdrop-blur-sm transition-all hover:bg-slate-700/80 hover:text-cyan-300"
-        >
-          {lang === "en" ? "العربية" : "English"}
-        </button>
-      </div>
-
-      <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+      <div className="relative z-10 flex xxxs:min-h-[400px] items-center justify-center p-0">
         <div
-          className={`w-full max-w-md transform transition-all duration-300 ${isTransitioning ? "scale-95 opacity-0" : "scale-100 opacity-100"}`}
+          className={`w-full max-w-xl transform transition-all duration-300 ${isTransitioning ? "scale-95 opacity-0" : "scale-100 opacity-100"}`}
         >
-          <div className="rounded-2xl border border-cyan-500/20 bg-slate-900/90 p-8 shadow-2xl backdrop-blur-md">
-            <h2 className="mb-2 text-center text-3xl font-bold text-white">
+          <div className="rounded-2xl border border-cyan-500/20 bg-slate-900/90 xxxs:p-4 xxs:p-8 shadow-2xl backdrop-blur-md">
+            <h2 className="mb-2 text-center text-2xl font-bold text-white">
               {formType === "login" ? t.loginTitle : t.registerTitle}
             </h2>
             <p className="mb-8 text-center text-sm text-slate-400">
@@ -461,54 +428,20 @@ export default function NeuralNetworkAuth() {
                   {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
                 </div>
 
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{t.password}</label>
-                  <div className="relative">
-                    <Lock
-                      className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500`}
-                    />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                      onFocus={() => handleFieldFocus("password")}
-                      onBlur={() => handleFieldBlur("password")}
-                      className={`w-full rounded-lg border ${
-                        errors.password ? "border-red-500/50" : "border-slate-700"
-                      } bg-slate-800/50 py-3 ${isRTL ? "pr-11 pl-12" : "pl-11 pr-12"} text-white placeholder-slate-500 transition-all focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:shadow-lg focus:shadow-cyan-500/20`}
-                      placeholder="••••••••"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 text-slate-500 transition-all hover:scale-110 hover:text-cyan-400`}
-                    >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                  </div>
-                  {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password}</p>}
-                </div>
-
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 py-3 font-semibold text-white shadow-lg shadow-cyan-500/30 transition-all hover:from-cyan-400 hover:to-blue-400 hover:shadow-xl hover:shadow-cyan-500/50 active:scale-95"
+                  className="hover:cursor-pointer font-black w-full rounded-lg bg-linear-to-r from-cyan-500 to-blue-500 py-3 text-white shadow-lg shadow-cyan-500/30 transition-all hover:from-cyan-400 hover:to-blue-400 hover:shadow-xl hover:shadow-cyan-500/50 active:scale-95"
                 >
                   {t.loginButton}
                 </button>
 
-                <div className="flex items-center justify-between text-sm">
+                <div className="text-xl text-center">
                   <button
                     type="button"
                     onClick={switchForm}
-                    className="text-cyan-400 transition-colors hover:text-cyan-300 hover:underline"
+                    className="text-cyan-400 transition-colors hover:cursor-pointer hover:text-cyan-300 hover:underline font-black"
                   >
                     {t.createAccount}
-                  </button>
-                  <button
-                    type="button"
-                    className="text-slate-400 transition-colors hover:text-slate-300 hover:underline"
-                  >
-                    {t.forgotPassword}
                   </button>
                 </div>
               </form>
@@ -534,107 +467,9 @@ export default function NeuralNetworkAuth() {
                   </div>
                   {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
                 </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{t.email}</label>
-                  <div className="relative">
-                    <Mail
-                      className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500`}
-                    />
-                    <input
-                      type="email"
-                      value={registerData.email}
-                      onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                      onFocus={() => handleFieldFocus("email")}
-                      onBlur={() => handleFieldBlur("email")}
-                      className={`w-full rounded-lg border ${
-                        errors.email ? "border-red-500/50" : "border-slate-700"
-                      } bg-slate-800/50 py-2.5 ${isRTL ? "pr-11 pl-4" : "pl-11 pr-4"} text-white placeholder-slate-500 transition-all focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:shadow-lg focus:shadow-cyan-500/20`}
-                      placeholder="you@example.com"
-                    />
-                  </div>
-                  {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{t.phone}</label>
-                  <div className="relative">
-                    <Phone
-                      className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500`}
-                    />
-                    <input
-                      type="tel"
-                      value={registerData.phone}
-                      onChange={(e) => setRegisterData({ ...registerData, phone: e.target.value })}
-                      onFocus={() => handleFieldFocus("phone")}
-                      onBlur={() => handleFieldBlur("phone")}
-                      className={`w-full rounded-lg border ${
-                        errors.phone ? "border-red-500/50" : "border-slate-700"
-                      } bg-slate-800/50 py-2.5 ${isRTL ? "pr-11 pl-4" : "pl-11 pr-4"} text-white placeholder-slate-500 transition-all focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:shadow-lg focus:shadow-cyan-500/20`}
-                      placeholder="+1 234 567 8900"
-                    />
-                  </div>
-                  {errors.phone && <p className="mt-1 text-xs text-red-400">{errors.phone}</p>}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{t.password}</label>
-                  <div className="relative">
-                    <Lock
-                      className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500`}
-                    />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={registerData.password}
-                      onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                      onFocus={() => handleFieldFocus("password")}
-                      onBlur={() => handleFieldBlur("password")}
-                      className={`w-full rounded-lg border ${
-                        errors.password ? "border-red-500/50" : "border-slate-700"
-                      } bg-slate-800/50 py-2.5 ${isRTL ? "pr-11 pl-12" : "pl-11 pr-12"} text-white placeholder-slate-500 transition-all focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:shadow-lg focus:shadow-cyan-500/20`}
-                      placeholder="••••••••"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className={`absolute ${isRTL ? "left-3" : "right-3"} top-1/2 -translate-y-1/2 text-slate-500 transition-all hover:scale-110 hover:text-cyan-400`}
-                    >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                  </div>
-                  {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password}</p>}
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">{t.invitationCode}</label>
-                  <div className="relative">
-                    <Code
-                      className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500`}
-                    />
-                    <input
-                      type="text"
-                      value={registerData.invitationCode}
-                      onChange={(e) => setRegisterData({ ...registerData, invitationCode: e.target.value })}
-                      onFocus={() => handleFieldFocus("code")}
-                      onBlur={() => handleFieldBlur("code")}
-                      className={`w-full rounded-lg border ${
-                        errors.invitationCode ? "border-red-500/50" : "border-slate-700"
-                      } bg-slate-800/50 py-2.5 ${isRTL ? "pr-11 pl-4" : "pl-11 pr-4"} text-white placeholder-slate-500 transition-all focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 focus:shadow-lg focus:shadow-cyan-500/20`}
-                      placeholder="ABC123XYZ"
-                    />
-                  </div>
-                  {errors.invitationCode && <p className="mt-1 text-xs text-red-400">{errors.invitationCode}</p>}
-                </div>
-
-                <div className="rounded-lg border border-slate-700 bg-slate-800/30 p-2.5">
-                  <p className="text-xs text-slate-400">
-                    {t.verificationMethod}: <span className="font-medium text-slate-300">{t.email}</span>
-                  </p>
-                </div>
-
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 py-3 font-semibold text-white shadow-lg shadow-cyan-500/30 transition-all hover:from-cyan-400 hover:to-blue-400 hover:shadow-xl hover:shadow-cyan-500/50 active:scale-95"
+                  className="hover:cursor-pointer w-full rounded-lg bg-linear-to-r from-cyan-500 to-blue-500 py-3 font-semibold text-white shadow-lg shadow-cyan-500/30 transition-all hover:from-cyan-400 hover:to-blue-400 hover:shadow-xl hover:shadow-cyan-500/50 active:scale-95"
                 >
                   {t.registerButton}
                 </button>
@@ -643,7 +478,7 @@ export default function NeuralNetworkAuth() {
                   <button
                     type="button"
                     onClick={switchForm}
-                    className="text-cyan-400 transition-colors hover:text-cyan-300 hover:underline"
+                    className="text-cyan-400 transition-colors hover:text-cyan-300 hover:underline hover:cursor-pointer font-black text-xl"
                   >
                     {t.alreadyHaveAccount}
                   </button>
