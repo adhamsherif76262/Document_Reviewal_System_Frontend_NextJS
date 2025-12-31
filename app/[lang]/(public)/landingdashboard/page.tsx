@@ -83,9 +83,9 @@ export default function LandingDashboardPage() {
       {
         user.role === "admin" && <Button className='mb-10' onClick={()=>{router.push(`/${localStorage.getItem("lang") || "en"}/extendExpiryDate`);}}>Extend User Account Expiry Date</Button>
       }
-      {
+      {/* {
         user.role === "admin" && <Button className='mb-10' onClick={async()=>{await getAllUserStats();}}>Get All User&apos;s Statistics</Button>
-      }
+      } */}
       {userStatsLoading && <h2 className='text-blue-600 text-center'>Loading All User&lsquo;s Statistics</h2>}
       {userStatsMessage && <h1 className={`${userStatsStatus === "success" ? "text-green-600" : "text-red-600"} text-3xl text-center`}>{userStatsMessage}</h1>}
       {
@@ -104,10 +104,8 @@ export default function LandingDashboardPage() {
                     <p className=" mb-2 text-white">Email: {user.user.email}</p>
                     <p className=" mb-2 text-white">Phone: {user.user.phone}</p>
                     <p className=" mb-2 text-white">Role: {user.user.role}</p>
-                    {/* <p className=" mb-2 text-white">Admin Level: {user.user.adminLevel}</p> */}
                     <p className=" mb-2 text-white">Expiry Status: {user.user.expiryStatus}</p>
                     <p className=" mb-2 text-white">Preferred Verification Method: {user.user.preferredVerificationMethod}</p>
-                    {/* <p className=" mb-2 text-white">Verification Status: {user.user.verificationStatus}</p> */}
                     <p className=" mb-2 text-white">Is Verified: {user.user.isVerified ? 'Yes' : 'No'}</p>
                     <p className=" mb-2 text-white">Expirable: {user.user.expirable ? 'Yes' : 'No'}</p>
                     <p className=" mb-2 text-white">Expiry Date: {new Date(user.user.expiryDate).toLocaleDateString()} At {new Date(user.user.expiryDate).toLocaleTimeString()}</p>
