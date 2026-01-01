@@ -47,7 +47,7 @@ export default function AdminLayout({
   return (
     <>
       <AdminNavbar />
-      <main className="min-h-screen px-6 py-6 bg-muted">
+      <main className="min-h-screen px-3 py-10 bg-muted">
         {children}
       </main>
     </>
