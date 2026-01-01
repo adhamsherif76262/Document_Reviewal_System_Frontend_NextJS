@@ -179,38 +179,18 @@ export default function MagneticCardNavbar() {
   const [currentLanguage,] = useState<ParamValue>(lang)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
-   const [isScrolled, setIsScrolled] = useState(false);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     // Set to true if scrolled down more than 50px
-  //     if (window.scrollY > 50) {
-  //       setIsScrolled(true);
-  //     } else {
-  //       setIsScrolled(false);
-  //     }
-  //   };
-
-  //   window.addEventListener('scroll', handleScroll);
-    
-  //   // Cleanup the listener on unmount to prevent memory leaks
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, []);
-
     useEffect(() => {
   if (isMenuOpen) {
     // Lock scroll
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); 
     document.body.style.overflow = "hidden"
     document.body.style.touchAction = "none" // mobile Safari fix
-    if(pathname.includes("userAccountMangement")){
-
-      document.body.getElementsByTagName("nav").item(0)?.classList.add("relative")
-    }
+    // if(pathname.includes("userAccountMangement")){
+    //   document.body.getElementsByTagName("nav").item(0)?.classList.add("fixed")
+    // }
   } else {
     // Restore scroll
     if(pathname.includes("userAccountMangement")){
-
       document.body.getElementsByTagName("nav").item(0)?.classList.add("fixed")
     }
     document.body.style.overflow = "visible"
@@ -221,8 +201,11 @@ export default function MagneticCardNavbar() {
     // Cleanup on unmount
     if(pathname.includes("userAccountMangement")){
 
-      document.body.getElementsByTagName("nav").item(0)?.classList.add("fixed")
+      document.body.getElementsByTagName("nav").item(0)?.classList.add("relative")
     }
+    // else{
+    //   document.body.getElementsByTagName("nav").item(0)?.classList.add("relative")
+    // }
     // document.body.getElementsByTagName("nav").item(0)?.classList.add("mb-10")
     document.body.style.overflow = "visible"
     document.body.style.touchAction = "auto"
@@ -304,7 +287,7 @@ if (!user) {
   ]
 
   return (
-    <nav  className={`w-full bg-zinc-950 border-b border-zinc-800 ${isRTL ? "rtl" : "ltr"} ${isScrolled  ? "bg-red-600" : "bg-green-600"} inset-0 z-100 ${isMenuOpen ? "top-0" : "max-h-fit"}`}>
+    <nav  className={`w-full bg-zinc-950 border-b border-zinc-800 ${isRTL ? "rtl" : "ltr"} inset-0 z-100 ${isMenuOpen ? "top-0" : "max-h-fit"}`}>
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Desktop View */}
         <div className="hidden xxxlg:flex items-center justify-between gap-4">

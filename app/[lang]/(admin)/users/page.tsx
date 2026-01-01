@@ -193,9 +193,9 @@ export default function LogsPage() {
         ) : data ? (
           <section dir={"ltr"}>
             <div className='flex xxxs:flex-col xxxs:items-center xxxs:justify-between md:flex-row md:items-center md:justify-evenly'>
-              <Button className='hover:text-black font-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-8 md:my-0' onClick={()=>router.push(`/${lang}/userAccountMangement`)}>Generate User Account Invitation Code</Button>
+              <Button className='hover:text-black font-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-8 md:my-0' onClick={()=>router.push(`/${lang}/userAccountMangement?activeForm=register`)}>Generate User Account Invitation Code</Button>
               <span className='flex flex-col items-center justify-between'><p className='font-black xxxs:text-lg xxxs:text-center xxxs:pb-5 xxs:text-xl'>Total Number Of Filtered Users :</p> <strong className='text-xl xxxs:pb-5 md:pb-0'>{data.pagination.totalUsers}</strong></span>
-              <Button className='hover:text-black font-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-8 md:my-0' onClick={()=>router.push(`/${lang}/userAccountMangement`)}>Extend User Account Expiry Date</Button>
+              <Button className='hover:text-black font-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-8 md:my-0' onClick={()=>router.push(`/${lang}/userAccountMangement?activeForm=login`)}>Extend User Account Expiry Date</Button>
 
               {/* <span className='flex flex-col items-center justify-between'><p className='font-black xxxs:text-lg xxxs:text-center xxxs:pb-5 xxs:text-xl'>Total Number Of Exsisting Users :</p> <strong className='text-xl'>{metricsData?.totalUsers}</strong> </span> */}
             </div>

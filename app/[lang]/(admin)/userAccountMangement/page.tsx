@@ -66,9 +66,9 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { Eye, EyeOff, Lock, Mail, User, Phone, Code, Check, AlertCircle, Loader2 } from "lucide-react"
-import { useParams, usePathname } from "next/navigation"
+import { useParams, usePathname ,useSearchParams } from "next/navigation"
 
-type FormType = "login" | "register"
+type FormType = "login" | "register" | null | string
 type MessageType = { type: "error" | "success" | "loading"; text: string } | null
 type Language = "en" | "ar"
 
@@ -158,10 +158,14 @@ const translations = {
 }
 
 export default function NeuralNetworkAuth() {
-//   const {L} = useParams()
+  // const {L} = useParams()
+  const searchParams = useSearchParams()
+  const activeForm = searchParams.get("activeForm")
+  // alert(activeForm)
   const pathname = usePathname()
   const [lang, setLang] = useState<Language>(pathname.includes("ar") ? "ar" : "en")
-  const [formType, setFormType] = useState<FormType>("login")
+  const [formType, setFormType] = useState<FormType>(activeForm)
+  // alert(formType)
   const [isTransitioning, setIsTransitioning] = useState(false)
 //   const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState<MessageType>(null)
@@ -297,7 +301,8 @@ export default function NeuralNetworkAuth() {
   const validateName = (name: string): string | null => {
     if (!name) return t.nameRequired
     if (name.length < 2) return t.nameLength
-    if (!/^[a-zA-Z\s]+$/.test(name)) return t.nameFormat
+    // if (!/^[a-zA-Z\s]+$/.test(name)) return t.nameFormat
+    if (!/^[a-zA-Z\s\u0600-\u06FF\u0750-\u077F\uFB50-\uFBC1\uFBD3-\uFD3F\uFD50-\uFD8F\uFD92-\uFDC7\uFE70-\uFEFC\uFDF0-\uFDFD]+$/.test(name)) return t.nameFormat
     return null
   }
 
