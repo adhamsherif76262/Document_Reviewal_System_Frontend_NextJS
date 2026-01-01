@@ -67,6 +67,8 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { Eye, EyeOff, Lock, Mail, User, Phone, Code, Check, AlertCircle, Loader2 } from "lucide-react"
 import { useParams, usePathname ,useSearchParams } from "next/navigation"
+import { useInviteCode } from "../../../hooks/useInviteCode"
+import { useExtendUserExpiryDate } from "../../../hooks/useExtendUserExpiryDate"
 
 type FormType = "login" | "register" | null | string
 type MessageType = { type: "error" | "success" | "loading"; text: string } | null
@@ -173,17 +175,15 @@ export default function NeuralNetworkAuth() {
   const nodesRef = useRef<Node[]>([])
   const densityIncreasedRef = useRef(false)
 
-  const [loginData, setLoginData] = useState({ email: "", password: "" })
-  const [registerData, setRegisterData] = useState({
-    email: "",
-    password: "",
-    phone: "",
-    name: "",
-    invitationCode: "",
-  })
+  const [loginData, setLoginData] = useState({ email: ""})
+  const [registerData, setRegisterData] = useState({name: ""})
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [activeFields, setActiveFields] = useState<Set<string>>(new Set())
+
+    const {generateInvite , inviteCodeLoading , inviteCodemessage , code} = useInviteCode()
+
+    const {handleExtendUserExpiryDate , extendExpiryDateloading , extendExpiryDateMessage , status} = useExtendUserExpiryDate()
 
   const t = translations[lang]
   const isRTL = lang === "ar"
@@ -313,7 +313,7 @@ export default function NeuralNetworkAuth() {
     setTimeout(() => {
       setFormType(formType === "login" ? "register" : "login")
       setIsTransitioning(false)
-    }, 300)
+    }, 500)
   }
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -334,9 +334,22 @@ export default function NeuralNetworkAuth() {
     }
 
     setMessage({ type: "loading", text: t.authenticating })
-    setTimeout(() => {
+
+    const result = await handleExtendUserExpiryDate(loginData.email)
+
+      if (result.success) {
       setMessage({ type: "success", text: t.loginSuccess })
-    }, 1500)
+        if(formType === "login"){
+          setTimeout(() => {
+              switchForm()
+            }, 3000)
+        }
+        } else {
+            setMessage({ type: "error", text: result.error })
+        }
+    // setTimeout(() => {
+    //   setMessage({ type: "success", text: t.loginSuccess })
+    // }, 1500)
   }
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -359,9 +372,23 @@ export default function NeuralNetworkAuth() {
     }
 
     setMessage({ type: "loading", text: t.creatingAccount })
-    setTimeout(() => {
+
+        const result = await generateInvite(registerData.name)
+
+          if (result.success) {
       setMessage({ type: "success", text: t.accountCreated })
-    }, 1500)
+        if(formType === "register"){
+          setTimeout(() => {
+              switchForm()
+            }, 3000)
+        }
+  } else {
+      setMessage({ type: "error", text: result.error })
+  }
+
+    // setTimeout(() => {
+    //   setMessage({ type: "success", text: t.accountCreated })
+    // }, 1500)
   }
 
   const handleFieldFocus = (field: string) => {

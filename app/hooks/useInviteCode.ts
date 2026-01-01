@@ -4,21 +4,24 @@ import api from "../../lib/api";
 
 export function useInviteCode() {
   const [inviteCodeLoading, setInviteCodeLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [inviteCodemessage, setInviteCodeMessage] = useState<string>("");
   const [code, setCode] = useState("");
 
   const generateInvite = async (generatedFor: string) => {
     setInviteCodeLoading(true);
-    setError("");
+    setInviteCodeMessage("");
     try {
     const res = await api.post("/api/users/generate-invite-code", { generatedFor });
     setCode(res.data.code);
+    return{data: res.data ,success : true}
     }
     catch (err: any) {
-      setError(err?.response?.data?.message || 'Invide Code Generation failed');
+      setInviteCodeMessage(err?.response?.data?.message || 'Invide Code Generation failed');
+      const msg = err?.response?.data?.message || 'Forgot Password failed'
+      return{success : false , error : msg}
     } finally {
       setInviteCodeLoading(false);
     }  };
 
-  return { generateInvite, inviteCodeLoading, code , error};
+  return { generateInvite, inviteCodeLoading, code , inviteCodemessage};
 }

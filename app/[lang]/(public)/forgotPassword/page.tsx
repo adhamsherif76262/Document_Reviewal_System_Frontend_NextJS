@@ -622,7 +622,7 @@ const resetRegisterForm = () => {
 
                 <button
                   type="submit"
-                  className="hover:cursor-pointer w-full rounded-lg bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 py-3 font-semibold text-white transition-all hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400 hover:shadow-lg hover:shadow-violet-500/50 active:scale-95"
+                  className="hover:cursor-pointer w-full rounded-lg bg-linear-to-r from-violet-600 via-purple-500 to-fuchsia-500 py-3 font-semibold text-white transition-all hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400 hover:shadow-lg hover:shadow-violet-500/50 active:scale-95"
                 >
                   {t.login}
                 </button>
@@ -832,7 +832,7 @@ const resetRegisterForm = () => {
 
                 <button
                   type="submit"
-                  className="hover:cursor-pointer w-full rounded-lg bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 py-3 font-semibold text-white transition-all hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400 hover:shadow-lg hover:shadow-violet-500/50 active:scale-95"
+                  className="hover:cursor-pointer w-full rounded-lg bg-linear-to-r from-violet-600 via-purple-500 to-fuchsia-500 py-3 font-semibold text-white transition-all hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400 hover:shadow-lg hover:shadow-violet-500/50 active:scale-95"
                 >
                   {t.register}
                 </button>
