@@ -227,7 +227,7 @@ export default function MagneticCardNavbar() {
     document.body.style.overflow = "visible"
     document.body.style.touchAction = "auto"
   }
-}, [isMenuOpen])
+}, [isMenuOpen , pathname])
 
 const closeMenu = () => {
   setIsMenuOpen(false)
