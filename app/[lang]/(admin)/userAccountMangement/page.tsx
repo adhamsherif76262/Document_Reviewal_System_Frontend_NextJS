@@ -185,7 +185,7 @@ export default function NeuralNetworkAuth() {
   const isRTL = lang === "ar"
 
   useEffect(() => {
-    document.body.style.overflow = "hidden"
+    // document.body.style.overflow = "hidden"
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -198,7 +198,7 @@ export default function NeuralNetworkAuth() {
     // Initialize nodes once if not already done
     if (nodesRef.current.length === 0 || !densityIncreasedRef.current) {
       const nodes = []
-      const count = window.innerWidth < 768 ? 30 : 50
+      const count = window.innerWidth < 768 ? 100 : 200
       for (let i = 0; i < count; i++) {
         nodes.push({
           x: Math.random() * canvas.width,
@@ -236,8 +236,8 @@ export default function NeuralNetworkAuth() {
           const dy = nodes[j].y - node.y
           const dist = Math.sqrt(dx * dx + dy * dy)
 
-          if (dist < 150) {
-            const opacity = 1 - dist / 150
+          if (dist < 200) {
+            const opacity = 1 - dist / 200
             ctx.beginPath()
             ctx.moveTo(node.x, node.y)
             ctx.lineTo(nodes[j].x, nodes[j].y)
@@ -373,10 +373,11 @@ export default function NeuralNetworkAuth() {
 
 //   ueeff
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950" dir={isRTL ? "rtl" : "ltr"}>
-      <canvas ref={canvasRef} className="fixed top-42 inset-0 w-full h-full" />
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 z-0" dir={isRTL ? "rtl" : "ltr"}>
 
-      <div className="relative z-10 flex xxxs:min-h-[400px] items-center justify-center p-0">
+      <canvas ref={canvasRef} className="fixed pointer-events-none tops-42 z-0 inset-0 w-full h-full" />
+
+      <div className="relative z-10 flex xxxs:min-h-screen items-center justify-center p-0">
         <div
           className={`w-full max-w-xl transform transition-all duration-300 ${isTransitioning ? "scale-95 opacity-0" : "scale-100 opacity-100"}`}
         >

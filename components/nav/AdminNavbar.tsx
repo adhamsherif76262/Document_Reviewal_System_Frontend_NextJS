@@ -185,6 +185,7 @@ export default function MagneticCardNavbar() {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); 
     document.body.style.overflow = "hidden"
     document.body.style.touchAction = "none" // mobile Safari fix
+    // document.body.getElementsByTagName("nav").item(0)?.classList.add("fixed top-0")
   } else {
     // Restore scroll
     document.body.style.overflow = "visible"
@@ -273,7 +274,7 @@ if (!user) {
   ]
 
   return (
-    <nav className={`w-full bg-zinc-950 border-b border-zinc-800 ${isRTL ? "rtl" : "ltr"} inset-0 z-20`}>
+    <nav  className={`w-full bg-zinc-950 border-b border-zinc-800 ${isRTL ? "rtl" : "ltr"} inset-0 z-100 fixed ${isMenuOpen ? "top-0" : "max-h-fit"}`}>
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Desktop View */}
         <div className="hidden xxxlg:flex items-center justify-between gap-4">
