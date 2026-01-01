@@ -180,19 +180,19 @@ export default function MagneticCardNavbar() {
   const dropdownRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
+      if(pathname.includes("userAccountMangement")){
+        document.body.getElementsByTagName("nav").item(0)?.classList.add("fixed")
+      }
   if (isMenuOpen) {
     // Lock scroll
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }); 
     document.body.style.overflow = "hidden"
     document.body.style.touchAction = "none" // mobile Safari fix
+  } else {
+    // Restore scroll
     // if(pathname.includes("userAccountMangement")){
     //   document.body.getElementsByTagName("nav").item(0)?.classList.add("fixed")
     // }
-  } else {
-    // Restore scroll
-    if(pathname.includes("userAccountMangement")){
-      document.body.getElementsByTagName("nav").item(0)?.classList.add("fixed")
-    }
     document.body.style.overflow = "visible"
     document.body.style.touchAction = "auto"
   }
