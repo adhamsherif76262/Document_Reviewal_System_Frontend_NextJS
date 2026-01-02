@@ -7,6 +7,7 @@ import api from '../../lib/api'
 interface GetAllUsersParams {
   page: number
   limit?: string
+  id?: string
   name?: string
   email?: string
   expiryStatus?: string

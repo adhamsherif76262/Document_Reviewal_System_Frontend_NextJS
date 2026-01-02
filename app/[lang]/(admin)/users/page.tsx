@@ -173,6 +173,7 @@ export default function LogsPage() {
           onChange={(key, value) => {
             setFilters(prev => ({ ...prev, [key]: value }))
             setLoading(true)
+            setPage(1)
           } }
           onReset={() => {
             setFilters({ 
@@ -185,6 +186,7 @@ export default function LogsPage() {
               createdBefore : "",
               createdAfter : "",
             })
+            setPage(1)
             setLoading(true)
           } } />
 

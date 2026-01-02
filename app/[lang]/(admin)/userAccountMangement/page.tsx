@@ -87,7 +87,7 @@ const translations = {
     loginTitle: "Extend User Account Exipry Date",
     registerTitle: "Generate A Registration Invitation Code For A New User Account",
     loginSubtitle: "Extend Account Validity By One Year",
-    registerSubtitle: "This Will Be A One Time Use Invitation Code",
+    registerSubtitle: "This Will Be A One Time Use Registration Invitation Code",
     email: "Email",
     password: "Password",
     name: "Full Name",
@@ -171,6 +171,7 @@ export default function NeuralNetworkAuth() {
   const [isTransitioning, setIsTransitioning] = useState(false)
 //   const [showPassword, setShowPassword] = useState(false)
   const [message, setMessage] = useState<MessageType>(null)
+  // const [registrationInvitationCode, setRegistrationInvitationCode] = useState<string>("")
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const nodesRef = useRef<Node[]>([])
   const densityIncreasedRef = useRef(false)
@@ -339,11 +340,11 @@ export default function NeuralNetworkAuth() {
 
       if (result.success) {
       setMessage({ type: "success", text: t.loginSuccess })
-        if(formType === "login"){
-          setTimeout(() => {
-              switchForm()
-            }, 3000)
-        }
+        // if(formType === "login"){
+        //   setTimeout(() => {
+        //       switchForm()
+        //     }, 3000)
+        // }
         } else {
             setMessage({ type: "error", text: result.error })
         }
@@ -377,11 +378,11 @@ export default function NeuralNetworkAuth() {
 
           if (result.success) {
       setMessage({ type: "success", text: t.accountCreated })
-        if(formType === "register"){
-          setTimeout(() => {
-              switchForm()
-            }, 3000)
-        }
+        // if(formType === "register"){
+        //   setTimeout(() => {
+        //       switchForm()
+        //     }, 3000)
+        // }
   } else {
       setMessage({ type: "error", text: result.error })
   }
@@ -499,6 +500,9 @@ export default function NeuralNetworkAuth() {
                     />
                   </div>
                   {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
+                  {code && lang === "en" ? <p className="mt-5 font-black text-center text-xl text-yellow-400">Registration Invitation Code For User Name {registerData.name} Is {code} .</p> 
+                  : code && lang === "ar" ?  <p className="mt-5 font-black text-center text-xl text-yellow-400">رمز الدعوة للمستخدم {registerData.name} هو {code} .</p> 
+                  : ""}
                 </div>
                 <button
                   type="submit"

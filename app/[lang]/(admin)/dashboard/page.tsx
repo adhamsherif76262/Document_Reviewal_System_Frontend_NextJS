@@ -13,7 +13,7 @@ import { TableSkeleton } from '../../../../components/skeleton'
 import { DocsFilters } from '../../../../components/docs/docs-filters'
 import { Pagination } from '../../../../components/pagination'
 
-export default function LogsPage() {
+export default function DocsPage() {
   // const [data, setData] = useState<DocumentsResponse | null>(null)
   const [data, setData] = useState<DocumentsResponse | null>(null)
   const [page, setPage] = useState<number>(1)
@@ -113,6 +113,7 @@ export default function LogsPage() {
           onChange={(key, value) => {
             setFilters(prev => ({ ...prev, [key]: value }))
             setLoading(true)
+            setPage(1)
           } }
           onReset={() => {
             setFilters({ 
@@ -131,6 +132,7 @@ export default function LogsPage() {
               endDate : "",
             })
             setLoading(true)
+            setPage(1)
           } } />
 
         {loading ? (

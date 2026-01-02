@@ -21,8 +21,25 @@ export interface user {
     expiryDate: string
     createdAt: string
     updatedAt: string
-  
-}
+    totalDocuments: number
+    pendingCount: number
+    approvedCount:number
+    partiallyApprovedCount?: number
+    rejectedCount: number
+    
+    documents: Document[]
+    pendingDocuments: Document[]
+    partiallyApprovedDocuments: Document[],
+    approvedDocuments: Document[],
+    rejectedDocuments: Document[]
+
+    pagination: {
+      totalDocuments: number,
+      pages: number,
+      page:number,
+    },
+    
+  }
 export interface EmbededUser {
   user:user[]
   totalDocuments: number
@@ -32,7 +49,7 @@ export interface EmbededUser {
   rejectedCount: number
 
   pendingDocuments: Document[]
-  partiallyApprovedDocuments?: Document[],
+  partiallyApprovedDocuments: Document[],
   approvedDocuments: Document[],
   rejectedDocuments: Document[]
 

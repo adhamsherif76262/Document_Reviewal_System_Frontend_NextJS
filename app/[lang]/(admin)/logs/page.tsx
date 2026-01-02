@@ -279,10 +279,12 @@ export default function LogsPage() {
           onChange={(key, value) => {
             setFilters(prev => ({ ...prev, [key]: value }))
             setLoading(true)
+            setPage(1)
           } }
           onReset={() => {
             setFilters({ actor: '', action: '', startDate: '', endDate: '', limit: "25" })
             setLoading(true)
+            setPage(1)
           } } />
 
         {loading ? (
