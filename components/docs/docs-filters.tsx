@@ -227,7 +227,7 @@ export function DocsFilters({
                 <Select
                   value={certificateStatus || 'all'}
                   onValueChange={(value) =>
-                    onChange('certificateStatus', value === 'all' ? '1500' : value)
+                    onChange('certificateStatus', value === 'all' ? '' : value)
                   }
                   
                 >

@@ -20,8 +20,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { columns } from './docsColumns'
-import { Document } from '../../types/document'
+import { columns } from './singleReviewColumns'
+import { ReviewedFields } from '../../types/reviews'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
@@ -34,14 +34,14 @@ import { Button } from '@/components/ui/button'
 import { Settings } from 'lucide-react'
 
 interface Props {
-  data: Document[]
-  page: number
+  data: ReviewedFields[]
+  documentId : string
+//   page: number
   // limit: number
-  limit: string
-  Single_Page_Routing: string
+//   limit: string
 }
 
-export function DocsDataTable({ data  , page , limit , Single_Page_Routing}: Props) {
+export function SingleReviewDataTable({ data , documentId}: Props) {
   const router = useRouter()
   const [columnVisibility, setColumnVisibility] = useState({})
   const {lang} = useParams()
@@ -50,10 +50,10 @@ export function DocsDataTable({ data  , page , limit , Single_Page_Routing}: Pro
     columns,
       state: {
         columnVisibility,
-        pagination: {
-          pageIndex: page - 1, // backend is 1-based
-          pageSize: Number(limit),     // 🔥 THIS IS THE FIX
-        },
+        // pagination: {
+        //   pageIndex: page - 1, // backend is 1-based
+        //   pageSize: Number(limit),     // 🔥 THIS IS THE FIX
+        // },
     },
     manualPagination:true,
     onColumnVisibilityChange: setColumnVisibility,
@@ -125,7 +125,7 @@ export function DocsDataTable({ data  , page , limit , Single_Page_Routing}: Pro
                         
                         "
                     onClick={() =>
-                      router.push(`/${lang}/${Single_Page_Routing}/${row.original._id}`)
+                      router.push(`/${lang}/dashboard/${documentId}`)
                     }
                   >
                     {row.getVisibleCells().map(cell => (

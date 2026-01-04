@@ -147,7 +147,7 @@ export default function DocsPage() {
                {JSON.stringify(data.documents, null, 2)}
            </pre>             */}
            
-           <DocsDataTable data={data.documents} page={page} limit={filters.limit} />
+           <DocsDataTable data={data.documents} page={page} limit={filters.limit} Single_Page_Routing='dashboard'/>
             <Pagination
               page={data.page}
               pages={data.pages}

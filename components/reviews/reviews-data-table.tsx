@@ -20,8 +20,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { columns } from './docsColumns'
-import { Document } from '../../types/document'
+import { columns } from './reviewsColumns'
+import { Reviews } from '../../types/reviews'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
@@ -34,14 +34,13 @@ import { Button } from '@/components/ui/button'
 import { Settings } from 'lucide-react'
 
 interface Props {
-  data: Document[]
+  data: Reviews[]
   page: number
   // limit: number
   limit: string
-  Single_Page_Routing: string
 }
 
-export function DocsDataTable({ data  , page , limit , Single_Page_Routing}: Props) {
+export function ReviewsDataTable({ data  , page , limit}: Props) {
   const router = useRouter()
   const [columnVisibility, setColumnVisibility] = useState({})
   const {lang} = useParams()
@@ -125,7 +124,7 @@ export function DocsDataTable({ data  , page , limit , Single_Page_Routing}: Pro
                         
                         "
                     onClick={() =>
-                      router.push(`/${lang}/${Single_Page_Routing}/${row.original._id}`)
+                      router.push(`/${lang}/reviews/${row.original._id}`)
                     }
                   >
                     {row.getVisibleCells().map(cell => (

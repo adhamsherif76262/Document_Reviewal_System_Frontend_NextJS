@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-
+import {Download} from "lucide-react"
 type Props = {
   images: string[];
   startIndex: number;
@@ -15,6 +15,28 @@ export default function ImageModalCarousel({
   onClose,
 }: Props) {
   const [index, setIndex] = useState(startIndex);
+
+  const handleDownload = async () => {
+  const imageUrl = images[index];
+
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+
+    a.href = url;
+    a.download = imageUrl.split('/').pop() || 'image';
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error('Failed to download image', err);
+  }
+};
 
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => {
@@ -31,13 +53,26 @@ export default function ImageModalCarousel({
 
       {/* CONTENT */}
       <div className="relative z-10 max-w-5xl w-full px-6">
-        {/* CLOSE */}
-        <button
-          onClick={onClose}
-          className="absolute -top-10 right-0 text-white text-3xl cursor-pointer hover:text-red-600 font-black transition-all duration-300"
-        >
-          ✕
-        </button>
+        {/* CLOSE + DOWNLOAD */}
+        <div className="mb-5 flex items-center justify-between gap-4">
+          <button
+            disabled={!images[index]}
+            onClick={handleDownload}
+            className="text-white text-3xl cursor-pointer hover:text-green-500 font-black transition-all duration-300"
+            title="Download image"
+          >
+            {/* ⬇ */}
+            <Download className='w-7 h-7'></Download>
+          </button>
+
+          <button
+            onClick={onClose}
+            className="text-white text-3xl cursor-pointer hover:text-red-600 font-black transition-all duration-300"
+            title="Close"
+          >
+            ✕
+          </button>
+        </div>
 
         {/* IMAGE */}
         <div className="relative w-full h-[70vh]">

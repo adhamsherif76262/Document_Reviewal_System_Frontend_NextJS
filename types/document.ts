@@ -162,6 +162,7 @@ export interface Document {
 
 export interface DocumentsResponse {
   total: number
+  count?: number
   page: number
   pages: number
   documents: Document[]

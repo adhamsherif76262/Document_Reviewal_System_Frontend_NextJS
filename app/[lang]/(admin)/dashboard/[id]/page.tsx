@@ -149,11 +149,13 @@ import React from 'react'
 import { json } from 'stream/consumers'
 import  ImageFieldCarousel  from '../../../../../components/docs/imageFieldCarousel'
 import { PdfFieldList } from '../../../../../components/docs/pdfFieldRenderer'
+import ImageModalCarousel from '../../../../../components/docs/imageModalCarousel'
 
 export default function DocumentDetailsPage() {
 
   const { user } = useAuth();
-
+  const [open, setOpen] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
   const { id , lang} = useParams()
   const router = useRouter()
   const [docData, setDocData] = useState<Document | null>(null)
@@ -899,7 +901,12 @@ export default function DocumentDetailsPage() {
                                 <CarouselItem key={index} className="h-full flex items-center justify-center">
                                   <div className="py-0">
                                     <Card className='py-0'>
-                                      <CardContent className="flex aspect-auto items-center justify-center p-0 ">
+                                      <CardContent className="flex aspect-auto items-center justify-center p-0 " 
+                                        onClick={() => {
+                                          setStartIndex(index);
+                                          setOpen(true);
+                                        }}
+                                      >
                                         <Image 
                                         loading='lazy'
                                           className='font-black hover:blur-xs transition-all duration-500 hover:cursor-pointer rounded-lg object-contain max-h-[500px]' 
@@ -916,9 +923,18 @@ export default function DocumentDetailsPage() {
                                 </CarouselItem>
                               ))}
                             </CarouselContent>
-                            <CarouselPrevious />
-                            <CarouselNext />
+                              {
+                                ( docData?.certificate?.images?.length && docData?.certificate?.images?.length > 1)  && (<><CarouselPrevious /><CarouselNext /></>)
+                              }
                           </Carousel>
+                          {/* ===== MODAL (SEPARATE, DOES NOT AFFECT CAROUSEL) ===== */}
+                          {open && (
+                            <ImageModalCarousel
+                              images={docData?.certificate?.images || []}
+                              startIndex={startIndex}
+                              onClose={() => setOpen(false)}
+                            />
+                          )}
                         </ItemContent>
                   </Item>
                 </div>
@@ -953,18 +969,31 @@ export default function DocumentDetailsPage() {
               {/* <CardContent className="space-y-6 xxxs:text-center xs:text-left xxxs:mx-auto xs:mx-0"> */}
               <div className="text-white font-black flex xxs:flex-row xxs:items-center xxs:justify-start  xxxs:flex-col xxxs:justify-center xxxs:items-center gap-2 mx-auto">
                 <Mail className="h-4 w-4 text-muted-foregsround" />
-                <p className='xxxs:text-sm xxs:text-lg'>{docData?.user.email}</p>
+                <p className='xxxs:text-sm xxs:text-lg'>{docData?.custody?.currentHolder.email}</p>
               </div>
 
               <div className="text-white font-black flex xxs:flex-row xxs:items-center xxxs:flex-col xxxs:justify-center xxxs:items-center gap-2">
                 <Phone className="h-4 w-4 text-mutsed-foreground" />
-                <p>{docData?.user.phone}</p>
+                <p>{docData?.custody?.currentHolder.phone}</p>
               </div>
-              <div className='flex flex-row items-center text-white justify-center'>
-                {/* <p className="text-muted-foreground">Role :</p> */}
-                <UserStar />
-                <Badge variant = {"secondary"}  className='h-8 w-20 text-lg font-black'>{docData?.user.role}</Badge>
-              </div>
+              {
+                docData?.custody.currentHolder.role && (
+                  <div className='flex flex-row items-center text-white justify-center'>
+                    {/* <p className="text-muted-foreground">Role :</p> */}
+                    <UserStar />
+                    <Badge variant = {"secondary"}  className='h-8 w-20 text-lg font-black'>{docData?.custody?.currentHolder.role}</Badge>
+                  </div>
+                ) 
+              }
+              {
+                docData?.custody.currentHolder.adminLevel && (
+                  <div className='flex flex-row items-center text-white justify-center'>
+                    {/* <p className="text-muted-foreground">Role :</p> */}
+                    <UserStar />
+                    <Badge variant = {"secondary"}  className='h-8 w-20 text-lg font-black'>{docData?.custody?.currentHolder.adminLevel}</Badge>
+                  </div>
+                ) 
+              }
             </div>
             {
               docData?.custody.currentHolder.role && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0 mx-auto font-black' onClick={()=>router.push(`/${lang}/users/${docData?.custody?.currentHolder?._id}`)}>Submission History</Button>)

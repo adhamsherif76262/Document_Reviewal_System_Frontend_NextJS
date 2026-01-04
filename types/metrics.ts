@@ -1,12 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// types/log.ts
-
-// export interface LogUser {
-//   _id: string
-//   name: string
-//   email: string
-// }
-
+// types/metrics.ts
 export interface DocumentStatuses {
   pending: number
   approved: number
@@ -18,6 +11,11 @@ export interface UsersRoles {
   regularUsers:number
   admins:number
   superAdmins:number
+}
+export interface ReviewsCount {
+  rejected:number
+  partiallyApproved:number
+  approved:number
 }
 export interface LogsActionsCount {
   SubmitFinalCertificate:number
@@ -55,12 +53,6 @@ export interface MetricsResponse {
   totalReviews: number
   totalLogs: number
   logsActionsCount: LogsActionsCount | null
+  reviewsCount: ReviewsCount | null
   documentStatuses: DocumentStatuses | null
 }
-
-// export interface LogsResponse {
-//   total: number
-//   page: number
-//   pages: number
-//   logs: Log[]
-// }

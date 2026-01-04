@@ -141,8 +141,8 @@ export default function LogDetailsPage() {
           const actorId =  log.user._id
           const adminId =  log.admin._id
           if (!actorId) return
-          const actor = await getUserById({ id: actorId })
-          const admin = await getUserById({ id: adminId })
+          const actor = await getUserById({ id: actorId  , page:1 , filters : {}})
+          const admin = await getUserById({ id: adminId  , page:1 , filters : {}})
           // console.log( "aCOTR ==>" + actor)
           
           if (cancelled) return
@@ -152,7 +152,7 @@ export default function LogDetailsPage() {
           // alert("Admin Only")
           const actorId =  log.admin._id
           if (!actorId) return
-          const actor = await getUserById({ id: actorId })
+          const actor = await getUserById({ id: actorId , page:1 , filters:{} })
           console.log(actor)
           if (cancelled) return
           setActorData(actor)
@@ -160,7 +160,7 @@ export default function LogDetailsPage() {
           // alert("User Only")
           const actorId =  log.user._id
           if (!actorId) return
-          const actor = await getUserById({ id: actorId })
+          const actor = await getUserById({ id: actorId , page:1 , filters:{} })
           console.log(actor)
           if (cancelled) return
           setActorData(actor)

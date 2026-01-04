@@ -4,8 +4,6 @@
 import { Label } from "@/components/ui/label"
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from "@/components/ui/checkbox"
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
@@ -22,17 +20,15 @@ const State_Values = [
     "General",
 ] as const
 
-const Status_Values = [
-    "pending",
+const Review_Status_Values = [
     "partiallyApproved",
     "approved",
     "rejected"
 ] as const
-const Certificate_Status_Values = [
+const Field_Reviewed_Status_Values = [
+    "pending",
     "approved",
     "rejected",
-    "pending",
-    "none",
 ] as const
 
 const Doc_Types = [
@@ -70,34 +66,42 @@ const Limit_Values = [
   '400',
   '450',
   '500',
+  '550',
+  '600',
+  '650',
+  '700',
+  '800',
+  '900',
+  '1000',
 ] as const
 
 interface Props {
-  // limit: number
   limit: string
-  currentHolderName: string
-  state: string
-  docNumber : string,
-  hasPendingResubmission: boolean | string
-  status: string
-  certificateStatus: string
   docType: string
-  createdBefore: string
-  createdAfter: string
+  docNumber: string
+  state: string
+  status: string
+  fieldReviewedKey: string
+  fieldReviewedStatus: string
+  adminName: string
+  adminEmail: string
+  startDate: string
+  endDate: string
   onChange: (key: string, value: string) => void
   onReset: () => void
 }
-export function SingleUserDocsFilters({
+export function ReviewsFilters({
   limit,
   docType,
   docNumber,
-  currentHolderName,
   state,
-  hasPendingResubmission,
   status,
-  certificateStatus,
-  createdBefore,
-  createdAfter,
+  fieldReviewedKey,
+  fieldReviewedStatus,
+  adminName,
+  adminEmail,
+  startDate,
+  endDate,
   onChange,
   onReset,
 }: Props) {
@@ -110,7 +114,8 @@ export function SingleUserDocsFilters({
           <CardTitle className='text-center text-xl font-black'>Filters</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+
+          <div className="grid gap-4 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               <div className="flex flex-col items-center justify-between gap-y-4">
                 <Label htmlFor="limit">Limit</Label>
 
@@ -168,7 +173,7 @@ export function SingleUserDocsFilters({
               </div>
 
               <div className="flex flex-col items-center justify-between gap-y-4">
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">Review Status</Label>
 
                 <Select
                   value={status || 'all'}
@@ -177,15 +182,15 @@ export function SingleUserDocsFilters({
                   }
                 >
                   <SelectTrigger className="w-[175px]">
-                    <SelectValue placeholder="Select Status" />
+                    <SelectValue placeholder="Select Review Status" />
                   </SelectTrigger>
                 
                   <SelectContent>
                     {/* All actions (no filter) */}
-                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="all">All Review Statuses</SelectItem>
                 
                     {/* Specific actions */}
-                    {Status_Values.map(status => (
+                    {Review_Status_Values.map(status => (
                       // <SelectItem key={action} value={"l"}>
                         <SelectItem key={status} value={status}>
                         {status}
@@ -195,28 +200,27 @@ export function SingleUserDocsFilters({
                 </Select>
               </div>
               <div className="flex flex-col items-center justify-between gap-y-4">
-                <Label htmlFor="certificateStatus">Certificate Status</Label>
+                <Label htmlFor="fieldReviewedStatus">Field Reviewed Status</Label>
 
                 <Select
-                  value={certificateStatus || 'all'}
+                  value={fieldReviewedStatus || 'all'}
                   onValueChange={(value) =>
-                    onChange('certificateStatus', value === 'all' ? '1500' : value)
+                    onChange('fieldReviewedStatus', value === 'all' ? '1500' : value)
                   }
                   
                 >
                   <SelectTrigger className="w-[175px]">
-                    <SelectValue placeholder="Select Certificate Status" />
+                    <SelectValue placeholder="Select Field Reviewed Status" />
                   </SelectTrigger>
                 
                   <SelectContent>
                     {/* All actions (no filter) */}
-                    <SelectItem value="all">All Certificate Statuses</SelectItem>
+                    <SelectItem value="all">All Field Reviewed Statuses</SelectItem>
                 
                     {/* Specific actions */}
-                    {Certificate_Status_Values.map(certificateStatus => (
-                      // <SelectItem key={action} value={"l"}>
-                        <SelectItem key={certificateStatus} value={certificateStatus}>
-                        {certificateStatus}
+                    {Field_Reviewed_Status_Values.map(fieldReviewedStatus => (
+                        <SelectItem key={fieldReviewedStatus} value={fieldReviewedStatus}>
+                        {fieldReviewedStatus}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -251,22 +255,6 @@ export function SingleUserDocsFilters({
                 </Select>
               </div>
 
-              <div className="flex flex-col items-center justify-evenly cursor-pointer">
-                <Checkbox
-                  id="hasPendingResubmission"
-                  checked={hasPendingResubmission === "true"}
-                  onCheckedChange={(checked) =>
-                    onChange(
-                      "hasPendingResubmission",
-                      checked ? "true" : ""
-                    )
-                  }
-                />
-                <Label htmlFor="hasPendingResubmission">
-                  Pending Re-Submission?
-                </Label>
-              </div>
-
               <div className="flex flex-col items-center justify-between gap-y-4">
                 <Label htmlFor="docNumber">Submission Number</Label>
                 <Input
@@ -279,34 +267,45 @@ export function SingleUserDocsFilters({
               </div>
 
               <div className="flex flex-col items-center justify-between gap-y-4">
-                <Label htmlFor="currentHolderName">Current Holder Name</Label>
+                <Label htmlFor="adminName">Admin Name</Label>
                 <Input
-                  id="currentHolderName"
-                  placeholder="Current Holder Name"
-                  value={currentHolderName}
-                  onChange={(e) => onChange('currentHolderName', e.target.value)}
+                  id="adminName"
+                  placeholder="Admin Name"
+                  value={adminName}
+                  onChange={(e) => onChange('adminName', e.target.value)}
                   className="w-[175px]"
                   />
               </div>
 
               <div className="flex flex-col items-center justify-between gap-y-4">
-                <Label htmlFor="createdBefore">Created Before</Label>
+                <Label htmlFor="adminEmail">Admin Email</Label>
                 <Input
-                  id="createdBefore"
+                  id="adminEmail"
+                  placeholder="User Email"
+                  value={adminEmail}
+                  onChange={(e) => onChange('adminEmail', e.target.value)}
+                  className="w-[175px]"
+                  />
+              </div>
+
+              <div className="flex flex-col items-center justify-between gap-y-4">
+                <Label htmlFor="startDate">Start Date</Label>
+                <Input
+                  id="startDate"
                   type="date"
-                  value={createdBefore}
-                  onChange={e => onChange('createdBefore', e.target.value)}
+                  value={startDate}
+                  onChange={e => onChange('startDate', e.target.value)}
                   className="w-[175px]"
                   />
               </div>
 
               <div className="flex flex-col items-center justify-between gap-y-4">
-                    <Label htmlFor="createdAfter">Created After</Label>
+                    <Label htmlFor="endDate">End Date</Label>
                     <Input
-                      id="createdAfter"
+                      id="endDate"
                       type="date"
-                      value={createdAfter}
-                      onChange={e => onChange('createdAfter', e.target.value)}
+                      value={endDate}
+                      onChange={e => onChange('endDate', e.target.value)}
                       className="w-[175px]"
                       />
               </div>

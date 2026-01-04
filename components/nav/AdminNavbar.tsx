@@ -279,6 +279,7 @@ if (!user) {
     { label: currentLanguage === "en" ? "Dashboard" : "لوحة القيادة", href: `/${currentLanguage}/dashboard` },
     { label: currentLanguage === "en" ? "Users" : "المستخدمون", href: `/${currentLanguage}/users` },
     { label: currentLanguage === "en" ? "Admins" : "المديرون", href: `/${currentLanguage}/admins` },
+    { label: currentLanguage === "en" ? "Reviews" : "المراجعات", href: `/${currentLanguage}/reviews` },
     { label: currentLanguage === "en" ? "Logs" : "السجلات", href: `/${currentLanguage}/logs` },
   ]
   :[
@@ -290,7 +291,7 @@ if (!user) {
     <nav  className={`w-full bg-zinc-950 border-b border-zinc-800 ${isRTL ? "rtl" : "ltr"} inset-0 z-100 ${isMenuOpen ? "top-0" : "max-h-fit"}`}>
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Desktop View */}
-        <div className="hidden xxxlg:flex items-center justify-between gap-4">
+        <div className="hidden lg:flex items-center justify-between gap-4">
           {/* Logo Card */}
           {/* <a
             href="/"
@@ -402,7 +403,7 @@ if (!user) {
         </div>
 
         {/* Mobile View */}
-        <div className="xxxlg:hidden">
+        <div className="lg:hidden">
           <div className="flex items-center justify-between">
             {/* <a href="/" className="flex items-center gap-2"> */}
             <Link href={"/"} className="flex items-center gap-2">
