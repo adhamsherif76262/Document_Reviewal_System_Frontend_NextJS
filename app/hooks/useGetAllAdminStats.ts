@@ -2,6 +2,15 @@
 import {useState} from 'react'
 import api from '../../lib/api';
 
+interface GetAllAdminStatsParams {
+  page: number
+  limit?: string
+  id?: string
+  admin?: string
+  createdBefore?: string
+  createdAfter?: string
+}
+
 export function useGetAllAdminStats() {
 
     const [adminstatsloading, setAdminstatsLoading] = useState<boolean>(false);
@@ -9,12 +18,12 @@ export function useGetAllAdminStats() {
      const [adminstatsmessage, setAdminstatsMessage] = useState<string>("");;
      const [adminstats, setAdminstats] = useState<any>(null);
 
-     const getAllAdminStats = async () => {
+     const getAllAdminStats = async (params: GetAllAdminStatsParams) => {
         setAdminstatsLoading(true);
         setAdminstatsStatus("");
         setAdminstatsMessage("");
         try {
-            const res = await api.get('/api/users/admins');
+            const res = await api.get('/api/users/admins', {params});
             setAdminstatsStatus(res.status === 200 ? "success" : "failure")
             setAdminstatsMessage(res.data.message)
             setAdminstats(res.data);

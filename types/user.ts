@@ -3,9 +3,11 @@ import { User } from 'lucide-react';
 // types/user.ts
 
 import {Document} from "./document"
+import {Reviews} from "./reviews"
 export interface user {
     user: any;
-    // user: any;
+    admin: any;
+    adminId: string
     _id: string
     name: string
     email: string
@@ -24,8 +26,12 @@ export interface user {
     totalDocuments: number
     pendingCount: number
     approvedCount:number
-    partiallyApprovedCount?: number
+    partiallyApprovedCount: number
     rejectedCount: number
+
+    totalReviewed: number
+
+    reviews: Reviews[]
     
     documents: Document[]
     pendingDocuments: Document[]
@@ -35,6 +41,7 @@ export interface user {
 
     pagination: {
       totalDocuments: number,
+      totalReviews: number,
       pages: number,
       page:number,
     },
@@ -45,7 +52,7 @@ export interface EmbededUser {
   totalDocuments: number
   pendingCount: number
   approvedCount:number
-  partiallyApprovedCount?: number
+  partiallyApprovedCount: number
   rejectedCount: number
 
   pendingDocuments: Document[]
@@ -60,8 +67,12 @@ export interface UsersResponse {
       totalUsers  : number
       totalPages  : number
       currentPage : number  
+      total  : number
+      page  : number
+      pages  : number
   }
   // page: number
   // pages: number
   users: user[]
+  admins: user[]
 }
