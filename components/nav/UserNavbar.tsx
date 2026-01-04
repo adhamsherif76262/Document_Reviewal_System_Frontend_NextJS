@@ -200,7 +200,7 @@ export default function NeonCyberpunkNavbar() {
 
   const navLinks = [
     { en: "My submissions", ar: "تقديماتي", href: `/${language}/submissions` },
-    // { en: "New submission", ar: "تقديم جديد", href: `/${language}/submit` },
+    { en: "New submission", ar: "تقديم جديد", href: `/${language}/submit` },
   ]
 
   
@@ -253,7 +253,7 @@ export default function NeonCyberpunkNavbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-0">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
