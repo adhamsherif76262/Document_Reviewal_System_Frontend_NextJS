@@ -149,6 +149,7 @@ export default function LogDetailsPage() {
           setActorData(actor)
           setAdminData(admin)
         }else if(log.admin && (!log.user || log.user === null)){
+        // }else if(true){
           // alert("Admin Only")
           const actorId =  log.admin._id
           if (!actorId) return
@@ -222,13 +223,13 @@ export default function LogDetailsPage() {
         </CardContent>
       </Card>
       <Card>
-        <h1 className='text-2xl font-black text-center'>{actorData?.adminLevel === null ? "User Details" : "Admin Details"}</h1>
+        <h1 className='text-2xl font-black text-center'>{actorData?.user.role === "admin" ? "Admin Details" : actorData?.role === "user" ? "User Details" : "User Details"}</h1>
         <CardHeader className='flex xs:flex-row xxxs:flex-col xxxs:items-center xs:items-center xs:justify-between xxxs:justify-between'>
           <div className="flex items-center gap-4">
             <Avatar>
               <AvatarFallback className='w-12 h-12 rounded-full bg-linear-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-xs font-bold text-white animate-avatar-pulse-rings animate-bounce'>
                 {/* {actorData?.name?.charAt(0).toUpperCase()} */}
-                {getUserInitials(actorData?.name)}
+                {getUserInitials(actorData?.user.name)}
               </AvatarFallback>
                 {/* Animated ring around avatar */}
                 {/* <span className="absolute inset-0 rounded-full border-2 border-emerald-500 animate-avatar-ring-pulse" />
@@ -238,9 +239,9 @@ export default function LogDetailsPage() {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                {actorData?.name}
+                {actorData?.user.name}
               </CardTitle>
-              <CardDescription>{actorData?.email}</CardDescription>
+              <CardDescription>{actorData?.user.email}</CardDescription>
             </div>
           </div>
             {
@@ -256,12 +257,12 @@ export default function LogDetailsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-muted-foreground" />
-              {actorData?.email}
+              {actorData?.user.email}
             </div>
 
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-muted-foreground" />
-              {actorData?.phone}
+              {actorData?.user.phone}
             </div>
           </div>
 
@@ -271,24 +272,24 @@ export default function LogDetailsPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-lg">
             <div>
               <p className="text-muted-foreground">Role</p>
-              <Badge variant = {"outline"}  className='h-8 w-20 text-lg'>{actorData?.role}</Badge>
+              <Badge variant = {"outline"}  className='h-8 w-20 text-lg'>{actorData?.user.role}</Badge>
             </div>
 
             <div>
               <p className="text-muted-foreground">Verified</p>
-              <BooleanBadge value={actorData?.isVerified || false} />
+              <BooleanBadge value={actorData?.user.isVerified || false} />
             </div>
 
             <div>
               <p className="text-muted-foreground">Expirable</p>
-              <BooleanBadge value={actorData?.expirable || false} />
+              <BooleanBadge value={actorData?.user.expirable || false} />
             </div>
 
             <div>
               <p className="text-muted-foreground">Expiry Status</p>
               <Badge variant="outline" className='h-10 w-30 text-primary text-lg' >
-                  {actorData?.expiryStatus ==="active" ? <CheckCircle className='h-5 w-5 text-primary' /> : <XCircle className='h-5 w-5 text-primary'/>}
-                  {actorData?.expiryStatus}
+                  {actorData?.user.expiryStatus ==="active" ? <CheckCircle className='h-5 w-5 text-primary' /> : <XCircle className='h-5 w-5 text-primary'/>}
+                  {actorData?.user.expiryStatus}
               </Badge>
             </div>
           </div>
@@ -301,7 +302,7 @@ export default function LogDetailsPage() {
               <p className="text-muted-foreground">Created At</p>
               <div className="flex items-center gap-2">
                 <Clock className='h-5 w-5 text-primary'/>
-                {formatDate(actorData?.createdAt)}
+                {formatDate(actorData?.user.createdAt)}
               </div>
             </div>
 
@@ -309,31 +310,31 @@ export default function LogDetailsPage() {
               <p className="text-muted-foreground">Updated At</p>
                 <div className="flex items-center gap-2">
                   <Clock className='h-5 w-5 text-primary'/>
-                  {formatDate(actorData?.updatedAt)}
+                  {formatDate(actorData?.user.updatedAt)}
                 </div>
             </div>
 
-            {actorData?.expiryDate && (
+            {actorData?.user.expiryDate && (
               <div >
                 <p className="text-muted-foreground">Expiry Date</p>
                 <div className="flex items-center gap-2">
                   <Clock className='h-5 w-5 text-primary'/>
-                  {formatDate(actorData?.expiryDate)}
+                  {formatDate(actorData?.user.expiryDate)}
                 </div>
               </div>
             )}
           </div>
           
           {/* Optional Fields */}
-          {/* {(actorData?.adminLevel || actorData?.lastOTPResend) && ( */}
+          {/* {(actorData?.user.adminLevel || actorData?.user.lastOTPResend) && ( */}
             <>
               <Separator />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-                {actorData?.adminLevel ? (
+                {actorData?.user.adminLevel ? (
                   <div>
                     <p className="text-muted-foreground">Administration Level</p>
                     <Badge variant="secondary" className='h-10 w-30 text-primary text-xl font-black'>
-                      {actorData?.adminLevel}
+                      {actorData?.user.adminLevel}
                     </Badge>
                   </div>
                 ):(
@@ -341,18 +342,18 @@ export default function LogDetailsPage() {
                     <p className="text-muted-foreground">Level</p>
                     <Badge variant="secondary" className='h-10 w-40 text-primary text-xl font-black'>
                       Regular User
-                      {/* {actorData?.adminLevel} */}
+                      {/* {actorData?.user.adminLevel} */}
                     </Badge>
                   </div>
                 )
               }
 
-                {actorData?.lastOTPResend && (
+                {actorData?.user.lastOTPResend && (
                   <div>
                     <p className="text-muted-foreground">Last OTP Resend</p>
                     <div className="flex items-center gap-2">
                       <Clock className='h-5 w-5 text-primary'/>
-                      {formatDate(actorData?.lastOTPResend)}
+                      {formatDate(actorData?.user.lastOTPResend)}
                     </div>
                   </div>
                 )}
@@ -370,8 +371,8 @@ export default function LogDetailsPage() {
             <div className="flex items-center gap-4">
               <Avatar>
                 <AvatarFallback className='w-12 h-12 rounded-full bg-linear-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-xs font-bold text-white animate-avatar-pulse-rings animate-bounce'>
-                  {/* {adminData?.name?.charAt(0).toUpperCase()} */}
-                  {getUserInitials(adminData?.name)}
+                  {/* {adminData?.user.name?.charAt(0).toUpperCase()} */}
+                  {getUserInitials(adminData?.user.name)}
                 </AvatarFallback>
                   {/* Animated ring around avatar */}
                   {/* <span className="absolute inset-0 rounded-full border-2 border-emerald-500 animate-avatar-ring-pulse" />
@@ -381,9 +382,9 @@ export default function LogDetailsPage() {
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <User className="h-5 w-5" />
-                  {adminData?.name}
+                  {adminData?.user.name}
                 </CardTitle>
-                <CardDescription>{adminData?.email}</CardDescription>
+                <CardDescription>{adminData?.user.email}</CardDescription>
               </div>
             </div>
             {
@@ -396,12 +397,12 @@ export default function LogDetailsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-muted-foreground" />
-                {adminData?.email}
+                {adminData?.user.email}
               </div>
 
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
-                {adminData?.phone}
+                {adminData?.user.phone}
               </div>
             </div>
 
@@ -411,24 +412,24 @@ export default function LogDetailsPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-lg">
               <div>
                 <p className="text-muted-foreground">Role</p>
-                <Badge variant = {"outline"}  className='h-8 w-20 text-lg'>{adminData?.role}</Badge>
+                <Badge variant = {"outline"}  className='h-8 w-20 text-lg'>{adminData?.user.role}</Badge>
               </div>
 
               <div>
                 <p className="text-muted-foreground">Verified</p>
-                <BooleanBadge value={adminData?.isVerified || false} />
+                <BooleanBadge value={adminData?.user.isVerified || false} />
               </div>
 
               <div>
                 <p className="text-muted-foreground">Expirable</p>
-                <BooleanBadge value={adminData?.expirable || false} />
+                <BooleanBadge value={adminData?.user.expirable || false} />
               </div>
 
               <div>
                 <p className="text-muted-foreground">Expiry Status</p>
                 <Badge variant="outline" className='h-10 w-30 text-primary text-lg' >
-                    {adminData?.expiryStatus ==="active" ? <CheckCircle className='h-5 w-5 text-primary' /> : <XCircle className='h-5 w-5 text-primary'/>}
-                    {adminData?.expiryStatus}
+                    {adminData?.user.expiryStatus ==="active" ? <CheckCircle className='h-5 w-5 text-primary' /> : <XCircle className='h-5 w-5 text-primary'/>}
+                    {adminData?.user.expiryStatus}
                 </Badge>
               </div>
             </div>
@@ -441,7 +442,7 @@ export default function LogDetailsPage() {
                 <p className="text-muted-foreground">Created At</p>
                 <div className="flex items-center gap-2">
                   <Clock className='h-5 w-5 text-primary'/>
-                  {formatDate(adminData?.createdAt)}
+                  {formatDate(adminData?.user.createdAt)}
                 </div>
               </div>
 
@@ -449,31 +450,31 @@ export default function LogDetailsPage() {
                 <p className="text-muted-foreground">Updated At</p>
                   <div className="flex items-center gap-2">
                     <Clock className='h-5 w-5 text-primary'/>
-                    {formatDate(adminData?.updatedAt)}
+                    {formatDate(adminData?.user.updatedAt)}
                   </div>
               </div>
 
-              {/* {actorData?.expiryDate && (
+              {/* {actorData?.user.expiryDate && (
                 <div >
                   <p className="text-muted-foreground">Expiry Date</p>
                   <div className="flex items-center gap-2">
                     <Clock className='h-5 w-5 text-primary'/>
-                    {formatDate(actorData?.expiryDate)}
+                    {formatDate(actorData?.user.expiryDate)}
                   </div>
                 </div>
               )} */}
             </div>
             
             {/* Optional Fields */}
-            {/* {(actorData?.adminLevel || actorData?.lastOTPResend) && ( */}
+            {/* {(actorData?.user.adminLevel || actorData?.user.lastOTPResend) && ( */}
               <>
                 <Separator />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-                  {adminData?.adminLevel ? (
+                  {adminData?.user.adminLevel ? (
                     <div>
                       <p className="text-muted-foreground">Administration Level</p>
                       <Badge variant="secondary" className='h-10 w-30 text-primary text-xl font-black'>
-                        {adminData?.adminLevel}
+                        {adminData?.user.adminLevel}
                       </Badge>
                     </div>
                   ):(
@@ -481,18 +482,18 @@ export default function LogDetailsPage() {
                       <p className="text-muted-foreground">Level</p>
                       <Badge variant="secondary" className='h-10 w-40 text-primary text-xl font-black'>
                         Regular User
-                        {/* {adminData?.adminLevel} */}
+                        {/* {adminData?.user.adminLevel} */}
                       </Badge>
                     </div>
                   )
                 }
 
-                  {adminData?.lastOTPResend && (
+                  {adminData?.user.lastOTPResend && (
                     <div>
                       <p className="text-muted-foreground">Last OTP Resend</p>
                       <div className="flex items-center gap-2">
                         <Clock className='h-5 w-5 text-primary'/>
-                        {formatDate(adminData?.lastOTPResend)}
+                        {formatDate(adminData?.user.lastOTPResend)}
                       </div>
                     </div>
                   )}
