@@ -116,7 +116,6 @@ export default function AdminDetailsPage() {
   return (
     <div dir='ltr' className="space-y-6">
 
-
         <h1 className='text-center font-black text-2xl animate-pulse'>User Statistics</h1>
         {loading ? (
           <TableSkeleton L={1} />
@@ -125,22 +124,18 @@ export default function AdminDetailsPage() {
         <div className="stat">
           <div className="stat-title text-black font-black text-lg text-center">Total Number Of <br /> Reviews</div>
           <div className="stat-value text-xl text-center">{userData?.pagination.totalReviews}</div>
-          {/* <div className="stat-desc text-black">↘︎ 90 (14%)</div> */}
         </div>
         <div className="stat">
           <div className="stat-title text-black font-black text-lg text-center">Total Number Of <br /> Partially Approved <br /> Reviews</div>
           <div className="stat-value text-xl text-center">{userData?.partiallyApprovedCount}</div>
-          {/* <div className="stat-desc text-black">↘︎ 90 (14%)</div> */}
         </div>
         <div className="stat">
           <div className="stat-title text-black font-black text-lg text-center">Total Number Of <br /> Approved Reviews</div>
           <div className="stat-value text-xl text-center">{userData?.approvedCount}</div>
-          {/* <div className="stat-desc text-black">↘︎ 90 (14%)</div> */}
         </div>
         <div className="stat">
           <div className="stat-title text-black font-black text-lg text-center">Total Number Of <br /> Rejected Reviews</div>
           <div className="stat-value text-xl text-center">{userData?.rejectedCount}</div>
-          {/* <div className="stat-desc text-black">↘︎ 90 (14%)</div> */}
         </div>
           </div>
         ):null}
@@ -224,21 +219,17 @@ export default function AdminDetailsPage() {
                 </div>
             </div>
           </div>
-          
-            <>
-              <Separator />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
-                {userData?.admin.lastOTPResend && (
-                  <div>
-                    <p className="text-muted-foreground">Last OTP Resend</p>
-                    <div className="flex items-center gap-2">
-                      <Clock className='h-5 w-5 text-primary'/>
-                      {formatDate(userData?.admin.lastOTPResend)}
-                    </div>
-                  </div>
-                )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-lg">
+            {userData?.admin.lastOTPResend && (
+              <div>
+                <p className="text-muted-foreground">Last OTP Resend</p>
+                <div className="flex items-center gap-2">
+                  <Clock className='h-5 w-5 text-primary'/>
+                  {formatDate(userData?.admin.lastOTPResend)}
+                </div>
               </div>
-            </>
+            )}
+          </div>            
         </CardContent>
       </Card>
 
