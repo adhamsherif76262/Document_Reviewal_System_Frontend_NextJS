@@ -145,7 +145,8 @@ export interface Document {
 
   assignedAdmins: BasicUser[]
 
-  hasPendingResubmission: boolean
+  hasPendingResubmission: string | boolean | null
+
   adminComment: string | null
 
   docNumber: string

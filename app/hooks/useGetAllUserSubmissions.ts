@@ -9,7 +9,7 @@ interface GetAllDocsParams {
   // limit?: number
   limit?: string
   docType?: string
-  hasPendingResubmission?: boolean
+  hasPendingResubmission?: boolean | null
   state?: string
   status?: string
   docNumber?: string

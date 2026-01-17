@@ -78,7 +78,7 @@ interface Props {
   currentHolderName: string
   state: string
   docNumber : string,
-  hasPendingResubmission: boolean | string
+  hasPendingResubmission: boolean | string | null
   status: string
   certificateStatus: string
   docType: string

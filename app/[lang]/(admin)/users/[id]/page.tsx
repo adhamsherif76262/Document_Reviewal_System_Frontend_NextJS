@@ -54,7 +54,7 @@ export default function UserDetailsPage() {
     state:"",
     status : "",
     certificateStatus: "",
-    hasPendingResubmission: "",
+    hasPendingResubmission: null,
     createdBefore : "",
     createdAfter : "",
   })
@@ -290,7 +290,7 @@ export default function UserDetailsPage() {
               state:"",
               status : "",
               certificateStatus: "",
-              hasPendingResubmission: "",
+              hasPendingResubmission: null,
               createdBefore : "",
               createdAfter : "",
             })

@@ -83,7 +83,7 @@ interface Props {
   currentHolderName: string
   currentHolderEmail: string
   state: string
-  hasPendingResubmission: boolean
+  hasPendingResubmission: boolean | null
   status: string
   certificateStatus: string
   userName: string
