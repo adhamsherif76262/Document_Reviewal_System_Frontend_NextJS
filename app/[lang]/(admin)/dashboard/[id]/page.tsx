@@ -178,7 +178,7 @@ export default function DocumentDetailsPage() {
   const formatDate = (date?: string) =>
     date ? format(new Date(date), 'PPP • p') : '—'
   
-  const BooleanBadge = ({ value }: { value: boolean }) => (
+  const BooleanBadge = ({ value }: { value: boolean  | string}) => (
     <Badge variant={value ? 'default' : 'destructive'} className='h-8 w-15 text-lg animate-pulses'>
       {value ? 'Yes' : 'No'}
     </Badge>
