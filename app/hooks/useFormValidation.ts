@@ -16,10 +16,25 @@ export function useFormValidation(template: Template, lang: "en" | "ar") {
       return template.globals.errors.required[lang];
     }
 
-    for (const file of files) {
-      const error = validateFile(file, field.type, template.globals, lang);
-      if (error) return error;
-    }
+    console.log("Before Passing To Validate Single File" + Object.keys(template.globals))
+    const fileErrors = validateFile(
+      files,
+      field.type,
+      template.globals,
+      lang
+    );
+
+    if (fileErrors) return fileErrors
+// form.setFieldError(
+//   field.name,
+//   fileErrors.length ? fileErrors.join('\n') : null
+// );
+
+    // for (const file of files) {
+    //   console.log("Before Passing To Validate Single File" + Object.keys(template.globals))
+    //   const error = validateFile(file, field.type, template.globals, lang);
+    //   if (error) return error;
+    // }
 
     return null;
   }

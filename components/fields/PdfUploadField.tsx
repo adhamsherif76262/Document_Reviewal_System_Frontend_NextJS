@@ -24,10 +24,10 @@ export function PdfUploadField({
   };
 
   return (
-    <Card className="relative border-dashed border-2 rounded-2xl p-4">
+    <Card className="relative border-dashed border-2 rounded-2xl p-5 flex items-center justify-center">
       {locked && <LockedOverlay />}
-      <Label className="font-semibold text-sm">{field.label[lang]}</Label>
-      <p className="text-xs text-muted-foreground mt-1">
+      <Label className="font-black font-sans text-xl text-center">{field.label[lang]}</Label>
+      <p dir={lang === "ar" ? "rtl" : "ltr"}  className="text-muted-foreground mt-1 font-black font-sans text-xl text-center">
         {globals.helpText?.pdf?.[lang]}
       </p>
 
@@ -58,7 +58,7 @@ export function PdfUploadField({
 
       {/* Preview file names */}
       {value.length > 0 && (
-        <div className="flex flex-col mt-2 text-xs text-muted-foreground">
+        <div className="flex flex-col mt-2 text-muted-foreground font-black font-sans text-xl text-center">
           {value.map((file: File | string, i: number) => (
             <span key={i} className="truncate">
               {typeof file === "string" ? file : file.name}
@@ -67,7 +67,17 @@ export function PdfUploadField({
         </div>
       )}
 
-      {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
+      {
+        error && (
+          <ul>
+            {
+            error.map((err : any , index : any)=>(
+              <li key={err}  className="font-black text-lg text-red-500 mt-2">{err}</li>
+            ))
+          }
+          </ul>
+        )
+      }
     </Card>
   );
 }

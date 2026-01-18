@@ -120,6 +120,8 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -128,6 +130,36 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* === Sonner Toast Card === */
+[data-sonner-toast] {
+  min-height: 120px;               /* ✅ controls height */
+  min-width: 400px;
+  
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  /* gap: 16px; */
+}
+
+/* === Content wrapper === */
+[data-sonner-toast] [data-content] {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 1rem;
+  /* color: red; */
+}
+
+/* === Title / message === */
+[data-sonner-toast] [data-title] {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* === Description ===
 
 /* Adding Magnetic Card Navbar Animations */
 @keyframes user-menu-slide-down {

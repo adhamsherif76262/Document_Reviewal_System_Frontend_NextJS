@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // types/template.ts
 export type Lang = 'en' | 'ar';
 
@@ -33,7 +34,9 @@ export interface TemplateGlobals {
 }
 
 export interface Template {
+  appliesTo: string;
+  tabs: any;
   templateKey: string;
-  states: Record<'Domestic' | 'Imported'| 'General', TemplateState>;
+  states: Record<'Domestic' | 'Imported'| 'General' | string, TemplateState>;
   globals: TemplateGlobals;
 }

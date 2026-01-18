@@ -26,7 +26,19 @@ export function TextField({
         disabled={locked}
         className="w-full mt-1"
       />
-      {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
+      {
+        error && (
+          <ul>
+            {
+            error.map((err : any , index : any)=>(
+              <li key={err}  className="font-black text-lg text-red-500 mt-2">{err}</li>
+            ))
+          }
+            {/* <li></li> */}
+          {/* {error}         */}
+          </ul>
+        )
+      }
     </div>
   );
 }

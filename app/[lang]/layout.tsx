@@ -10,6 +10,7 @@ import { AuthProvider } from '../context/AuthContext';
 // import PublicNavbar from '../../components/nav/PublicNavbar';
 // import { LanguageProvider } from "../context/LanguageContext";
 // import { NextIntlClientProvider } from "next-intl";
+import { Toaster } from "@/components/ui/sonner"
 
 const metadataMap = {
   en: {
@@ -103,6 +104,7 @@ style={{
           <AuthProvider>
             {/* <LanguageProvider> */}
               {children}
+              <Toaster />
             {/* </LanguageProvider> */}
           </AuthProvider>
         {/* </NextIntlClientProvider> */}
