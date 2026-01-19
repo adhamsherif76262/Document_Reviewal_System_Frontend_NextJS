@@ -12,6 +12,11 @@ export function useFormValidation(template: Template, lang: "en" | "ar") {
   }
 
   function validateFiles(field : any, files: File[]) {
+
+    if (!files || files.length === 0) {
+      return [];
+    }
+
     if (field.required && files.length === 0) {
       return template.globals.errors.required[lang];
     }

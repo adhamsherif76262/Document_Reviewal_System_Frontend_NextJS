@@ -122,6 +122,8 @@ import { DocumentTypeSelector } from "../../../../components/DocumentTypeSelecto
 import { TemplateForm } from "../../../../components/TemplateForm";
 import { useTemplateForm } from "../../../hooks/useTemplateForm";
 import { useParams } from "next/navigation";
+import ImageCompressionTest from "../../../../components/ImageCompressionTester";
+import PDFUploadFieldTester from "../../../../components/pdfCompressionTest";
 
 export default function NewDocumentPage() {
   const { lang }: any = useParams();
@@ -164,6 +166,8 @@ export default function NewDocumentPage() {
   if (!template || !state) {
     return (
       <div className="max-w-7xl mx-auto p-4 text-center">
+        <PDFUploadFieldTester></PDFUploadFieldTester>
+        {/* <ImageCompressionTest></ImageCompressionTest> */}
         <h1 className="text-2xl font-black mb-6 font-sans">
           {lang === "en" ? "Select Document Type" : "اختر نوع المستند"}
         </h1>
@@ -177,6 +181,7 @@ export default function NewDocumentPage() {
   }
 
   return (
+
     <div className="max-w-7xl mx-auto p-4 flex flex-col items-center">
       <div className="self-center mb-4">
         <button

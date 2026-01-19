@@ -272,7 +272,7 @@ export function TemplateForm({
               ? "Document submission failed"
               : "فشل إرسال المستند"),
         }),
-        duration: 5000, // ✅ stays for ~10 seconds after resolve
+        duration: 10000, // ✅ stays for ~10 seconds after resolve
       },
     );
   }
@@ -332,6 +332,15 @@ export function TemplateForm({
       </Button>
     </div> */}
 
+      <div className="font-black font-sans text-2xl text-red-600 text-center p-3">
+
+        {
+          lang === "ar" ? 
+            "يجب تسليم جميع الأوراق و الملفات المطلوبة بالأسفل كأصول ورقية بالاضافة الي نسخها علي فلاشة" 
+          : "All required documents and files listed below must be submitted as original paper copies, in addition to copies on a flash drive."
+        }
+
+      </div>
       <TemplateTabs
         tabs={template.tabs}
         lang={lang}
@@ -349,6 +358,10 @@ export function TemplateForm({
                 value={form.values[field.name]}
                 locked={lockedFields.includes(field.name)}
                 error={form.errors[field.name]} // ✅ array of errors
+                onClear={() => {
+                  form.setFieldValue(field.name, []);
+                  form.setFieldError(field.name, null);
+                }}
                 onChange={(value: any) => {
                   let error: string | string[] | null = null;
 
@@ -387,6 +400,7 @@ export function TemplateForm({
         lang={lang}
         onSubmit={handleSubmit}
       />
+
     </>
   );
 }

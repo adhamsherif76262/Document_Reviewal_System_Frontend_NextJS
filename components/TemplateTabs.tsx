@@ -127,7 +127,7 @@ export function TemplateTabs({
     if (onTabChange) {
       const currentTab = tabs.find((t: any) => t.key === activeTab);
       const canLeave = onTabChange(currentTab.fields);
-      if (!canLeave) return; // prevent tab switch if validation fails
+      // if (!canLeave) return; // prevent tab switch if validation fails
     }
 
     setActiveTab(nextKey);

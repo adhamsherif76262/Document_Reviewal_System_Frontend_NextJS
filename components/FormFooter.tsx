@@ -51,7 +51,7 @@ export function FormFooter({
         shadow-2xl
         border-t
         p-3 sm:p-4
-        
+        z-50 inset-0
         flex flex-col sm:flex-row
         gap-2
       `}

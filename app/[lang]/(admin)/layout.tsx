@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import AdminNavbar from "../../../components/nav/AdminNavbar";
+import ScrollToTop from "../../../components/ScrollToTop";
 
 export default function AdminLayout({
   children,
@@ -50,6 +51,7 @@ export default function AdminLayout({
       <main className="min-h-screen px-3 py-10 bg-muted">
         {children}
       </main>
+      <ScrollToTop></ScrollToTop>
     </>
   );
 }

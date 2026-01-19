@@ -37,7 +37,7 @@ export function FieldRenderer({
   onChange,
   locked,
   error,
-}: any) {
+}: any , onClear?: () => void) {
 
   const props = {
     field,
@@ -46,6 +46,7 @@ export function FieldRenderer({
     value,
     onChange,
     locked,
+    onClear,
     error,
   };
 

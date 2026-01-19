@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import {Download} from "lucide-react"
+import { useParams } from 'next/navigation';
 type Props = {
   images: string[];
   startIndex: number;
@@ -14,6 +15,7 @@ export default function ImageModalCarousel({
   startIndex,
   onClose,
 }: Props) {
+  const {lang} = useParams()
   const [index, setIndex] = useState(startIndex);
 
   const handleDownload = async () => {
@@ -93,7 +95,7 @@ export default function ImageModalCarousel({
               }
               className="text-white text-xl cursor-pointer hover:text-red-600 font-black transition-all duration-300"
             >
-              ‹ Previous
+              ‹ {lang === "en" ? "Previous" : "السابق"}
             </button>
 
             <button
@@ -102,7 +104,7 @@ export default function ImageModalCarousel({
               }
               className="text-white text-xl cursor-pointer hover:text-red-600 font-black transition-all duration-300"
             >
-              Next ›
+              {lang === "en" ? "Next" : "التالي"} ›
             </button>
           </div>
         )}
