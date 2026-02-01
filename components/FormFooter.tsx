@@ -39,6 +39,7 @@ export function FormFooter({
   isFormValid,
   lang,
   onSubmit,
+  form,
 }: any) {
   return (
     <div
@@ -58,7 +59,8 @@ export function FormFooter({
     >
       <Button
         onClick={onSubmit}
-        disabled={isSubmitting || !isFormValid}
+        // disabled={isSubmitting || !isFormValid}
+        disabled={!form.isFormValid() || form.submissionLoading} 
         className="w-full sm:w-auto hover:cursor-pointer hover:bg-transparent hover:text-black transition-all duration-300"
       >
         {isSubmitting

@@ -218,10 +218,15 @@
 import { TemplateTabs } from "./TemplateTabs";
 import { FieldRenderer } from "./FieldRenderer";
 import { FormFooter } from "./FormFooter";
+import { ResubmissionFooter } from "./ResubmissionFooter";
 import { useFormValidation } from "../app/hooks/useFormValidation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+
+import { useState , useRef , useEffect} from "react";
+import { useRouter } from "next/navigation";
 
 export function TemplateForm({
   template,
@@ -229,122 +234,208 @@ export function TemplateForm({
   lang,
   lockedFields = [],
   form,
+  doc,
+  mode,
 }: any) {
+  const router = useRouter()
   const { validateText, validateFiles } =
     useFormValidation(template, lang);
 
+    // const [progress, setProgress] = useState(10)
+
   /** 🔥 Centralized submit handler */
-  async function handleSubmit() {
-    // 1️⃣ Validate entire form
-    const isValid = form.validate();
-    if (!isValid) {
-      form.scrollToFirstError?.();
-      return;
-    }
 
-    // 2️⃣ Use Sonner promise API
-    toast.promise(
-      form.submit(),
-      {
-        loading: (
-          <div className="flex items-center gap-2">
-            {/* <Loader2 className="w-4 h-4 animate-spin" /> */}
-            <span>
-              {lang === "en" ? "Submitting document..." : "جارٍ إرسال المستند..."}
-            </span>
-          </div>
-        ),
+async function handleSubmit() {
+  // 1️⃣ Validate form before doing anything
+  const isValid = form.validate(); // this updates errors internally
+  if (!isValid) {
+    form.scrollToFirstError?.();
+    return; // ❌ Stop here if validation fails
+  }
+  //   // 🔹 Check if form is valid
+  // function isFormValid() {
+  //   return Object.values(errors).every(errList => !errList || errList.length === 0);
+  // }
 
-        success: (res: any) => ({
-          message:
-            res?.message ||
-            (lang === "en"
-              ? "Document submitted successfully"
-              : "تم إرسال المستند بنجاح"),
-        }),
+  // ✅ If we reached here, form is valid
+  let progress = 0;
 
-        error: (err: any) => ({
-          message:
-            // err?.error ||
-            // err?.response?.data?.message || err?.response?.data?.error
-            err?.message || err?.error
-            (lang === "en"
-              ? "Document submission failed"
-              : "فشل إرسال المستند"),
-        }),
-        duration: 10000, // ✅ stays for ~10 seconds after resolve
-      },
+  // Reusable render function
+  const renderToast = () => (
+    <div className="space-y-3 w-full">
+      <p className="font-black">
+        {lang === "en" ? "Submitting documents..." : "جارٍ إرسال المستندات..."}
+      </p>
+      <Progress value={progress} />
+      <p className="text-xs text-muted-foreground text-right">{progress}%</p>
+    </div>
+  );
+
+  const toastId = toast.loading(renderToast());
+
+  // Start simulated progress
+  let stopped = false;
+  const startProgress = () => {
+    let current = 0;
+
+    const run = async () => {
+      while (!stopped && current < 95) {
+        await new Promise(res => setTimeout(res, 500));
+        current += Math.floor(Math.random() * 5) + 3;
+        progress = Math.min(current, 95);
+        toast.loading(renderToast(), { id: toastId });
+      }
+    };
+
+    run();
+
+    return () => {
+      stopped = true;
+    };
+  };
+
+  const stopProgress = startProgress();
+
+  try {
+    // 2️⃣ Submit form only after validation passed
+    await form.submit();
+
+    // 3️⃣ Stop progress and set 100%
+    stopProgress();
+    progress = 100;
+    toast.loading(renderToast(), { id: toastId });
+
+    toast.success(
+      lang === "en"
+        ? "Documents Submitted Successfully"
+        : "تم إرسال المستندات بنجاح",
+      { id: toastId }
+    );
+        router.push(`/${lang}/submissions`)
+  } catch (err: any) {
+    stopProgress();
+
+    // ❌ Re-validate form again on failure to catch required errors
+    form.validate();
+
+    toast.error(
+      err?.message ||
+        (lang === "en"
+          ? "Document submission failed"
+          : "فشل إرسال المستندات"),
+      { id: toastId }
     );
   }
+}
+
+async function handleReSubmit() {
+  // 1️⃣ Validate form before doing anything
+  const isValid = form.validate(); // this updates errors internally
+  if (!isValid) {
+    form.scrollToFirstError?.();
+    return; // ❌ Stop here if validation fails
+  }
+
+  // ✅ If we reached here, form is valid
+  let progress = 0;
+
+  // Reusable render function
+  const renderToast = () => (
+    <div className="space-y-3 w-full">
+      <p className="font-black">
+        {lang === "en" ? "Re-Submitting documents..." : "جارٍ اعادة إرسال المستندات..."}
+      </p>
+      <Progress value={progress} />
+      <p className="text-xs text-muted-foreground text-right">{progress}%</p>
+    </div>
+  );
+
+  const toastId = toast.loading(renderToast());
+
+  // Start simulated progress
+  let stopped = false;
+  const startProgress = () => {
+    let current = 0;
+
+    const run = async () => {
+      while (!stopped && current < 95) {
+        await new Promise(res => setTimeout(res, 500));
+        current += Math.floor(Math.random() * 5) + 3;
+        progress = Math.min(current, 95);
+        toast.loading(renderToast(), { id: toastId });
+      }
+    };
+
+    run();
+
+    return () => {
+      stopped = true;
+    };
+  };
+
+  const stopProgress = startProgress();
+
+  try {
+    // 2️⃣ Submit form only after validation passed
+    await form.submit();
+
+    // 3️⃣ Stop progress and set 100%
+    stopProgress();
+    progress = 100;
+    toast.loading(renderToast(), { id: toastId });
+
+    toast.success(
+      lang === "en"
+        ? "Documents Re-Submitted Successfully"
+        : "تم اعادة إرسال المستندات بنجاح",
+      { id: toastId }
+    );
+    router.push(`/${lang}/submissions/${doc._id}`)
+  } catch (err: any) {
+    stopProgress();
+
+    // ❌ Re-validate form again on failure to catch required errors
+    form.validate();
+
+    toast.error(
+      err?.message ||
+        (lang === "en"
+          ? "Document Re-submission failed"
+          : "فشل اعادة إرسال المستندات"),
+      { id: toastId }
+    );
+  }
+}
+
+
+const didInit = useRef(false);
+
+useEffect(() => {
+  if (didInit.current) return;
+  didInit.current = true;
+
+  form.reset();     // set values
+  // form.validate();  // 🔥 REQUIRED
+}, []);
+
 
   return (
     <>
-
-        {/* <div className="flex flex-wrap gap-2">
-      <Button variant="outline" onClick={() => toast("Event has been created")}>
-        Default
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() => toast.success("Event has been created")}
-      >
-        Success
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast.info("Be at the area 10 minutes before the event time")
-        }
-      >
-        Info
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast.warning("Event start time cannot be earlier than 8am")
-        }
-      >
-        Warning
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() => toast.error("Event has not been created")}
-      >
-        Error
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() => {
-          toast.promise<{ name: string }>(
-            () =>
-              new Promise((resolve) =>
-                setTimeout(() => resolve({ name: "Event" }), 2000)
-              ),
-            {
-              loading: "Loading...",
-              success: (data) => `${data.name} has been created`,
-              error: "Error",
-            }
-          )
-        }}
-      >
-        Promise
-      </Button>
-    </div> */}
-
-      <div className="font-black font-sans text-2xl text-red-600 text-center p-3">
+      <div className="font-black font-sans text-2xl text-blue-900 text-center p-3">
 
         {
           lang === "ar" ? 
-            "يجب تسليم جميع الأوراق و الملفات المطلوبة بالأسفل كأصول ورقية بالاضافة الي نسخها علي فلاشة" 
-          : "All required documents and files listed below must be submitted as original paper copies, in addition to copies on a flash drive."
+            "اذا أردت مسح جميع الملفات برجاء اعادة تحميل الصفحة (CTRL + R)" 
+          : "If You Need To Clear All The File Inputs Please Refresh The Page (CTRL + R)"
         }
 
       </div>
       <TemplateTabs
+      
         tabs={template.tabs}
         lang={lang}
-        onTabChange={(fields: any[]) => form.validateTab(fields)}
+  /*** Commented Recently To Solve The Error Of The Resubmission Form ****/
+        // onTabChange={(fields: any[]) => form.validateTab(fields)}
         tabErrors={form.getTabErrors(template.tabs)}
       >
         {(tab: any) => (
@@ -353,7 +444,9 @@ export function TemplateForm({
               <FieldRenderer
                 key={field.name}
                 field={field}
+                doc={doc}
                 lang={lang}
+                mode={mode}
                 globals={template.globals}
                 value={form.values[field.name]}
                 locked={lockedFields.includes(field.name)}
@@ -362,6 +455,7 @@ export function TemplateForm({
                   form.setFieldValue(field.name, []);
                   form.setFieldError(field.name, null);
                 }}
+                form={form}
                 onChange={(value: any) => {
                   let error: string | string[] | null = null;
 
@@ -394,12 +488,30 @@ export function TemplateForm({
         )}
       </TemplateTabs>
 
-      <FormFooter
-        isSubmitting={form.submissionLoading}
-        isFormValid={form.isFormValid()}
-        lang={lang}
-        onSubmit={handleSubmit}
-      />
+        {
+          mode === "submission" && (
+            <FormFooter
+              isSubmitting={form.submissionLoading}
+              isFormValid={form.isFormValid()}
+              lang={lang}
+              form={form}
+              onSubmit={handleSubmit}
+            />
+          )
+        }
+
+        {
+          mode === "resubmission" && (
+            <ResubmissionFooter
+
+              // isReSubmitting={form.resubmissionLoading}
+              // isFormValid={form.isFormValid()}
+              lang={lang}
+              form={form}
+              onReSubmit={handleReSubmit}
+            />
+          )
+        }
 
     </>
   );

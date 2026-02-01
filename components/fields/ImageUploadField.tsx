@@ -1,249 +1,3 @@
-// // fields/ImageUploadField.tsx
-// <Card className="relative border-dashed border-2 rounded-2xl p-4">
-//   {locked && <LockedOverlay />}
-
-//   <Label className="font-semibold text-sm">
-//     {field.label[lang]}
-//   </Label>
-
-//   <p className="text-xs text-muted-foreground mt-1">
-//     {globals.helpText.image[lang]}
-//   </p>
-
-//   <input
-//     type="file"
-//     accept={globals.constraints.image.allowedMimeTypes.join(',')}
-//     className="hidden"
-//     id={field.name}
-//     onChange={handleImage}
-//   />
-
-//   <label
-//     htmlFor={field.name}
-//     className="
-//       mt-4 flex flex-col items-center justify-center
-//       rounded-xl border bg-background
-//       hover:bg-muted transition
-//       min-h-[120px]
-//     "
-//   >
-//     <UploadCloud className="w-6 h-6 mb-2" />
-//     <span className="text-xs text-center">
-//       {lang === 'en' ? 'Click to upload' : 'اضغط للتحميل'}
-//     </span>
-//   </label>
-
-//   {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
-// </Card>
-
-
-// fields/ImageUploadField.tsx
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-// "use client";
-
-// import { useState, useEffect } from "react";
-// import { Card } from "@/components/ui/card";
-// import { Label } from "@/components/ui/label";
-// import { UploadCloud } from "lucide-react";
-// import { LockedOverlay } from "../../components/LockedOverlay";
-
-// export function ImageUploadField({
-//   field,
-//   lang,
-//   globals,
-//   value = [],
-//   onChange,
-//   locked = false,
-//   error,
-// }: any) {
-//   const [previews, setPreviews] = useState<string[]>([]);
-
-//   useEffect(() => {
-//     if (value && Array.isArray(value)) {
-//       const urls = value.map((file: File | string) => {
-//         if (typeof file === "string") return file;
-//         return URL.createObjectURL(file);
-//       });
-//       setPreviews(urls);
-
-//       // revoke object URLs on unmount
-//       return () => urls.forEach((url) => typeof url !== "string" && URL.revokeObjectURL(url));
-//     }
-//   }, [value]);
-
-//   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     if (!e.target.files) return;
-//     const files = Array.from(e.target.files);
-//     onChange(files);
-//   };
-
-//   return (
-//     <Card className="relative border-dashed border-2 rounded-2xl p-4">
-//       {locked && <LockedOverlay />}
-//       <Label className="font-semibold text-sm">{field.label[lang]}</Label>
-//       <p className="text-xs text-muted-foreground mt-1">
-//         {globals.helpText?.image?.[lang]}
-//       </p>
-
-//       <input
-//         type="file"
-//         accept={globals.constraints?.image?.allowedMimeTypes?.join(",")}
-//         className="hidden"
-//         id={field.name}
-//         multiple
-//         onChange={handleImage}
-//         disabled={locked}
-//       />
-
-//       <label
-//         htmlFor={field.name}
-//         className="
-//           mt-4 flex flex-col items-center justify-center
-//           rounded-xl border border-dashed border-gray-300 bg-background
-//           hover:bg-muted transition min-h-[120px] cursor-pointer
-//           w-full
-//         "
-//       >
-//         <UploadCloud className="w-6 h-6 mb-2" />
-//         <span className="text-xs text-center">
-//           {lang === "en" ? "Click to upload" : "اضغط للتحميل"}
-//         </span>
-//       </label>
-
-//       {/* Preview */}
-//       {previews.length > 0 && (
-//         <div className="flex flex-wrap gap-2 mt-2">
-//           {previews.map((src, i) => (
-//             <img
-//               alt=""
-//               key={i}
-//               src={src}
-//               className="w-20 h-20 object-cover rounded-lg border"
-//             />
-//           ))}
-//         </div>
-//       )}
-
-//       {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
-//     </Card>
-//   );
-// }
-
-
-
-// "use client";
-
-// import { useState, useEffect } from "react";
-// import { Card } from "@/components/ui/card";
-// import { Label } from "@/components/ui/label";
-// import { UploadCloud } from "lucide-react";
-// import { LockedOverlay } from "../../components/LockedOverlay";
-
-// export function ImageUploadField({
-//   field,
-//   lang,
-//   globals,
-//   value = [],
-//   onChange,
-//   locked = false,
-//   error,
-// }: any) {
-//   const [previews, setPreviews] = useState<string[]>([]);
-
-//   useEffect(() => {
-//     if (!value || !Array.isArray(value)) return;
-
-//     // Compute new URLs without mutating state directly
-//     const newUrls: string[] = value.map((file: File | string) =>
-//       typeof file === "string" ? file : URL.createObjectURL(file)
-//     );
-
-//     // Use functional update to avoid triggering synchronous cascades
-//     setPreviews((prev) => {
-//       // Cleanup previous object URLs
-//       prev.forEach((url) => {
-//         if (!value.includes(url)) URL.revokeObjectURL(url);
-//       });
-//       return newUrls;
-//     });
-
-//     // Cleanup on unmount
-//     return () => {
-//       newUrls.forEach((url) => {
-//         if (!value.includes(url) && typeof url !== "string") URL.revokeObjectURL(url);
-//       });
-//     };
-//   }, [value]);
-
-//   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     if (!e.target.files) return;
-//     const files = Array.from(e.target.files);
-//     onChange(files);
-//   };
-
-  
-// // console.log(globals)
-// // console.log(field)
-// // console.log(lang)
-// // // console.log(globals)
-// // console.log(error)
-
-//   return (
-//     <Card className="relative border-dashed border-2 rounded-2xl p-4">
-//       {locked && <LockedOverlay lang={lang} />}
-//       <Label className="font-semibold text-sm">{field.label[lang]}</Label>
-//       <p className="text-xs text-muted-foreground mt-1">
-//         {/* {globals.helpText?.image?.[lang]} */}
-//         {globals.helpText?.image?.[lang]}
-//       </p>
-
-//       <input
-//         type="file"
-//         accept={globals.constraints?.image?.allowedMimeTypes?.join(",")}
-//         className="hidden"
-//         id={field.name}
-//         multiple
-//         onChange={handleImage}
-//         disabled={locked}
-//       />
-
-//       <label
-//         htmlFor={field.name}
-//         className="
-//           mt-4 flex flex-col items-center justify-center
-//           rounded-xl border border-dashed border-gray-300 bg-background
-//           hover:bg-muted transition min-h-[120px] cursor-pointer
-//           w-full
-//         "
-//       >
-//         <UploadCloud className="w-6 h-6 mb-2" />
-//         <span className="text-xs text-center">
-//           {lang === "en" ? "Click to upload" : "اضغط للتحميل"}
-//         </span>
-//       </label>
-
-//       {/* Preview */}
-//       {previews.length > 0 && (
-//         <div className="flex flex-wrap gap-2 mt-2">
-//           {previews.map((src, i) => (
-//             <img
-//               alt=""
-//               key={i}
-//               src={src}
-//               className="w-20 h-20 object-cover rounded-lg border"
-//             />
-//           ))}
-//         </div>
-//       )}
-
-//       {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
-//     </Card>
-//   );
-// }
-
-
-
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -267,6 +21,9 @@ import { Button } from "@/components/ui/button";
 
 export function ImageUploadField({
   field,
+  form,
+  doc,
+  mode,
   lang,
   globals,
   value = [],
@@ -278,25 +35,46 @@ export function ImageUploadField({
 
   const [open, setOpen] = useState(false);
   const [startIndex, setStartIndex] = useState(0);
-  const [localFiles, setLocalFiles] = useState<File[]>([]);
+  // const [localFiles, setLocalFiles] = useState<File[]>([]);
+  const [localFiles, setLocalFiles] = useState<File[]>(value);
   const [pending, setPending] = useState<any[]>([]);
   const [rawFiles, setRawFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const compressAbortRef = useRef({ cancelled: false });
 
+const resetFileInput = () => {
+  if (fileInputRef.current) {
+    fileInputRef.current.value = ''; // reset the native input
+  }
   
-  const resetFileInput = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // or null
-      // ✅ HARD RESET UI IMMEDIATELY
-      setLocalFiles([]);
-      setPending([]);
-      setRawFiles([]);
-      console.log('File input reset.');
-    }
-  };
+  // 1️⃣ Clear internal state for UI
+  setLocalFiles([]);
+  setPending([]);
+  setRawFiles([]);
+    // compressAbortRef.current.cancelled = true;
 
-  // console.log(error[0]);
-  // ✅ DERIVED, NOT STATE
+  // 2️⃣ Clear the value in the form
+  // if (onChange) 
+    onChange([]); // very important!
+
+  // 3️⃣ Clear errors for this field
+  // if (onClear) 
+    // onClear(); // optional callback to clear field errors
+
+  // 4️⃣ Re-validate form immediately to disable submit & show required errors
+  // if(form?.validate)
+
+  /*** Commented Recently To Solve The Error Of The Resubmission Form ****/
+
+  // if(mode === "resubmission" && form.isFormValid())
+  //   {
+  //     alert("validate Called From Butotn")
+  //     form.validate(false); 
+  //   }
+};
+
+
+
   const previews = useMemo(() => {
     if (!Array.isArray(value)) return [];
 
@@ -308,35 +86,31 @@ export function ImageUploadField({
 useEffect(() => {
   if (rawFiles.length === 0) return;
 
-  let cancelled = false;
+  compressAbortRef.current.cancelled = false;
+  // const cancelled = false;
 
   async function compress() {
     const result: File[] = [];
-
     for (let i = 0; i < rawFiles.length; i++) {
       const compressed = await compressImageIfNeeded(rawFiles[i]);
-      if (cancelled) return;
-
+      if (compressAbortRef.current.cancelled) return;
       result.push(compressed);
-
       setPending(p =>
-        p.map((x, idx) =>
-          idx === i ? { ...x, loading: false } : x
-        )
+        p.map((x, idx) => (idx === i ? { ...x, loading: false } : x))
       );
     }
 
-    if (!cancelled) {
+    if (!compressAbortRef.current.cancelled) {
       setPending([]);
-      setLocalFiles(result);   // ✅ UI update first
-      onChange(result);        // ✅ FORM update last
+      setLocalFiles(result);
+      onChange(result);
     }
   }
 
   compress();
 
   return () => {
-    cancelled = true;
+    compressAbortRef.current.cancelled = true;
   };
 }, [rawFiles]);
 
@@ -347,6 +121,7 @@ const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
   const files = Array.from(e.target.files);
 
   // ✅ HARD RESET UI IMMEDIATELY
+  // value = []
   setLocalFiles([]);
   setPending([]);
   setRawFiles([]);
@@ -370,8 +145,11 @@ const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 
   return (
+
     <Card className="relative border-dashed border-2 rounded-2xl p-5 flex items-center justify-center" dir={lang === "ar" ? "rtl" : "ltr"}>
-      {locked && <LockedOverlay lang={lang} />}
+      {/* {doc.fields[field.name].review.status} */}
+      {/* {field.name} */}
+      {locked && <LockedOverlay lang={lang} fieldState={doc.fields[field.name].review.status} field={field} doc={doc}/>}
       {/* <LockedOverlay lang={lang} /> */}
 
       <Label className="font-black font-sans text-xl text-center" dir={lang === "ar" ? "rtl" : "ltr"}>
@@ -440,7 +218,7 @@ const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
           ))}
 
           {/* ✅ Final images */}
-           {previews.map((src, i) => (
+           {previews.map((src :any, i:any) => (
              <Image
              onClick={() => {
                setStartIndex(i);

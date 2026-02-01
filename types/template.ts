@@ -7,6 +7,7 @@ export interface TemplateField {
   type: 'text' | 'image' | 'pdf';
   required?: boolean;
   label: Record<Lang, string>;
+  status: string;
 }
 
 export interface TemplateTab {

@@ -31,16 +31,20 @@ import { PdfUploadField } from "./fields/PdfUploadField";
 
 export function FieldRenderer({
   field,
+  doc,
   lang,
   globals,
   value,
   onChange,
   locked,
   error,
+  form,
+  mode,
 }: any , onClear?: () => void) {
 
   const props = {
     field,
+    doc,
     lang,
     globals,
     value,
@@ -48,6 +52,8 @@ export function FieldRenderer({
     locked,
     onClear,
     error,
+    mode,
+    form,
   };
 
   switch (field.type) {

@@ -122,19 +122,22 @@ export function TemplateTabs({
   const [activeTab, setActiveTab] = useState(tabs[0]?.key);
 
   function handleTabChange(nextKey: string) {
+    alert("bEFORE tab changed")
     if (nextKey === activeTab) return;
+    alert(" aFTER tab changed")
 
     if (onTabChange) {
+      alert("tab changed")
       const currentTab = tabs.find((t: any) => t.key === activeTab);
       const canLeave = onTabChange(currentTab.fields);
-      // if (!canLeave) return; // prevent tab switch if validation fails
+      if (!canLeave) return; // prevent tab switch if validation fails
     }
 
     setActiveTab(nextKey);
   }
 
   return (
-    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full max-w-7xl">
+    <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full max-w-7xl mx-auto">
       <TabsList className=" w-full xs:h-20 xxxs:h-50 flex xs:flex-row xxxs:flex-col xs:items-center xsxx:items-center xxxs:justify-center xs:justify-evenly bg-muted xxxs:p-5 xs:p-3 rounded-xl">
         {tabs.map((tab: any) => {
           const hasError = tabErrors[tab.key];

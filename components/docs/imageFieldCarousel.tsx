@@ -152,6 +152,9 @@ export default function ImageFieldCarousel({ images }: { images: string[] }) {
                     group-hover:blur-sm
                     "
                   priority={i === 0}
+                  // onError={(e) => {
+                  //   e.currentTarget.src = "/placeholder.png";
+                  // }}
                 />
 
                 {/* 🔹 HOVER OVERLAY */}

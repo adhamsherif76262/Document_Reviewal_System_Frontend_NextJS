@@ -12,10 +12,12 @@ import { useRef } from "react";
 import { Loader2, FileText } from "lucide-react";
 import { compressPdf } from "../../lib/compressPdf";
 import { useState } from "react";
+import { TemplateField } from "../../types/template";
 
 export function PdfUploadField({
   field,
   lang,
+  doc,
   globals,
   value = [],
   onChange,
@@ -129,7 +131,7 @@ const [pending, setPending] = useState<any[]>([]);
 
   return (
     <Card className="relative border-dashed border-2 rounded-2xl p-5 flex items-center justify-center">
-      {locked && <LockedOverlay />}
+      {locked && <LockedOverlay field={field} lang={lang} fieldState={doc.fields[field.name].review.status} doc={doc}/>}
       <Label className="font-black font-sans text-xl text-center">{field.label[lang]}</Label>
       <p dir={lang === "ar" ? "rtl" : "ltr"}  className="text-muted-foreground mt-1 font-black font-sans text-xl text-center">
         {globals.helpText?.pdf?.[lang]}
@@ -219,16 +221,23 @@ const [pending, setPending] = useState<any[]>([]);
 </div> */}
 
           {/* ✅ Final PDFs */}
-          {value.map((file: File | string, i: number) => (
-            <div
+          {value.map((file: File | TemplateField, i: number) => (
+            
+              file.name && (
+                            <div
               key={i}
               className="flex items-center gap-2 p-2 border rounded-xl"
             >
               <FileText className="w-5 h-5" />
               <span className="truncate">
-                {typeof file === "string" ? file : file.name}
+                
+                {/* {typeof file === "string" ? file : file.name} */}
+                {/* {typeof file === "string" ? "" : file.name} */}
+                {file.name}
               </span>
             </div>
+              )
+            
           ))}
         </div>
       )}
@@ -238,7 +247,7 @@ const [pending, setPending] = useState<any[]>([]);
           <ul>
             {
             error.map((err : any , index : any)=>(
-              <li key={err}  className="font-black text-lg text-red-500 mt-2">{err}</li>
+              <li key={index}  className="font-black text-lg text-red-500 mt-2">{err}</li>
             ))
           }
           </ul>

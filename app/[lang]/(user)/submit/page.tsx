@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// /* eslint-disable @typescript-eslint/no-unused-vars */
 // import React from 'react'
 
 // export default function SubmitDocumentpage() {
@@ -166,7 +166,7 @@ export default function NewDocumentPage() {
   if (!template || !state) {
     return (
       <div className="max-w-7xl mx-auto p-4 text-center">
-        <PDFUploadFieldTester></PDFUploadFieldTester>
+        {/* <PDFUploadFieldTester></PDFUploadFieldTester> */}
         {/* <ImageCompressionTest></ImageCompressionTest> */}
         <h1 className="text-2xl font-black mb-6 font-sans">
           {lang === "en" ? "Select Document Type" : "اختر نوع المستند"}
@@ -183,6 +183,15 @@ export default function NewDocumentPage() {
   return (
 
     <div className="max-w-7xl mx-auto p-4 flex flex-col items-center">
+            <div className="font-black font-sans text-2xl text-red-600 text-center p-3">
+
+        {
+          lang === "ar" ? 
+            "يجب تسليم جميع الأوراق و الملفات المطلوبة بالأسفل كأصول ورقية بالاضافة الي نسخها علي فلاشة" 
+          : "All required documents and files listed below must be submitted as original paper copies, in addition to copies on a flash drive."
+        }
+
+      </div>
       <div className="self-center mb-4">
         <button
           onClick={resetSelection}
@@ -201,6 +210,7 @@ export default function NewDocumentPage() {
         state={state}
         lang={lang}
         form={form}
+        mode={"submission"}
         onSubmit={handleSubmit}
       />
     </div>

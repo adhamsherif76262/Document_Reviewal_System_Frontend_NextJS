@@ -94,6 +94,9 @@ export default function DocumentDetailsPage() {
   const [open, setOpen] = useState(false);
   const [startIndex, setStartIndex] = useState(0);
 
+  // const [isResubmitting, setIsResubmitting] = useState(false);
+
+
   // const getUserInitials = (name: string | undefined) => {
   //   if(name){
   //         return name
@@ -153,6 +156,11 @@ export default function DocumentDetailsPage() {
       .trim();
   };
 
+    // const canResubmit =
+    // docData?.status === "rejected" ||
+    // docData?.status === "partiallyApproved";
+
+
   // const fieldsArray = Object.entries(docData?.fields ?? {})
   // =========================
   // 🦴 Skeleton
@@ -174,7 +182,10 @@ export default function DocumentDetailsPage() {
         <div className={`${(docData?.status !== "approved" && docData?.status !== "pending") ? 'w-full flex sm:flex-row xxxs:flex-col xxxs:items-center sm:items-center xxxs:justify-between sm:justify-between px-4' : ""}`}>
           <h1 className='text-2xl font-black text-center animate-pulse xxxs:pb-5 xxxs:pt-5'>Submission Fields&apos; Details</h1>
           {
-            (docData?.status !== "approved" && docData?.status !== "pending") && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0' onClick={()=>router.push(`/${lang}/resubmit/${docData?._id}`)}>Resubmit Rejected Fields</Button>)
+            (docData?.status !== "approved" && docData?.status !== "pending") && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0' onClick={()=>{
+              router.push(`/${lang}/resubmit/${docData?._id}`)
+              // setIsResubmitting(true)
+            }}>Resubmit Rejected Fields</Button>)
           }
         </div>
         <div className="grid gap-2 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:p-4">

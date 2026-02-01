@@ -24,7 +24,8 @@ import imageCompression from 'browser-image-compression';
  */
 export async function compressImageIfNeeded(file: File): Promise<File> {
     // 1. Validation: Skip if not an image or already small enough
-    if (!file.type.startsWith('image/') || file.size <= 300 * 1024) {
+    // if (!file.type.startsWith('image/') || file.size <= 300 * 1024) {
+    if (!file.type.startsWith('image/')) {
         return file;
     }
     

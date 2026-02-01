@@ -34,6 +34,10 @@ export function useTemplateForm(
     setErrors({});
   }
 
+  useEffect(() => {
+  validate();
+}, [values]);
+
   // 🔹 Set a field value and clear its errors if valid
   function setFieldValue(name: string, value: any) {
     if (lockedFields.includes(name)) return;
@@ -75,12 +79,33 @@ export function useTemplateForm(
         const fieldErrors: string[] = [];
 
         // Required validation
-        if (field.required && !values[field.name]) {
-          const msg =
-            template.globals.errors[field.type]?.required?.[lang] ||
-            "This field is required";
-          fieldErrors.push(msg);
+        // if (field.required && !values[field.name]) {
+        //   const msg =
+        //     template.globals.errors[field.type]?.required?.[lang] ||
+        //     "This field is required";
+        //   fieldErrors.push(msg);
+        // }
+
+        // Required validation
+        if (field.required) {
+          const value = values[field.name];
+        
+          const isEmpty =
+            value === undefined ||
+            value === null ||
+            (typeof value === "string" && value.trim() === "") ||
+            (Array.isArray(value) && value.length === 0);
+        
+          if (isEmpty) {
+            const msg =
+              template.globals.errors[field.type]?.required?.[lang] ||
+              "This field is required";
+          
+            fieldErrors.push(msg);
+            isValid = false;
+          }
         }
+
 
         // Add other validations if needed (files, custom rules)
 
@@ -94,6 +119,7 @@ export function useTemplateForm(
     });
 
     setErrors(prev => ({ ...prev, ...nextErrors }));
+    // alert("Form.Validate Called")
     return isValid;
   }
 
@@ -140,17 +166,30 @@ export function useTemplateForm(
 
   // 🔹 Scroll to first error in the DOM
   function scrollToFirstError() {
-    const firstKey = Object.keys(errors).find(k => errors[k]?.length > 0);
+  requestAnimationFrame(() => {
+    const firstKey = Object.keys(errors).find(
+      k => errors[k]?.length > 0
+    );
+
     if (!firstKey) return;
 
-    const el = document.querySelector(`[data-field="${firstKey}"]`);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }
+    const el = document.querySelector(
+      `[data-field="${firstKey}"]`
+    ) as HTMLElement | null;
+
+    if (!el) return;
+
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  });
+}
+
+
 
   // 🔹 Form submission
-  async function submit() {
+  async function submit({ onProgress }: { onProgress?: (p: number) => void } = {}) {
     if (!template) return { success: false, error: "No template selected" };
 
     const valid = validate();
@@ -185,6 +224,12 @@ export function useTemplateForm(
 
       const res = await api.post("api/documents/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (event) => {
+          if (!event.total) return;
+
+          const percent = Math.round((event.loaded * 100) / event.total);
+          onProgress?.(percent);
+        },
       });
 
       setSubmissionStatus("success");
