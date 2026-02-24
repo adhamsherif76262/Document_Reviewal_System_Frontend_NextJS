@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button"
 import { FileText } from "lucide-react"
 
-export function PdfFieldList({ pdfs , fieldName}: { pdfs: string[] , fieldName : string}) {
+export function PdfFieldList({ pdfs , fieldName , textSize}: { pdfs: string[] , fieldName : string , textSize? : string}) {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 mx-auto min-w-f">
       {pdfs.map((url, i) => (
         <Button
           key={i}
           variant="outline"
-          className="justify-start gap-2"
+          className={`justify-start gap-2 ${textSize}`}
           asChild
         >
           <a href={url} target="_blank" rel="noopener noreferrer">

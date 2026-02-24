@@ -229,13 +229,19 @@ export default function DocumentDetailsPage() {
                   <PdfFieldList pdfs={field.value} fieldName={formatKeyToLabel(fieldName)}/>
                 )}
 
-
                 {/* Admin comment */}
                 {field.review?.adminComment && (
+                  <p className="text-lg text-gray-600 italic font-black text-center whitespace-pre-line">
+                    {lang === "ar" ? " :: تعليق المدير" : "Admin Comment ::"} <br />{field.review.adminComment}
+                  </p>
+                )}
+
+                {/* Admin comment */}
+                {/* {field.review?.adminComment && (
                   <p className="text-lg text-gray-600 italic font-black text-center">
                     Comment: {field.review.adminComment}
                   </p>
-                )}
+                )} */}
               </div>
             );
           })}
@@ -440,6 +446,7 @@ export default function DocumentDetailsPage() {
                 <span className="font-medium">Pending Resubmission:</span>
               </div>
               <BooleanBadge value={docData?.hasPendingResubmission || false} />
+              {/* <BooleanBadge value={docData?.hasPendingResubmission} /> */}
             </div>
           </div>
             

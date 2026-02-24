@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // // app/(dashboard)/logs/[id]/page.tsx
 // "use client"
 // // import api from '../../../../../lib/api'
@@ -64,7 +65,7 @@
 
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams , useRouter } from 'next/navigation'
 
 import { getDocumentById } from '../../../../hooks/useGetDocumentById'
@@ -119,6 +120,7 @@ import {
   MessageCircleMoreIcon,
   CheckCircle,
   XCircle,
+  Key,
 } from 'lucide-react'
 
 import {
@@ -150,6 +152,8 @@ import { json } from 'stream/consumers'
 import  ImageFieldCarousel  from '../../../../../components/docs/imageFieldCarousel'
 import { PdfFieldList } from '../../../../../components/docs/pdfFieldRenderer'
 import ImageModalCarousel from '../../../../../components/docs/imageModalCarousel'
+import { useDocumentReview } from '../../../../hooks/useDocumentReview'
+import { Label } from 'radix-ui'
 
 export default function DocumentDetailsPage() {
 
@@ -183,6 +187,10 @@ export default function DocumentDetailsPage() {
       {value ? 'Yes' : 'No'}
     </Badge>
   )
+
+    const {
+      template,
+    } = useDocumentReview({id})
 
   useEffect(() => {
     let cancelled = false
@@ -222,6 +230,22 @@ export default function DocumentDetailsPage() {
       .trim();
   };
 
+  const templateFieldMap = useMemo(() => {
+  if (!template) return {}
+
+  const map: Record<string, any> = {}
+
+  template.tabs.forEach((tab: any) => {
+    tab.fields.forEach((field: any) => {
+      map[field.name] = field
+    })
+  })
+
+  return map
+}, [template])
+
+  // console.log(docData)
+
   // const fieldsArray = Object.entries(docData?.fields ?? {})
   // =========================
   // 🦴 Skeleton
@@ -234,28 +258,37 @@ export default function DocumentDetailsPage() {
   // 🧾 Content
   // =========================
   return (
-    <div dir='ltr' className="space-y-6">
+    <div className="space-y-6">
 
 
       {/* Fields */}
 
-      <section className='bg-gray-300 rounded-4xl shadow-2xl'>
+      <section className='bg-gray-300 rounded-4xl shadow-2xl' dir={lang === "ar" ? "rtl" : "ltr"}>
         <div className='w-full flex sm:flex-row xxxs:flex-col xxxs:items-center sm:items-center xxxs:justify-between sm:justify-between px-4'>
-          <h1 className='text-2xl font-black text-center animate-pulse xxxs:pb-5 xxxs:pt-5'>Submission Fields&apos; Details</h1>
+          <h1 className='text-2xl font-black text-center animate-pulse xxxs:pb-5 xxxs:pt-5'>{ lang === "ar" ? "تفاصيل الحقول" : "Submission Fields' Details"}</h1>
           {
-            docData && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0' onClick={()=>router.push(`/${lang}/review/${docData?._id}`)}>Review This Submission</Button>)
+            docData && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0' onClick={()=>router.push(`/${lang}/review/${docData?._id}`)}>{lang === "ar" ? "مراجعة هذا التقديم" : "Review This Submission"}</Button>)
           }
         </div>
         <div className="grid gap-2 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 xs:p-4">
           {Object.entries(docData?.fields ?? {}).map(([fieldName, field]) => {
+
+            const templateField = templateFieldMap[fieldName]
+            const label = templateField?.label?.[lang as string] ?? fieldName // fallback if template missing
+           
             return (
               <div
                 key={fieldName}
                 className="border rounded-xl py-4 xs:px-4 xxxs:px-2 space-y-3 bg-card"
               >
-                <div className="flex xl:flex-row xl:justify-between xl:items-center xxs:flex-row xxs:justify-between xxs:items-center xxxs:flex-col xxxs:justify-center xxxs:items-center sm:flex-col sm:justify-between sm:items-center">
-                  <h2 className="font-medium">{formatKeyToLabel(fieldName)}</h2>
-                  {/* <h2 className="font-medium text-center">Active Substance Analysis Certificate</h2> */}
+                <div 
+                // className="flex xl:flex-row xl:justify-between xl:items-center xxs:flex-row xxs:justify-between
+                //  xxs:items-center xxxs:flex-col xxxs:justify-center xxxs:items-center sm:flex-col sm:justify-between
+                //   sm:items-center"
+                className="flex flex-col-reverse justify-between items-center"
+                  >
+                  {/* <h2 className="font-medium">{formatKeyToLabel(fieldName)}</h2> */}
+                  <h2 className='pt-2 font-medium text-center'>{label}</h2>
 
                   {field.review && (
                     <span
@@ -289,11 +322,14 @@ export default function DocumentDetailsPage() {
 
 
                 {/* Admin comment */}
-                {field.review?.adminComment && (
-                  <p className="text-lg text-gray-600 italic font-black text-center">
-                    Comment: {field.review.adminComment}
+                {field.review?.adminComment ? (
+                  <p className="text-lg text-gray-600 italic font-black text-center whitespace-pre-line">
+                    {lang === "ar" ? "تعليق المدير ::" : "Admin Comment ::"} <br />{field.review.adminComment}
                   </p>
-                )}
+                ) : (
+                  <p className='text-lg text-gray-600 italic font-black text-center whitespace-pre-line'>{lang === "ar" ? "لا يوجد تعليق للمدير" : "The Admin Has No Comment"}</p> 
+                )
+                }
               </div>
             );
           })}
@@ -301,7 +337,7 @@ export default function DocumentDetailsPage() {
       </section>
 
       <Card>
-        <h1 className='text-2xl font-black text-center animate-pulse'>User Details</h1>
+        <h1 className='text-2xl font-black text-center animate-pulse'>{lang === "ar" ? "بيانات المستخدم" : "User Details"}</h1>
         <CardHeader className='flex xs:flex-row xxxs:flex-col xxxs:items-center xs:items-center xs:justify-between xxxs:justify-between'>
           <div className="flex items-center gap-4">
             <Avatar>
@@ -322,14 +358,14 @@ export default function DocumentDetailsPage() {
             </div>
           </div>
             {
-              docData?.user && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0' onClick={()=>router.push(`/${lang}/users/${docData?.user?._id}`)}>Submission History</Button>)
+              docData?.user && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0' onClick={()=>router.push(`/${lang}/users/${docData?.user?._id}`)}>{lang === "ar" ? "تاريخ التقديم" : "Submission History"}</Button>)
             }
             {/* {
               (logData?.admin && (!logData?.user)) && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0' onClick={()=>router.push(`/${lang}/admins/${logData?.admin?._id}`)}>Reviews History</Button>)
             }  */}
         </CardHeader>
 
-        <CardContent className="space-y-6 xxxs:text-center xs:text-left xxxs:mx-auto xs:mx-0">
+        <CardContent className={`space-y-6 xxxs:text-center ${lang === "ar" ? "xs:text-right" : "xs:text-left"} xxxs:mx-auto xs:mx-0`}>
           {/* Contact */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
             <div className="flex xxs:flex-row xxs :items-center xxs:justify-start  xxxs:flex-col xxxs:justify-center xxxs:items-center gap-2">
@@ -346,24 +382,24 @@ export default function DocumentDetailsPage() {
           <Separator />
 
           {/* Status */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-lg">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xl" dir={lang === "ar" ? "rtl" : "ltr"}>
             <div>
-              <p className="text-muted-foreground">Role</p>
+              <p className={`mb-4 text-muted-foreground font-black ${lang === "ar" ? "ml-4" : ""}`}>{lang === "ar" ? "الدور" : "Role"}</p>
               <Badge variant = {"outline"}  className='h-8 w-20 text-lg'>{docData?.user.role}</Badge>
             </div>
 
             <div>
-              <p className="text-muted-foreground">Verified</p>
+              <p className="text-muted-foreground mb-4">{lang === "ar" ? "تم التحقق منه" : "Verified"}</p>
               <BooleanBadge value={docData?.user.isVerified || false} />
             </div>
 
             <div>
-              <p className="text-muted-foreground">Expirable</p>
+              <p className=" mb-4 text-muted-foreground">{lang === "ar" ? "يمكن انتهاء صلاحيته" : "Expirable"}</p>
               <BooleanBadge value={docData?.user.expirable || false} />
             </div>
 
             <div>
-              <p className="text-muted-foreground">Expiry Status</p>
+              <p className=" mb-4 text-muted-foreground">{lang === "ar" ? "حالة انتهاء الصلاحية" : "Expiry Status"}</p>
               <Badge variant="outline" className='h-10 w-30 text-primary text-lg' >
                   {docData?.user.expiryStatus ==="active" ? <CheckCircle className='h-5 w-5 text-primary' /> : <XCircle className='h-5 w-5 text-primary'/>}
                   {docData?.user.expiryStatus}
@@ -376,7 +412,7 @@ export default function DocumentDetailsPage() {
           {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-lg">
             <div>
-              <p className="text-muted-foreground">Created At</p>
+              <p className="text-muted-foreground">{lang === "ar" ? "تم الإنشاء في" : "Created At"}</p>
               <div className="flex items-center gap-2">
                 <Clock className='h-5 w-5 text-primary'/>
                 {formatDate(docData?.user.createdAt)}
@@ -384,7 +420,7 @@ export default function DocumentDetailsPage() {
             </div>
 
             <div>
-              <p className="text-muted-foreground">Updated At</p>
+              <p className="text-muted-foreground">{lang === "ar" ? "تم التحديث في" : "Updated At"}</p>
                 <div className="flex items-center gap-2">
                   <Clock className='h-5 w-5 text-primary'/>
                   {formatDate(docData?.user.updatedAt)}
@@ -393,7 +429,7 @@ export default function DocumentDetailsPage() {
 
             {docData?.user.expiryDate && (
               <div >
-                <p className="text-muted-foreground">Expiry Date</p>
+              <p className="text-muted-foreground">{lang === "ar" ? "تاريخ انتهاء الصلاحية" : "Expiry Date"}</p>
                 <div className="flex items-center gap-2">
                   <Clock className='h-5 w-5 text-primary'/>
                   {formatDate(docData?.user.expiryDate)}
@@ -416,7 +452,7 @@ export default function DocumentDetailsPage() {
                   </div>
                 ):(
                   <div>
-                    <p className="text-muted-foreground">Level</p>
+                    <p className="text-muted-foreground mb-4">{lang === "ar" ? "المستوي" : "Level"}</p>
                     <Badge variant="secondary" className='h-10 w-40 text-primary text-xl font-black'>
                       Regular User
                       {/* {docData?.user.adminLevel} */}
@@ -427,7 +463,7 @@ export default function DocumentDetailsPage() {
 
                 {docData?.user.lastOTPResend && (
                   <div>
-                    <p className="text-muted-foreground">Last OTP Resend</p>
+                    <p className="text-muted-foreground mb-6">{lang === "ar" ? "تاريخ أخر إعادة إرسال رمز التحقق (OTP)" : "Last OTP Resend"}</p>
                     <div className="flex items-center gap-2">
                       <Clock className='h-5 w-5 text-primary'/>
                       {formatDate(docData?.user.lastOTPResend)}
@@ -445,10 +481,10 @@ export default function DocumentDetailsPage() {
           <CardTitle className="flex items-center gap-2 text-2xl font-black mx-auto animate-pulse">
             {/* <FileText className="h-6 w-6 text-primary" /> */}
             <NotebookTabs className="h-6 w-6 text-primary"/>
-            Submission Details
+            {lang === "ar" ? "تفاصيل التقديم" : "Submission Details"}
           </CardTitle>
           <CardDescription>
-            Submission Metadata & Review State
+            {lang === "ar" ? "بيانات تعريف التقديم وحالة المراجعة" : "Submission Metadata & Review State"}
           </CardDescription>
         </CardHeader>
 
@@ -460,7 +496,7 @@ export default function DocumentDetailsPage() {
             <div className="flex xs:flex-row xs:items-center xs:justify-start xxxs:flex-col xxxs:items-center xxxs:justify-between gap-2">
                 <div className='flex items-center justify-between'>
                   <FileText className="h-5 w-5 text-muted-foregrsound mx-2" />
-                  <span className="font-medium">Type:</span>
+                  <span className="font-medium">{lang === "ar" ? "النوع" : "Type"}</span>
                 </div>
               <Badge variant="secondary" className='xxxs:text-sm xxs:text-lg font-black'>{docData?.docType}</Badge>
             </div>
@@ -468,7 +504,7 @@ export default function DocumentDetailsPage() {
             <div className="flex xs:flex-row xs:items-center xs:justify-start xxxs:flex-col xxxs:items-center xxxs:justify-between gap-2">
                 <div className='flex items-center justify-between'>
                   <Globe className="h-5 w-5 text-muted-foregrousnd mx-2" />
-                  <span className="font-medium">State:</span>
+                  <span className="font-medium">{lang === "ar" ? "الحالة" : "State"}</span>
                 </div>
               <Badge variant="outline" className='text-lg font-black'>{docData?.state}</Badge>
             </div>
@@ -476,7 +512,7 @@ export default function DocumentDetailsPage() {
             <div className="flex xs:flex-row xs:items-center xs:justify-start xxxs:flex-col xxxs:items-center xxxs:justify-between gap-2">
                 <div className='flex items-center justify-between'>
                   <Hash className="h-5 w-5 text-muted-foregrounsd mx-2" />
-                  <span className="font-medium">Submission Number</span>
+                  <span className="font-medium">{lang === "ar" ? "رقم التقديم" : "Submission Number"}</span>
                 </div>
               <Badge variant="default" className='text-lg font-black'>{docData?.docNumber}</Badge>
             </div>
@@ -499,7 +535,7 @@ export default function DocumentDetailsPage() {
                   ) : (
                     <Clock className="h-6 w-6 text-black mx-3" />
                   )}
-                  <span className="font-medium ">Status:</span>
+                  <span className="font-medium">{lang === "ar" ? "حالة المراجعة" : "Status"}</span>
                 </div>
               <Badge variant="outline" className={`text-lg text-white ${docData?.status === 'approved' ? 'bg-green-600' : docData?.status === 'rejected' ? 'bg-red-600' : docData?.status === 'partiallyApproved' ? 'bg-yellow-600' : 'bg-black'}`}>
                 {docData?.status}
@@ -509,9 +545,11 @@ export default function DocumentDetailsPage() {
             <div className="flex sm:flex-row sm:items-center sm:justify-start gap-2 xxxs:flex-col xxxs:items-center xxxs:justify-center sm:mt-0 xxxs:mt-6">
               <div className='flex flex-row items-center justify-between' >
                 <RotateCcw className="h-5 w-5 text-muted-foreground mx-3" />
-                <span className="font-medium">Pending Resubmission:</span>
+                <span className="font-medium">{lang === "ar" ? "بانتظار إعادة التقديم" : "Pending Resubmission"}</span>
               </div>
               <BooleanBadge value={docData?.hasPendingResubmission || false} />
+              {/* <BooleanBadge value={docData?.hasPendingResubmission} /> */}
+              {/* {docData?.hasPendingResubmission} */}
             </div>
           </div>
             
@@ -523,7 +561,7 @@ export default function DocumentDetailsPage() {
               <div className="flex items-start gap-2">
                 <MessageCircleMoreIcon className="h-6 w-6 text-muted-foreground mt-1" />
                 <div>
-                  <p className="text-muted-foreground">Admin Comment</p>
+                  <p className="font-medium">{lang === "ar" ? "تعليق المدير" : "Admin Comment"}</p>
                   <p className="font-medium">{docData.adminComment}</p>
                 </div>
               </div>
@@ -537,7 +575,7 @@ export default function DocumentDetailsPage() {
             <div className="flex items-center gap-2">
               <CalendarCheck className="h-5 w-5 text-primary" />
               <div>
-                <p className="text-muted-foreground">Submitted</p>
+              <p className="text-muted-foreground">{lang === "ar" ? "تم تقديمه في" : "Submitted At"}</p>
                 {formatDate(docData?.submittedAt)}
               </div>
             </div>
@@ -545,7 +583,7 @@ export default function DocumentDetailsPage() {
             <div className="flex items-center gap-2">
               <CalendarPlus className="h-5 w-5 text-primary" />
               <div>
-                <p className="text-muted-foreground">Created</p>
+              <p className="text-muted-foreground">{lang === "ar" ? "تم إنشاْه في" : "Created At"}</p>
                 {formatDate(docData?.createdAt)}
               </div>
             </div>
@@ -553,7 +591,7 @@ export default function DocumentDetailsPage() {
             <div className="flex items-center gap-2">
               <CalendarClock className="h-5 w-5 text-primary" />
               <div>
-                <p className="text-muted-foreground">Updated</p>
+              <p className="text-muted-foreground">{lang === "ar" ? "تم تحديثه في" : "Updated At"}</p>
                 {formatDate(docData?.updatedAt)}
               </div>
             </div>
@@ -562,7 +600,7 @@ export default function DocumentDetailsPage() {
               <div className="flex items-center gap-2">
                 <Gavel className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-muted-foreground">Last Reviewed</p>
+              <p className="text-muted-foreground">{lang === "ar" ? "آخر مراجعة في" : "Last Reviewed At"}</p>
                   {formatDate(docData.lastReviewedAt)}
                 </div>
               </div>
@@ -580,8 +618,9 @@ export default function DocumentDetailsPage() {
             collapsible
             className="w-full bg-card font-black text-black p-6 rounded-2xl shadow-2xl"
             defaultValue="item-1"
+            dir='ltr'
           >
-            <h1 className='text-center text-2xl font-black animate-pulse'>Assigned Admins</h1>
+            <h1 className='text-center text-2xl font-black animate-pulse'>{lang === "ar" ? "المديرون المعينون" : "Assigned Admins"}</h1>
             {
               docData?.assignedAdmins.map((admin , index)=>(
                 <AccordionItem key={index} value={`item-${index+1}`}>
@@ -637,7 +676,7 @@ export default function DocumentDetailsPage() {
                         </ItemContent>
                       </Item>
                     </div>
-                    <Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0' onClick={()=>router.push(`/${lang}/admins/${docData?.assignedAdmins[index]?._id}`)}>Reviews History</Button>
+                    <Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0' onClick={()=>router.push(`/${lang}/admins/${docData?.assignedAdmins[index]?._id}`)}>{lang === "ar" ? "تاريخ المراجعات" : "Reviews History"}</Button>
                   </AccordionContent>
                 </AccordionItem>
               ))
@@ -647,7 +686,7 @@ export default function DocumentDetailsPage() {
       }
 
       <ul  className="pt-10 bg-card rounded-xl shadow-xl xxs:max-h-[500px] xxxs:max-h-[600px]">
-        <h1 className='text-2xl font-black text-center mb-5 -mt-5 animate-pulse'>Submission Activity Log</h1>
+        <h1 className='text-2xl font-black text-center mb-5 -mt-5 animate-pulse'>{lang === "ar" ? "سجل نشاط التقديم" : "Submission Activity Log"}</h1>
         <ul className="timeline timeline-snap-icon max-sm:timeline-compact timeline-vertical overflow-y-scroll max-h-[425px]">
           {
             docData?.activityLog.map((Activity_Log , index) =>(
@@ -671,7 +710,7 @@ export default function DocumentDetailsPage() {
 
                   <time className={`font-mono italic flex xxs:flex-row xxs:items-center xxs:justify-between xxxs:justify-between xxxs:flex-col xxxs:items-center`}><Hourglass className='h-5 w-5 mx-3 xxxs:mb-3 xxs:mb-0'/><strong className='xxs:text-[17px] sm:text-[14px] md:text-[17px] xxxs:text-sm'>{formatDate(Activity_Log.timestamp)}</strong></time>
                   <div className={`text-lg my-5 flex items-center ${index % 2 === 0 ? "sm:justify-end" : "xxxs:justify-start"}`}><Shield className='h-5 w-5 mx-3'/>{Activity_Log.action}</div>
-                  <div className={`xxxs:text-md xxs:text-lg my-5 mx-3 flex items-center ${index % 2 === 0 ? "sm:justify-end" : "xxxs:justify-start"}`}>By <strong className='px-2'>{Activity_Log.role}</strong> <strong>{Activity_Log.by}</strong></div>
+                  <div className={`xxxs:text-md xxs:text-lg my-5 mx-3 flex items-center ${index % 2 === 0 ? "sm:justify-end" : "xxxs:justify-start"}`}>{lang === "ar" ? "بواسطة" : "By"} <strong className='px-2'>{Activity_Log.role}</strong> <strong>{Activity_Log.by}</strong></div>
                 </div>
                 {index+1 !== docData.activityLog.length ? <hr/> : ""}
               </li>
@@ -689,7 +728,7 @@ export default function DocumentDetailsPage() {
             className="w-full bg-card font-black text-black xxxs:p-3 xs:p-6 rounded-2xl shadow-2xl"
             defaultValue="item-1"
           >
-            <h1 className='text-center text-2xl font-black animate-pulse'>Submission&apos;s Final Certificate</h1>
+            <h1 className='text-center text-2xl font-black animate-pulse'>{lang === "ar" ? "الشهادة النهائية للتقديم" : "Submission's Final Certificate"}</h1>
             {
               <>
                 {/* Status */}
@@ -704,7 +743,7 @@ export default function DocumentDetailsPage() {
                     ) : (
                       <Clock className="h-6 w-6 text-black mx-3" />
                     )}
-                    <span className="font-medium">Status:</span>
+                    <span className="font-medium">{lang === "ar" ? "الحالة بعد المراجعة" : "Status"}</span>
                   </div>
                 <Badge variant="outline" className={`text-lg text-white ${docData?.certificate?.status === 'approved' ? 'bg-green-600' : docData?.certificate?.status === 'rejected' ? 'bg-red-600' : 'bg-black'}`}>
                   {docData?.certificate?.status}
@@ -718,7 +757,7 @@ export default function DocumentDetailsPage() {
                       <div className='flex flex-col items-center justify-between'>
                         <div className='flex flex-row items-center justify-between'>
                           <MessageCircleMoreIcon className="h-6 w-6 text-muted-foregrounsd mt-0 mx-3" />
-                          <p className="text-muted-fosreground">Super Admin Comment</p>
+                          <p className="text-muted-fosreground">{lang === "ar" ? "تعليق المدير المتميز" : "Super Admin Comment"}</p>
                         </div>
                         <p className="font-medium">{docData?.certificate?.comment}</p>
                       </div>
@@ -727,7 +766,7 @@ export default function DocumentDetailsPage() {
                 )}
                 </div>                      
                 <AccordionItem value={`item-1`}>
-                <AccordionTrigger className='cursor-pointer'>Uploaded By</AccordionTrigger>
+                <AccordionTrigger className='cursor-pointer'>{lang === "ar" ? "تم رفع الشهادة بواسطة" : "Uploaded By"}</AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 text-balance hover:cursor-text">
                   <div className="grid xl:grid-cols-[1fr_2.5fr_1fr_0.5fr_2fr] lg:grid-cols-3 sm:grid-cols-2 xxxs:grid-cols-1 w-full max-w-full gap-2">
                     <Item variant="outline" className='font-black hover:text-white hover:bg-black transition-all duration-300'>
@@ -777,7 +816,7 @@ export default function DocumentDetailsPage() {
                 {
                   docData?.certificate?.approvedBy && (
                 <AccordionItem value={`item-2`}>
-                  <AccordionTrigger className='cursor-pointer'>Approved By</AccordionTrigger>
+                <AccordionTrigger className='cursor-pointer'>{lang === "ar" ? "تم الموافقة علي الشهادة بواسطة" : "Approved By"}</AccordionTrigger>
                   <AccordionContent className="flex flex-col gap-4 text-balance hover:cursor-text">
                     <div className="grid xl:grid-cols-[1fr_2.5fr_1fr_0.5fr_2fr] lg:grid-cols-3 sm:grid-cols-2 xxxs:grid-cols-1 w-full max-w-full gap-2">
                       <Item variant="outline" className='font-black hover:text-white hover:bg-black transition-all duration-300'>
@@ -829,7 +868,7 @@ export default function DocumentDetailsPage() {
                 {
                   docData?.certificate?.rejectedBy && (
                 <AccordionItem value={`item-3`}>
-                  <AccordionTrigger className='cursor-pointer'>Rejected By</AccordionTrigger>
+                <AccordionTrigger className='cursor-pointer'>{lang === "ar" ? "تم رفض الشهادة بواسطة" : "Rejected By"}</AccordionTrigger>
                   <AccordionContent className="flex flex-col gap-4 text-balance hover:cursor-text">
                     <div className="grid xl:grid-cols-[1fr_2.5fr_1fr_0.5fr_2fr] lg:grid-cols-3 sm:grid-cols-2 xxxs:grid-cols-1 w-full max-w-full gap-2">
                       <Item variant="outline" className='font-black hover:text-white hover:bg-black transition-all duration-300'>
@@ -879,7 +918,7 @@ export default function DocumentDetailsPage() {
                   )
                 }
                 <AccordionItem value={`item-4`} >
-              <AccordionTrigger className='cursor-pointer'>Certificate Images</AccordionTrigger>
+              <AccordionTrigger className='cursor-pointer'>{lang === "ar" ? "صور الشهادة" : "Certificate Images"}</AccordionTrigger>
               <AccordionContent className="flex flex-col gap-4  p-0 text-balance">
                 <div className="w-full max-w-full p-0">
                   <Item variant="outline" className='p-0 max-w-fit max-h-fit mx-auto'>
@@ -946,16 +985,16 @@ export default function DocumentDetailsPage() {
         ) 
         :(
           <section className="w-full bg-card font-black text-black xxxs:p-3 xs:p-6 rounded-2xl shadow-2xl">
-            <h1 className='text-center text-2xl font-black animate-pulse'>Submission&apos;s Final Certificate</h1>
-            <div className='text-center mt-5'>There Is No Final Certificate Uploaded For This Submission.</div>
+            <h1 className='text-center text-2xl  animate-pulse'>{lang === "ar" ? "الشهادة النهائية للتقديم" : "Submission's Final Certificate"}</h1>
+            <div className='text-center mt-5 font-black text-xl'>{lang === "ar" ? "لم يتم رفع شهادة نهائية لهذا الطلب." : "There Is No Final Certificate Uploaded For This Submission."}</div>
           </section>
         ) 
       }
       
       <Card>
-        <h1 className='text-2xl font-black text-center animate-pulse'>Submission Custody Details</h1>
+        <h1 className='text-2xl font-black text-center animate-pulse'>{lang === "ar" ? "تفاصيل حيازة التقديم" : "Submission Custody Details"}</h1>
         <CardHeader className='px-0 py-4 mx-4 rounded-4xl bg-gray-500'>
-        <h2 className='text-xl font-black text-white text-center'>Current Holder Details</h2>
+        <h2 className='text-xl font-black text-white text-center'>{lang === "ar" ? "تفاصيل المستحوذ الحالي" : "Current Holder Details"}</h2>
           <div className="grid grid-cols-1 xxxlg:grid-cols-[1fr_2fr_1fr_1fr] gap-4 text-center text-lg pb-4">
             <div className="flex items-center gap-4 mx-auto">
               <div>
@@ -996,21 +1035,21 @@ export default function DocumentDetailsPage() {
               }
             </div>
             {
-              docData?.custody.currentHolder.role && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0 mx-auto font-black' onClick={()=>router.push(`/${lang}/users/${docData?.custody?.currentHolder?._id}`)}>Submission History</Button>)
+              docData?.custody.currentHolder.role && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0 mx-auto font-black' onClick={()=>router.push(`/${lang}/users/${docData?.custody?.currentHolder?._id}`)}>{lang === "ar" ? "تاريخ التقديم" : "Submission History"}</Button>)
             }
             {
-              (docData?.custody.currentHolder.adminLevel && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0 mx-auto font-black' onClick={()=>router.push(`/${lang}/admins/${docData?.custody?.currentHolder?._id}`)}>Reviews History</Button>))
+              (docData?.custody.currentHolder.adminLevel && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:my-0 mx-auto font-black' onClick={()=>router.push(`/${lang}/admins/${docData?.custody?.currentHolder?._id}`)}>{lang === "ar" ? "تاريخ المراجعات" : "Reviews History"}</Button>))
             }
             {/* </CardContent> */}
         </CardHeader>
 
         <div className="bg-gray-500 p-4 mx-4 rounded-4xl">
-          <h2 className='text-xl font-black text-white text-center mb-4'>Previous Holders&apos; Details</h2>
+          <h2 className='text-xl font-black text-white text-center mb-4'>{lang === "ar" ? "بيانات المستحوذين السابقين" : "Previous Holders' Details"}</h2>
           <div className='tabs tabs-box bg-gray-500 border-2 rounded-xl'>
             {
               docData?.custody.previousHolders.map((PreviousHolder , index)=>(
               <>
-                <input type="radio" name="my_tabs_6" className="tab text-white font-black shadow-3xl" aria-label={`Previous Holder ${index + 1}`} defaultChecked/>
+                <input type="radio" name="my_tabs_6" className="tab text-white font-black shadow-3xl" aria-label={`${lang === "ar" ? "المستحوذ السابق" : "Previous Holder"} ${index + 1}`} defaultChecked/>
                 <div className="tab-content bg-base-100 border-base-300 xxxs:px-1 xxxs:py-2 xs:p-6 bg-card rounded-xl text-center">
                   <div className="grid md:grid-cols-[1fr_2.5fr_1fr_0.5fr] sm:grid-cols-[1fr_1.5fr] xxxs:grid-cols-1 w-full max-w-full gap-2">
                     <Item variant="outline" className='font-black hover:text-white hover:bg-black transition-all duration-300'>
@@ -1047,10 +1086,10 @@ export default function DocumentDetailsPage() {
                     </Item>
                   </div>
                     {
-                      PreviousHolder.role && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0 mt-6 text-center font-black' onClick={()=>router.push(`/${lang}/users/${PreviousHolder._id}`)}>Submission History</Button>)
+                      PreviousHolder.role && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0 mt-6 text-center font-black' onClick={()=>router.push(`/${lang}/users/${PreviousHolder._id}`)}>{lang === "ar" ? "تاريخ التقديم" : "Submission History"}</Button>)
                     }
                     {
-                      (PreviousHolder.adminLevel && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0 mt-6 text-center font-black' onClick={()=>router.push(`/${lang}/admins/${PreviousHolder._id}`)}>Reviews History</Button>))
+                      (PreviousHolder.adminLevel && (<Button className='hover:text-black hover:bg-white cursor-pointer transition-all duration-400 xxxs:mb-5 sm:mb-0 mt-6 text-center font-black' onClick={()=>router.push(`/${lang}/admins/${PreviousHolder._id}`)}>{lang === "ar" ? "تاريخ المراجعات" : "Reviews History"}</Button>))
                     }
                 </div>
               </>
