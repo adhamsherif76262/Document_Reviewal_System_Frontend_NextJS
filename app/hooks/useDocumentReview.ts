@@ -8,7 +8,7 @@ import { getDocumentById } from './useGetDocumentById'
 import { fetchTemplateByKey } from "../../templates/api";
 // import { ParamValue } from 'next/dist/server/request/params'
 import {computeDocumentStatus} from "../../lib/review/computeDocumentStatus"
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 type ReviewStatus = 'approved' | 'rejected' | 'pending'
 
 type FieldReview = {
@@ -17,7 +17,8 @@ type FieldReview = {
 }
 
 export function useDocumentReview(documentId : any) {
-    const {id} = useParams()
+  const {id , lang} = useParams()
+  const router = useRouter()
   const [document, setDocument] = useState<any>(null)
   const [template, setTemplate] = useState<any>(null)
   const [loading, setLoading] = useState(true)
@@ -143,6 +144,8 @@ async function submitReview() {
   })
 
   setSubmitting(false)
+
+  router.push(`/${lang}/dashboard/${id}`)
 }
 
   return {

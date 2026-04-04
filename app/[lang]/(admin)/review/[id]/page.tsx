@@ -89,6 +89,7 @@ useEffect(() => {
           onClick={submitReview}
           className="w-full sm:w-auto hover:cursor-pointer hover:bg-transparent hover:text-black transition-all duration-300"
         >
+          
           {submitting
           ? lang === "en"
             ? "Submitting Review ..."

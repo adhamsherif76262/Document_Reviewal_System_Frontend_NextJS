@@ -205,8 +205,29 @@ export function useTemplateForm(
     try {
       const formData = new FormData();
 
+      let v = 0;
+      // alert("template.states.length = " + template.states.length)
+      // if(template.states.length > 1){
+        // alert("state = " + state)
+        if(state === "Imported"){v=1}
+      // }
+      // alert("V = " + v)
       // ✅ Required by backend
-      formData.append("docType", template.appliesTo[0]);
+      // formData.append("docType", template.appliesTo[0]);
+      formData.append("docType", template.appliesTo[v]);
+      // Find index of current state inside template.states
+      // const stateIndex = template.states.findIndex(s => s === state);
+          
+      // // Fallback safety (in case something is wrong)
+      // const docType =
+      //   stateIndex !== -1
+      //     ? template.appliesTo[stateIndex]
+      //     : template.appliesTo[0];
+          
+      // // Append correct docType
+      // formData.append("docType", docType);
+      // console.log("docType" + docType);
+
       formData.append("state", state);
 
       // ✅ Append dynamic fields
