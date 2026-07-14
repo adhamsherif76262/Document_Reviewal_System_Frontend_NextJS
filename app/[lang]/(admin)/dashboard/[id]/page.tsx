@@ -154,6 +154,10 @@ import { PdfFieldList } from '../../../../../components/docs/pdfFieldRenderer'
 import ImageModalCarousel from '../../../../../components/docs/imageModalCarousel'
 import { useDocumentReview } from '../../../../hooks/useDocumentReview'
 import { Label } from 'radix-ui'
+import SubmitFinalCertificate from '../../../../../components/SubmitFinalCertificate'
+import { ImageUploadField } from '../../../../../components/fields/ImageUploadField'
+import ResubmitFinalCertificate from '../../../../../components/ResubmitFinalCertificate'
+import ReviewFinalCertificate from '../../../../../components/ReviewFinalCertificate'
 
 export default function DocumentDetailsPage() {
 
@@ -720,7 +724,7 @@ export default function DocumentDetailsPage() {
       </ul>
 
       {
-        docData?.certificate?.status !== "none" ? 
+       docData?.certificate?.status !== "none" ? 
         ( 
           <Accordion
             type="single"
@@ -927,19 +931,20 @@ export default function DocumentDetailsPage() {
                             // orientation="vertical"
                             plugins={[plugin.current]}
                             // opts={{
-                            //   align: "start",
+                              //   align: "start",
                             // }}
-                            className="w-full sm:max-w-[450px] xs:max-w-[300px] xxs:max-w-[250px] xxxs:max-w-[150px] py-0"
+                            // className="w-full sm:max-w-[500px] xs:max-w-[300px] xxs:max-w-[250px] xxxs:max-w-[150px] py-0"
+                            className="w-full sm:max-w-[500px] xs:max-w-[300px] xxs:max-w-[250px] xxxs:max-w-[150px] py-0"
                             onMouseEnter={plugin.current.stop}
                             onMouseLeave={plugin.current.reset}
                           >
                             {/* <CarouselContent className='h-[300px]'> */}
-                            <CarouselContent className="xxxs:h-[200px] xxs:h-[325px] xs:h-[400px] sm:h-[500px]">
+                            <CarouselContent className="border-none shadow-none">
                               {docData?.certificate?.images.map((img, index) => (
                                 // <CarouselItem key={index} className='py-0 msd:basis-1/2'>
                                 <CarouselItem key={index} className="h-full flex items-center justify-center">
                                   <div className="py-0">
-                                    <Card className='py-0'>
+                                    <Card className='py-0 aspect-auto'>
                                       <CardContent className="flex aspect-auto items-center justify-center p-0 " 
                                         onClick={() => {
                                           setStartIndex(index);
@@ -948,9 +953,15 @@ export default function DocumentDetailsPage() {
                                       >
                                         <Image 
                                         loading='lazy'
-                                          className='font-black hover:blur-xs transition-all duration-500 hover:cursor-pointer rounded-lg object-contain max-h-[500px]' 
+                                          className='font-black hover:blur-xs transition-all duration-500 hover:cursor-pointer rounded-lg object-contain max-h-[1000px]' 
                                         src={img}
-                                        width={500} height={50} 
+                                        style={{
+                                          width: 'auto',
+                                          height: 'auto',
+                                          maxWidth: '100%',
+                                          maxHeight: '1000px'
+                                        }}
+                                        width={700} height={50} 
                                         // fill
                                           // sizes="(max-width: 640px) 90vw, 450px"
                                           // priority={index === 0}
@@ -972,23 +983,48 @@ export default function DocumentDetailsPage() {
                               images={docData?.certificate?.images || []}
                               startIndex={startIndex}
                               onClose={() => setOpen(false)}
-                            />
-                          )}
+                              />
+                            )}
                         </ItemContent>
                   </Item>
                 </div>
               </AccordionContent>
                 </AccordionItem>
+                {
+                  docData?.certificate?.status === "rejected" && (
+                            <AccordionItem value={`item-5`}>
+                            <AccordionTrigger className='cursor-pointer'>{lang === "ar" ? "اعادة تقديم الشهادة" : "Re-Submit Certificate"}</AccordionTrigger>
+                              <AccordionContent className="flex flex-col gap-4 text-balance hover:cursor-text">
+                                <ResubmitFinalCertificate docId={docData._id}></ResubmitFinalCertificate>
+                              </AccordionContent>
+                            </AccordionItem>
+                  )
+                }
+                {
+                  ((docData?.certificate?.status === "pending" || docData?.certificate?.status === "approved" || docData?.certificate?.status === "rejected") && user?.adminLevel === "super") && (
+                  // ( docData?.certificate?.status === "pending" && user?.adminLevel === "super") && (
+                            <AccordionItem value={`item-6`}>
+                            <AccordionTrigger className='cursor-pointer'>{lang === "ar" ? "مراجعة الشهادة" : "Review Certificate"}</AccordionTrigger>
+                              <AccordionContent className="flex flex-col gap-4 text-balance hover:cursor-text">
+                                {/* <ResubmitFinalCertificate docId={docData._id}></ResubmitFinalCertificate> */}
+                                <ReviewFinalCertificate Doc_Id={docData._id} images={docData.certificate.images}></ReviewFinalCertificate>
+                              </AccordionContent>
+                            </AccordionItem>
+                  )
+                }
               </>
             }
           </Accordion>
-        ) 
+        )
         :(
           <section className="w-full bg-card font-black text-black xxxs:p-3 xs:p-6 rounded-2xl shadow-2xl">
             <h1 className='text-center text-2xl  animate-pulse'>{lang === "ar" ? "الشهادة النهائية للتقديم" : "Submission's Final Certificate"}</h1>
             <div className='text-center mt-5 font-black text-xl'>{lang === "ar" ? "لم يتم رفع شهادة نهائية لهذا الطلب." : "There Is No Final Certificate Uploaded For This Submission."}</div>
-          </section>
-        ) 
+            {
+              docData?.status === "approved" ? (<SubmitFinalCertificate docId={docData._id}></SubmitFinalCertificate>) : ""
+            }
+            {/* <ImageUploadField></ImageUploadField> */}
+          </section>)
       }
       
       <Card>

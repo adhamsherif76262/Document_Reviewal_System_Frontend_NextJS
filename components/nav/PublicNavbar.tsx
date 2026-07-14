@@ -147,7 +147,7 @@ export default function ClassicDepthNavbar() {
             <div className="relative">
               <div className="w-10 h-10 xxxs:w-44 xxxs:h-28 bg-linear-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:shadow-emerald-500/50 transition-all duration-300 group-hover:scale-105 overflow-hidden">
                 <Image
-                  src="/Images/Logo.jpeg"
+                  src="/Images/LOGO.jpeg"
                   alt="CLOA Logo"
                   className="w-full h-full object-cover animate-logo-pulse group-hover:animate-logo-spin"
                   width={200}

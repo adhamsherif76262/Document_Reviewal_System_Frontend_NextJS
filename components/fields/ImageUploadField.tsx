@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { UploadCloud } from "lucide-react";
+import { FileText, UploadCloud } from "lucide-react";
 import { LockedOverlay } from "../../components/LockedOverlay";
 import Image from "next/image"
 import ImageModalCarousel from "../docs/imageModalCarousel";
@@ -153,11 +153,16 @@ const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
       {/* <LockedOverlay lang={lang} /> */}
 
       <Label className="font-black font-sans text-xl text-center" dir={lang === "ar" ? "rtl" : "ltr"}>
-        {field.label[lang]}
+        {field?.label[lang]}
       </Label>
 
+          {/* <a href={url} target="_blank" rel="noopener noreferrer">
+            <FileText className="h-4 w-4" />
+             <strong> Form 1 Template </strong>
+          </a> */}
+
       <p dir={lang === "ar" ? "rtl" : "ltr"}  className="text-muted-foreground mt-1 font-black font-sans text-xl text-center">
-        {globals.helpText?.image?.[lang]}
+        {globals?.helpText?.image?.[lang]}
       </p>
 
       <Button type="button" onClick={resetFileInput}
@@ -171,16 +176,16 @@ const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
       <input
         ref={fileInputRef}
         type="file"
-        id={field.name}
+        id={field?.name}
         multiple
         disabled={locked}
-        accept={globals.constraints?.image?.allowedMimeTypes?.join(",")}
+        accept={globals?.constraints?.image?.allowedMimeTypes?.join(",")}
         className="hidden"
         onChange={handleImage}
       />
 
       <label
-        htmlFor={field.name}
+        htmlFor={field?.name}
         className="
           mt-4 flex flex-col items-center justify-center
           rounded-xl border border-dashed border-gray-300
