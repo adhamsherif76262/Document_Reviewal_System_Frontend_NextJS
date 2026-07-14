@@ -305,7 +305,7 @@ if (!user) {
                 alt="CLOA Logo"
                 className="w-8 h-8 rounded-lg object-cover animate-logo-pulse-spin"
               /> */}
-              <Image height={100} width={100} src="/Images/Logo.jpeg" alt="CLOA Logo" className="w-44 h-28 rounded-lg object-cover animate-logo-pulse-spin" />
+              <Image height={100} width={100} src="/Images/LOGO.jpeg" alt="CLOA Logo" className="w-44 h-28 rounded-lg object-cover animate-logo-pulse-spin" />
               <span className="text-xl font-bold bg-linear-to-r from-white to-emerald-400 bg-clip-text text-transparent">
                 CLOA
               </span>
@@ -407,7 +407,7 @@ if (!user) {
           <div className="flex items-center justify-between">
             {/* <a href="/" className="flex items-center gap-2"> */}
             <Link href={"/"} className="flex items-center gap-2">
-              <Image height={100} width={100} src="/Images/Logo.jpeg" alt="CLOA Logo" className="w-48 h-32 rounded-lg object-cover animate-logo-pulse-spin" />
+              <Image height={100} width={100} src="/Images/LOGO.jpeg" alt="CLOA Logo" className="w-48 h-32 rounded-lg object-cover animate-logo-pulse-spin" />
               {/* <img
                 src="/agricultural-leaf-logo.jpg"
                 alt="CLOA Logo"
