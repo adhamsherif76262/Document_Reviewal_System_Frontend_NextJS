@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import UserNavbar from "../../../components/nav/UserNavbar";
 import Footer from "../../../components/Footer";
 import ScrollToTop from "../../../components/ScrollToTop";
-
+import { Analytics } from "@vercel/analytics/next"
 export default function UserLayout({
   children,
 }: {
@@ -38,6 +38,7 @@ export default function UserLayout({
 
   return (
     <>
+      <Analytics></Analytics>
       <UserNavbar />  
       <main className="min-h-screen px-4 py-6">{children}</main>
       <ScrollToTop></ScrollToTop>

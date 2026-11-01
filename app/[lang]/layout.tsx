@@ -11,7 +11,7 @@ import { AuthProvider } from '../context/AuthContext';
 // import { LanguageProvider } from "../context/LanguageContext";
 // import { NextIntlClientProvider } from "next-intl";
 import { Toaster } from "@/components/ui/sonner"
-
+import { Analytics } from "@vercel/analytics/next"
 const metadataMap = {
   en: {
     title: {
@@ -74,6 +74,7 @@ export default async function RootLayout({
   return (
     // <html lang={params.lang} dir={dir}>
     <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
+      <Analytics></Analytics>
       <body  
       className={clsx(
         // cairo.variable,                // 👈 Arabic font variable

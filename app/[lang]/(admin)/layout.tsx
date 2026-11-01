@@ -1,5 +1,5 @@
 "use client";
-
+import { Analytics } from "@vercel/analytics/next"
 import { useAuth } from "../../context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -47,6 +47,7 @@ export default function AdminLayout({
 
   return (
     <>
+      <Analytics></Analytics>
       <AdminNavbar />
       <main className="min-h-screen px-3 py-10 bg-muted">
         {children}
