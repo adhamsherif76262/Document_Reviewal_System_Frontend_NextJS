@@ -266,7 +266,7 @@ if (!user) {
   const isRTL = currentLanguage === "ar"
 
   const getUserInitials = (name: string) => {
-    return name | ""
+    return name
       .split(" ")
       .map((n) => n[0])
       .join("")
