@@ -249,7 +249,7 @@ export function LogsFilters({
 
 
 
-        <ul className="timeline timeline-vertical lg:timeline-horizontal overflow-auto">
+        {/* <ul className="timeline timeline-vertical lg:timeline-horizontal overflow-auto">
   <li>
     <div className="timeline-start">1984</div>
     <div className="timeline-middle">
@@ -560,7 +560,7 @@ export function LogsFilters({
     </div>
     <div className="timeline-end timeline-box">Apple Watch</div>
   </li>
-</ul>
+</ul> */}
 
 
 
